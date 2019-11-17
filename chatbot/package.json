@@ -1,0 +1,36 @@
+{
+  "name": "cinematjes-chatbot",
+  "version": "1.0.0",
+  "description": "facebook messenger chatbot voor cinematjes",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "camelcase": "^5.3.1",
+    "dotenv": "^8.1.0",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "i18n": "^0.8.3",
+    "path": "^0.12.7",
+    "request": "^2.88.0"
+  },
+  "engines": {
+    "node": "^8.10.0 || ^10.13.0 || >=11.10.1"
+  },
+  "repository": {
+    "url": "https://github.com/DevineJasper/PersonalPassionProject.git"
+  },
+  "author": "Jasper Vermeesch",
+  "license": "ISC",
+  "keywords": [
+    "messenger",
+    "webhook"
+  ],
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-devine": "^3.0.1",
+    "prettier": "^1.18.2"
+  }
+}
