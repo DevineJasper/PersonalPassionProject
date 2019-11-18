@@ -1,22 +1,25 @@
 # PersonalPassionProject
 
-Project last year Digital Design &amp; Development (DEVINE) @ Howest Kortrijk
+Project laatste jaar Digital Design &amp; Development (DEVINE) @ Howest Kortrijk
+BLOG: https://medium.com/@jasper.vermeesch
 
-## IDEA 1 - KARAOKE
+## DE KLANT
 
-A website where you can sing songs alone or together with friends.
+Jeugdhuis Comma willen filmavonden organiseren voor de jeugd van Brugge.
+Ze willen een filmbeleving aanbieden dat grote bioscopen (zoals Kinepolis en Lumière) niet kunnen aanbieden.
 
-- php (account, songs, scores), html, js
-- ml5 pitchdetection
-- socket.io (multiplayer)
-- Tone.js
+## CONCEPT
 
---> No react.js, because ml5 and react don't mix.
+'Organiseer jouw filmavond samen met Jeugdhuis Comma'
+De jeugd van Brugge krijgt de kans om hun eigen filmavonden te organiseren in het Jeugdhuis Comma.
+Hierbij wordt ingezet op authenticiteit en gezelligheid.
+De Facebook-pagina van het project (genaam Cinématjes) is het communicatiekanaal.
 
-## IDEA 2 - RUNNER ROUTE CALCULATOR
+## HET PRODUCT
 
-A webapplication (mobile first), that calculates a running route for you.
-You cans decide the sart and end point + how many KM's you want to run,
-the application gives you some suggested routes.
-
---> research in progress
+- Een Facebook Messenger chatbot die bezoekers helpt bij de organisatie van de filmavonden.
+- Een embedded applicatie in de chatbot, waar bezoekers suggesties kunnen doorsturen en votes kunnen plaatsen.
+- De embedded applicatie maakt gebruik van 'The Movie Database API', zodat ze snel films kunnen exploreren.
+- De suggesties en votes die worden doorgestuurd via de embedded applicatie worden opgeslaan in een database.
+- Een REST API wordt aangeboden door een Node server, waarmee de onderliggende database kan opgevraagd & aangpast worden.
+- Een Control Panel voor de organisatie waar ze de chatbot kunnen controleren en gegevens kunnen oproepen uit de database.
