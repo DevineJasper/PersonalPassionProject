@@ -1,23 +1,41 @@
-const mysql = require("mysql");
-const con = mysql.createConnection({
-  // socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-  host: "ID276017_cinematjes.db.webhosting.be",
-  user: "ID276017_cinematjes",
-  password: "JHcomm@19",
-  database: "ID276017_cinematjes"
-});
+'use strict';
+const mysql = require('mysql2/promise');
+// const mysql = require('mysql');
 
-con.connect(err => {
-  if (err) throw err;
-  console.log("Connected!");
-  con.query("SELECT * FROM `test-table`", function (err, result, fields) {
-    if (err) throw err;
-    console.log(result);
-  });
-});
+class Database {
+	constructor() {
+		this.connection;
+		this.connect();
+	}
+
+	connect = async () => {
+		this.connection = await mysql.createConnection({
+			socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
+			host: 'localhost',
+			user: 'nodesql',
+			password: 'nodesql',
+			database: 'nodesqltest'
+		});
+		console.log('Database connectie...');
+	};
+
+	getAll = async () => {
+		let [result] = await this.connection.execute('SELECT * FROM `test-table`');
+		return await result;
+	};
+
+	setAll = async data => {
+		console.log(data);
+		const sql = 'INSERT INTO `test-table` VALUES(?, ?, ?)';
+		this.connection.execute(sql, [data.id, data.phase, data.name]);
+		this.getAll();
+	};
+}
 
 // con.end((err) => {
 //   // The connection is terminated gracefully
 //   // Ensures all previously enqueued queries are still
 //   // before sending a COM_QUIT packet to the MySQL server.
 // });
+
+module.exports = Database;
