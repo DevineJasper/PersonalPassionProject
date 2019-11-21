@@ -4,12 +4,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Database = require('./Database.js');
-const crypto = require('crypto');
-const Receive = require('./services/receive');
-const GraphAPi = require('./services/graph-api');
-const User = require('./services/user');
-const config = require('./services/config');
-const i18n = require('./i18n.config');
+// const crypto = require('crypto');
+// const Receive = require('./services/receive');
+// const GraphAPi = require('./services/graph-api');
+// const User = require('./services/user');
+// const config = require('./services/config');
+// const i18n = require('./i18n.config');
 require('dotenv').config();
 
 app.use(morgan('short'));
