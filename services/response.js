@@ -8,142 +8,142 @@
  * https://developers.facebook.com/docs/messenger-platform/getting-started/sample-apps/original-coast-clothing
  */
 
-"use strict";
+'use strict';
 
-const i18n = require("../i18n.config");
+const i18n = require('../i18n.config');
 
 module.exports = class Response {
-  static genQuickReply(text, quickReplies) {
-    let response = {
-      text: text,
-      quick_replies: []
-    };
+	static genQuickReply(text, quickReplies) {
+		let response = {
+			text: text,
+			quick_replies: []
+		};
 
-    for (let quickReply of quickReplies) {
-      response["quick_replies"].push({
-        content_type: "text",
-        title: quickReply["title"],
-        payload: quickReply["payload"]
-      });
-    }
+		for (let quickReply of quickReplies) {
+			response['quick_replies'].push({
+				content_type: 'text',
+				title: quickReply['title'],
+				payload: quickReply['payload']
+			});
+		}
 
-    return response;
-  }
+		return response;
+	}
 
-  static genGenericTemplate(image_url, title, subtitle, buttons) {
-    let response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: title,
-              subtitle: subtitle,
-              image_url: image_url,
-              buttons: buttons
-            }
-          ]
-        }
-      }
-    };
+	static genGenericTemplate(image_url, title, subtitle, buttons) {
+		let response = {
+			attachment: {
+				type: 'template',
+				payload: {
+					template_type: 'generic',
+					elements: [
+						{
+							title: title,
+							subtitle: subtitle,
+							image_url: image_url,
+							buttons: buttons
+						}
+					]
+				}
+			}
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genImageTemplate(image_url, title, subtitle = "") {
-    let response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "generic",
-          elements: [
-            {
-              title: title,
-              subtitle: subtitle,
-              image_url: image_url
-            }
-          ]
-        }
-      }
-    };
+	static genImageTemplate(image_url, title, subtitle = '') {
+		let response = {
+			attachment: {
+				type: 'template',
+				payload: {
+					template_type: 'generic',
+					elements: [
+						{
+							title: title,
+							subtitle: subtitle,
+							image_url: image_url
+						}
+					]
+				}
+			}
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genButtonTemplate(title, buttons) {
-    let response = {
-      attachment: {
-        type: "template",
-        payload: {
-          template_type: "button",
-          text: title,
-          buttons: buttons
-        }
-      }
-    };
+	static genButtonTemplate(title, buttons) {
+		let response = {
+			attachment: {
+				type: 'template',
+				payload: {
+					template_type: 'button',
+					text: title,
+					buttons: buttons
+				}
+			}
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genText(text) {
-    let response = {
-      text: text
-    };
+	static genText(text) {
+		let response = {
+			text: text
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genTextWithPersona(text, persona_id) {
-    let response = {
-      text: text,
-      persona_id: persona_id
-    };
+	static genTextWithPersona(text, persona_id) {
+		let response = {
+			text: text,
+			persona_id: persona_id
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genPostbackButton(title, payload) {
-    let response = {
-      type: "postback",
-      title: title,
-      payload: payload
-    };
+	static genPostbackButton(title, payload) {
+		let response = {
+			type: 'postback',
+			title: title,
+			payload: payload
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genWebUrlButton(title, url) {
-    let response = {
-      type: "web_url",
-      title: title,
-      url: url,
-      messenger_extensions: true
-    };
+	static genWebUrlButton(title, url) {
+		let response = {
+			type: 'web_url',
+			title: title,
+			url: url,
+			messenger_extensions: true
+		};
 
-    return response;
-  }
+		return response;
+	}
 
-  static genNuxMessage(user) {
-    let welcome = this.genText(
-      i18n.__("get_started.welcome", {
-        userFirstName: user.firstName
-      })
-    );
+	static genNuxMessage(user) {
+		let welcome = this.genText(
+			`Hi ${user.firstName}! Welcome to Original Coast Clothgin where you'll find styles for every occasion`
+		);
 
-    let guide = this.genText(i18n.__("get_started.guidance"));
+		let guide = this.genText(
+			'At any time, use the menu below to navigate through the features'
+		);
 
-    let curation = this.genQuickReply(i18n.__("get_started.help"), [
-      {
-        title: i18n.__("menu.suggestion"),
-        payload: "CURATION"
-      },
-      {
-        title: i18n.__("menu.help"),
-        payload: "CARE_HELP"
-      }
-    ]);
+		let curation = this.genQuickReply('What we can do to help you today?', [
+			{
+				title: 'Outfit suggestions',
+				payload: 'CURATION'
+			},
+			{
+				title: 'Talk to an agent',
+				payload: 'CARE_HELP'
+			}
+		]);
 
-    return [welcome, guide, curation];
-  }
+		return [welcome, guide, curation];
+	}
 };

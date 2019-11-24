@@ -32,6 +32,7 @@
 		"request": "^2.88.0"
 	},
 	"devDependencies": {
+		"localtunnel": "^2.0.0",
 		"nodemon": "^1.19.4"
 	}
 }

@@ -1,1 +1,17 @@
-{}
+{
+	"profile": {
+		"greeting": "profile.greeting"
+	},
+	"menu": {
+		"support": "menu.support",
+		"order": "menu.order",
+		"help": "menu.help",
+		"suggestion": "menu.suggestion",
+		"shop": "menu.shop"
+	},
+	"get_started": {
+		"welcome": "get_started.welcome",
+		"guidance": "get_started.guidance",
+		"help": "get_started.help"
+	}
+}
