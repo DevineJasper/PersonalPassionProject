@@ -10,11 +10,11 @@ class Database {
 
 	connect = async () => {
 		this.connection = await mysql.createConnection({
-			socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
-			host: 'localhost',
-			user: 'nodesql',
-			password: 'nodesql',
-			database: 'nodesqltest'
+			// socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
+			host: 'ID276017_cinematjes.db.webhosting.be',
+			user: 'ID276017_cinematjes',
+			password: 'cinematjes-19',
+			database: 'ID276017_cinematjes'
 		});
 		console.log('Database connectie...');
 	};
@@ -27,8 +27,8 @@ class Database {
 	setAll = async data => {
 		console.log(data);
 		const sql = 'INSERT INTO `test-table` VALUES(?, ?, ?)';
-		this.connection.execute(sql, [data.id, data.phase, data.name]);
-		this.getAll();
+		this.connection.execute(sql, [data.id, data.psId, data.movieId]);
+		// this.getAll();
 	};
 }
 

@@ -180,7 +180,7 @@ module.exports = class Profile {
 					type: 'web_url',
 					title: i18n.__('menu.shop'),
 					url: config.shopUrl,
-					webview_height_ratio: 'full'
+					webview_height_ratio: 'compact'
 				}
 			]
 		};

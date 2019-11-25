@@ -14,29 +14,23 @@ module.exports = class Test {
 		let response;
 
 		const text = `${this.user.firstName}, you pressed a button!`;
+		const webButton = Response.genWebUrlButton('webview', config.siteUrl);
 
 		switch (payload) {
-			case 'NO':
-				response = [
-					Response.genText(text),
-					Response.genGenericTemplate(
-						`${config.appUrl}/coupon.png`,
-						"That's a no, right?",
-						'You crazy bugga',
-						[
-							{
-								type: 'postback',
-								title: 'Yes!',
-								payload: 'yes'
-							},
-							{
-								type: 'postback',
-								title: 'No!',
-								payload: 'no'
-							}
-						]
-					)
-				];
+			case 'TEST':
+				response = Response.genGenericTemplate(
+					`${config.appUrl}/coupon.png`,
+					'Test webview button',
+					'You crazy bugga',
+					[
+						webButton,
+						{
+							type: 'postback',
+							title: 'No!',
+							payload: 'no'
+						}
+					]
+				);
 				break;
 		}
 

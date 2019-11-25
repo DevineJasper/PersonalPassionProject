@@ -28,9 +28,9 @@ app.get('/api/test', async (req, res) => {
 
 app.post('/api/test', async (req, res) => {
 	const test = await {
-		id: req.body.id,
-		phase: req.body.phase,
-		name: req.body.name
+		id: '',
+		psId: req.body.psId,
+		movieId: req.body.movieId
 	};
 	await db.setAll(test);
 	res.status(201).json({

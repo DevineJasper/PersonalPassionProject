@@ -16,7 +16,8 @@ const /* Curation = require('./curation'), */
 	// Care = require("./care"),
 	// Survey = require("./survey"),
 	Test = require('./test'),
-	GraphAPI = require('./graph-api');
+	GraphAPI = require('./graph-api'),
+	config = require('./config');
 
 module.exports = class Receive {
 	constructor(user, webhookEvent) {
@@ -27,6 +28,8 @@ module.exports = class Receive {
 	// Check if the event is a message or postback and
 	// call the appropriate handler function
 	handleMessage() {
+		console.log('in de handleMessag() functie');
+		console.log(this.webhookEvent);
 		let event = this.webhookEvent;
 
 		let responses;
@@ -35,13 +38,16 @@ module.exports = class Receive {
 			if (event.message) {
 				let message = event.message;
 
-				if (message.text) {
-					responses = this.handleTextMessage();
+				if (message.quick_reply) {
+					console.log('QUICK REPLY GEDETECTEERD!');
+					responses = this.handleQuickReply();
 				} else if (message.attachments) {
 					responses = this.handleAttachmentMessage();
+				} else if (message.text) {
+					responses = this.handleTextMessage();
 				}
 			} else if (event.postback) {
-				console.log('EVENT ONTVANGEN IN HANDLEMESSAGE:');
+				console.log('POSTBACK EVENT ONTVANGEN IN HANDLEMESSAGE:');
 				console.log(event.postback);
 				responses = this.handlePostback();
 			}
@@ -58,7 +64,7 @@ module.exports = class Receive {
 		if (Array.isArray(responses)) {
 			let delay = 0;
 			for (let response of responses) {
-				this.sendMessage(response, delay * 2000);
+				this.sendMessage(response, delay * 1000);
 				delay++;
 			}
 		} else {
@@ -72,11 +78,17 @@ module.exports = class Receive {
 		// 	'Received text:',
 		// 	`${this.webhookEvent.message.text} for ${this.user.psid}`
 		// );
+		let message = this.webhookEvent.message.text.trim().toLowerCase();
 
 		let response;
-		response = {
-			text: `Hi ${this.user.firstName}. You sent the message: "${this.webhookEvent.message.text}". Now send me an attachment!`
-		};
+		console.log('DIT IS DE MESSAGE IN HANDLETEXTMESSAGE');
+		console.log(message);
+
+		if (message.includes('rs')) {
+			response = Response.genNuxMessage(this.user);
+		} else {
+			response = Response.genNuxMessage(this.user);
+		}
 
 		return response;
 	}
@@ -156,7 +168,7 @@ module.exports = class Receive {
 		// console.log('Received Payload:', `${payload} for ${this.user.psid}`);
 
 		// Log CTA event in FBA
-		// GraphAPI.callFBAEventsAPI(this.user.psid, payload);
+		GraphAPI.callFBAEventsAPI(this.user.psid, payload);
 
 		let response;
 
@@ -196,9 +208,9 @@ module.exports = class Receive {
 					}
 				])
 			];
-		} else {
-			// console.log(this.webhookEvent);
-			let test = new Test(this.user, this.webhookEvent);
+		} else if (payload == 'TEST') {
+			console.log('payload is TEST, hoera!');
+			let test = new Test(this.user, this.webhookevent);
 			response = test.handlePayload(payload);
 		}
 

@@ -5,17 +5,20 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>home</title>
+		<style>
+			li {
+				list-style: none;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>Cinematjes</h1>
-		<p>Welgekomen op de test</p>
 		<form action="">
-			<label for="id">id<input id="id" type="text"/></label>
-			<label for="phase">phase<input id="phase" type="text"/></label>
-			<label for="name">name<input id="name" type="text"/></label>
+			<ul class="list"></ul>
+			<div class="status"></div>
 			<input class="submit" type="submit" />
 		</form>
-		<ul class="list"></ul>
-		<script src="../js/api.js"></script>
+		<!-- <script src="../js/api.js"></script> -->
+		<script src="../js/movieDb.js"></script>
 	</body>
 </html>

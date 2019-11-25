@@ -118,25 +118,18 @@ module.exports = class Response {
 			type: 'web_url',
 			title: title,
 			url: url,
-			messenger_extensions: true
+			messenger_extensions: true,
+			webview_height_ratio: 'compact'
 		};
 
 		return response;
 	}
 
 	static genNuxMessage(user) {
-		let welcome = this.genText(
-			`Hi ${user.firstName}! Welcome to Original Coast Clothgin where you'll find styles for every occasion`
-		);
-
-		let guide = this.genText(
-			'At any time, use the menu below to navigate through the features'
-		);
-
 		let curation = this.genQuickReply('What we can do to help you today?', [
 			{
-				title: 'Outfit suggestions',
-				payload: 'CURATION'
+				title: 'Test the webview',
+				payload: 'TEST'
 			},
 			{
 				title: 'Talk to an agent',
@@ -144,6 +137,6 @@ module.exports = class Response {
 			}
 		]);
 
-		return [welcome, guide, curation];
+		return curation;
 	}
 };

@@ -10,7 +10,8 @@ const ENV_VARS = [
 	'PAGE_ACCESS_TOKEN',
 	'APP_SECRET',
 	'VERIFY_TOKEN',
-	'APP_URL'
+	'APP_URL',
+	'SITE_URL'
 ];
 
 module.exports = {
@@ -29,6 +30,9 @@ module.exports = {
 	// URL of your app domain
 	appUrl: process.env.APP_URL,
 
+	// URL of your website
+	siteUrl: process.env.SITE_URL,
+
 	// Preferred port (default to 3000)
 	port: process.env.PORT || 3000,
 
@@ -42,7 +46,7 @@ module.exports = {
 	},
 
 	get whitelistedDomains() {
-		return [this.appUrl];
+		return [this.appUrl, this.siteUrl];
 	},
 
 	checkEnvVariables: () => {
