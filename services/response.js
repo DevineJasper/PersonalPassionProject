@@ -119,7 +119,7 @@ module.exports = class Response {
 			title: title,
 			url: url,
 			messenger_extensions: true,
-			webview_height_ratio: 'compact'
+			webview_height_ratio: 'full'
 		};
 
 		return response;

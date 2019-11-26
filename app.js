@@ -35,7 +35,7 @@ app.post('/api/test', async (req, res) => {
 	await db.setAll(test);
 	res.status(201).json({
 		message: 'post test...',
-		test: test
+		entry: test
 	});
 });
 
@@ -82,6 +82,8 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 	// Parse the request body from the POST
 	let body = req.body;
+	console.log('DEZE BODY MOET IK ZENDEN VIA FETCH');
+	console.log(body);
 
 	// Check the webhook event is from a Page subscription
 	if (body.object === 'page') {

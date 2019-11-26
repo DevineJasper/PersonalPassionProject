@@ -8,6 +8,7 @@ const request = require('request'),
 module.exports = class GraphAPI {
 	static callSendAPI(requestBody) {
 		console.log('dit is de requestBody in callSendAPI');
+		console.log(requestBody);
 		if (requestBody.message.attachment) {
 			console.log(requestBody.message.attachment.payload.elements[0].buttons);
 		}

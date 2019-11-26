@@ -4,20 +4,140 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>home</title>
+		<title>Filmsuggesties</title>
 		<style>
 			li {
 				list-style: none;
 			}
+			.zoek {
+				position: relative;
+				z-index: 800;
+			}
+			.list {
+				position: relative;
+				z-index: 800;
+			}
+			.noScrollY {
+				overflow-y: hidden;
+			}
+			.submit {
+				display: flex;
+				justify-content: center;
+				z-index: 1000;
+				background: blue;
+				border-radius: 0;
+				border: none;
+				cursor: pointer;
+				color: white;
+				padding: 15px;
+				width: auto;
+			}
+			.submit-container {
+				background-color: white;
+				position: fixed;
+				bottom: 0;
+				width: 100vw;
+				z-index: 999;
+				height: auto;
+				display: flex;
+				justify-content: flex-start;
+			}
+			input[type='color'],
+			input[type='date'],
+			input[type='datetime'],
+			input[type='datetime-local'],
+			input[type='email'],
+			input[type='month'],
+			input[type='number'],
+			input[type='password'],
+			input[type='search'],
+			input[type='tel'],
+			input[type='text'],
+			input[type='time'],
+			input[type='url'],
+			input[type='week'],
+			select:focus,
+			textarea {
+				font-size: 16px;
+			}
+			.suggestionsContainer {
+				position: fixed;
+				height: 100vh;
+				width: 100vw;
+				bottom: 0;
+			}
+			.toFront {
+				z-index: 996;
+			}
+			.suggestionsWindow {
+				height: 100vh;
+				background-color: white;
+				position: absolute;
+				bottom: -100vh;
+				transition: bottom ease-in-out 0.2s;
+				overflow-y: scroll;
+				z-index: 997;
+				right: 0;
+			}
+			.currentSuggestions {
+				margin-bottom: 60px;
+			}
+			.shadow {
+				background-color: black;
+				opacity: 0;
+				width: 100vw;
+				height: 100vh;
+				position: absolute;
+				bottom: -100;
+				z-index: 0;
+				transition: opacity ease-in-out 0.4s;
+			}
+			.suggestionsBtn {
+				position: relative;
+				z-index: 999;
+				cursor: pointer;
+			}
+			.fullScreen {
+				bottom: 0;
+				transition: bottom ease-in-out 0.2s;
+			}
+			.shadowTrans {
+				z-index: 996;
+				opacity: 0.6;
+				transition: opacity ease-in-out 0.4s;
+			}
+			.zoekContainer {
+				opacity: 1;
+				transition: opacity ease-in-out 0.4s;
+			}
+			.transparant {
+				opacity: 0.2;
+				transition: opacity ease-in-out 0.4s;
+			}
 		</style>
 	</head>
 	<body>
-		<h1>Cinematjes</h1>
-		<form action="">
-			<ul class="list"></ul>
-			<div class="status"></div>
-			<input class="submit" type="submit" />
-		</form>
+		<h1 hidden>Cinematjes</h1>
+		<section class="zoekContainer">
+			<h2>Zoek films</h2>
+			<input class="zoek" type="text" value="" placeholder="Filmtitel" />
+			<ul class="list">
+				<li>search for a movie</li>
+			</ul>
+		</section>
+		<div class="submit-container">
+			<div class="submit">Verzend suggesties</div>
+			<p class="suggestionsBtn">
+				Huidige suggesties (<span class="amount">0</span>/3)
+			</p>
+		</div>
+		<div class="suggestionsContainer">
+			<div class="suggestionsWindow">
+				<h2 hidden>Huidige suggesties</h2>
+				<ul class="currentSuggestions"></ul>
+			</div>
+			<div class="shadow"></div>
+		</div>
 		<!-- <script src="../js/api.js"></script> -->
 		<script src="../js/movieDb.js"></script>
 	</body>
