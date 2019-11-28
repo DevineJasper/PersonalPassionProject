@@ -9,9 +9,6 @@ module.exports = class GraphAPI {
 	static callSendAPI(requestBody) {
 		console.log('dit is de requestBody in callSendAPI');
 		console.log(requestBody);
-		if (requestBody.message.attachment) {
-			console.log(requestBody.message.attachment.payload.elements[0].buttons);
-		}
 		// Send the HTTP request to the Messenger Platform
 		request(
 			{

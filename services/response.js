@@ -126,14 +126,14 @@ module.exports = class Response {
 	}
 
 	static genNuxMessage(user) {
-		let curation = this.genQuickReply('What we can do to help you today?', [
+		let curation = this.genQuickReply('Wat wil je doen?', [
 			{
-				title: 'Test the webview',
-				payload: 'TEST'
+				title: 'Filmsuggesties',
+				payload: 'SUGGESTIE_FILM'
 			},
 			{
-				title: 'Talk to an agent',
-				payload: 'CARE_HELP'
+				title: 'Andere suggesties',
+				payload: 'SUGGESTIE_ANDERE'
 			}
 		]);
 

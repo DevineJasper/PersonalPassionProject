@@ -15,7 +15,7 @@ const /* Curation = require('./curation'), */
 	Response = require('./response'),
 	// Care = require("./care"),
 	// Survey = require("./survey"),
-	Test = require('./test'),
+	Suggestie = require('./suggestie'),
 	GraphAPI = require('./graph-api'),
 	config = require('./config');
 
@@ -64,7 +64,7 @@ module.exports = class Receive {
 		if (Array.isArray(responses)) {
 			let delay = 0;
 			for (let response of responses) {
-				this.sendMessage(response, delay * 1000);
+				this.sendMessage(response, delay * 2000);
 				delay++;
 			}
 		} else {
@@ -208,10 +208,10 @@ module.exports = class Receive {
 					}
 				])
 			];
-		} else if (payload == 'TEST') {
-			console.log('payload is TEST, hoera!');
-			let test = new Test(this.user, this.webhookevent);
-			response = test.handlePayload(payload);
+		} else if (payload.includes('SUGGESTIE')) {
+			console.log('payload includes SUGGESTIES');
+			let suggestie = new Suggestie(this.user, this.webhookevent);
+			response = suggestie.handlePayload(payload);
 		}
 
 		return response;

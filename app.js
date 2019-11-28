@@ -3,41 +3,43 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const Database = require('./Database.js');
 require('dotenv').config();
 
 app.use(morgan('short'));
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
-const db = new Database();
 
 app.get('/', (req, res) => {
 	res.render(__dirname + '/views/index');
 });
 
-app.get('/api/test', async (req, res) => {
-	const tests = await db.getAll();
-	await console.log(tests);
-	res.json(tests);
+app.get('/admin', (req, res) => {
+	res.render(__dirname + '/views/admin');
 });
 
-app.post('/api/test', async (req, res) => {
-	const test = await {
-		id: '',
-		psId: req.body.psId,
-		movieId: req.body.movieId
-	};
-	await db.setAll(test);
-	res.status(201).json({
-		message: 'post test...',
-		entry: test
-	});
-});
+// app.get('/api/test', async (req, res) => {
+// 	const tests = await db.getAll();
+// 	await console.log(tests);
+// 	res.json(tests);
+// });
+
+// app.post('/api/test', async (req, res) => {
+// 	const test = await {
+// 		id: '',
+// 		psId: req.body.psId,
+// 		movieId: req.body.movieId
+// 	};
+// 	await db.setAll(test);
+// 	res.status(201).json({
+// 		message: 'post test...',
+// 		entry: test
+// 	});
+// });
 
 // -------------------------------------------------------- //
 // -------------------------------------------------------- //
@@ -53,8 +55,6 @@ const config = require('./services/config');
 let users = [];
 
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
-
-// const camelCase = require('camelcase');
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
@@ -249,3 +249,5 @@ const listener = app.listen(config.port, () => {
 		console.log('https://m.me/' + config.pageId);
 	}
 });
+
+require('./routes/suggestions.routes.js')(app);

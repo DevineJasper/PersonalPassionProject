@@ -1,0 +1,178 @@
+body {
+	width: 100%;
+	height: 100%;
+}
+.redirect {
+	z-index: 2000;
+	position: relative;
+}
+.hidden {
+	display: none;
+}
+li {
+	list-style: none;
+}
+.searchContainer {
+	background-color: white;
+	overflow: hidden;
+	position: fixed;
+	top: -2px;
+	left: 0;
+	width: 100vw;
+	z-index: 700;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: flex-start;
+}
+.zoekContainer {
+	position: relative;
+	overflow: auto;
+	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+	opacity: 1;
+	transition: opacity ease-in-out 0.4s;
+}
+.zoekContainer::-webkit-scrollbar {
+	display: none;
+}
+.zoekContainer {
+	-ms-overflow-style: none;
+}
+input[type='text'] {
+	font-size: 16px;
+	border-radius: 0;
+	border: 0 solid white;
+	border-bottom: #e5e5e5 0.1px solid;
+	line-height: 20px;
+}
+.zoek {
+	width: 100vw;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	align-self: center;
+	z-index: 998;
+}
+.zoek:focus {
+	outline: none;
+}
+.list {
+	position: relative;
+	z-index: 800;
+	padding-inline-start: 16px;
+}
+.submit {
+	display: flex;
+	justify-content: center;
+	z-index: 1000;
+	background: #4999ff;
+	border-radius: 5px;
+	cursor: pointer;
+	color: white;
+	padding: 15px;
+	width: max-content;
+	align-self: center;
+	margin-bottom: 5px;
+}
+.submit:hover .submit:active {
+	background: blue;
+}
+.submitContainer {
+	background-color: white;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100vw;
+	z-index: 999;
+	height: auto;
+	display: flex;
+	justify-content: center;
+}
+.suggestionsWindow {
+	will-change: auto;
+	border-radius: 15px 15px 0 0;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 90vh;
+	width: 100vw;
+	background-color: white;
+	position: absolute;
+	bottom: -80vh;
+	transition: bottom ease-in 0.2s;
+	z-index: 997;
+	right: 0;
+	box-shadow: -4px 2px 37px -8px rgba(0, 0, 0, 0.54);
+}
+.currentSuggestions {
+	display: flex;
+	overflow-x: scroll;
+	width: auto;
+	position: relative;
+	z-index: 998;
+}
+.currentSuggestions div:first-child {
+	margin-left: 16px;
+}
+.currentSuggestions div:last-child {
+	padding-right: 16px;
+}
+.suggestionsBtn {
+	cursor: pointer;
+	width: max-content;
+	align-self: center;
+}
+.fullScreen {
+	bottom: 0;
+	transition: bottom ease-in-out 0.2s;
+}
+.transparant {
+	opacity: 0.2;
+	transition: opacity ease-in-out 0.4s;
+}
+.redAnimation {
+	animation: red 0.2s linear;
+}
+@keyframes red {
+	0% {
+		color: black;
+		font-size: 16px;
+	}
+	50% {
+		color: red;
+		font-size: 20px;
+	}
+	100% {
+		color: black;
+		font-size: 16px;
+	}
+}
+.instruction {
+	color: darkgray;
+}
+.movieGrid {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-auto-rows: auto auto;
+	grid-template-areas:
+		'img title'
+		'img desc';
+}
+.moviePoster {
+	grid-area: img;
+	height: 200px;
+	width: auto;
+}
+.movieOverview {
+	grid-area: desc;
+	line-height: 15px;
+	height: 30px;
+	overflow: hidden;
+}
+.movieTitle {
+	grid-area: title;
+}

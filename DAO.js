@@ -1,22 +1,22 @@
 'use strict';
 const mysql = require('mysql2/promise');
-// const mysql = require('mysql');
 
-class Database {
+class DAO {
 	constructor() {
 		this.connection;
-		this.connect();
 	}
 
 	connect = async () => {
-		this.connection = await mysql.createConnection({
+		this.connection = await mysql.createPool({
 			// socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
 			host: 'ID276017_cinematjes.db.webhosting.be',
 			user: 'ID276017_cinematjes',
 			password: 'cinematjes-19',
-			database: 'ID276017_cinematjes'
+			database: 'ID276017_cinematjes',
+			connectionLimit: 10,
+			queueLimit: 0
 		});
-		console.log('Database connectie...');
+		console.log('db connected..');
 	};
 
 	getAll = async () => {
@@ -24,11 +24,9 @@ class Database {
 		return await result;
 	};
 
-	setAll = async data => {
-		console.log(data);
-		const sql = 'INSERT INTO `test-table` VALUES(?, ?, ?)';
-		this.connection.execute(sql, [data.id, data.psId, data.movieId]);
-		// this.getAll();
+	disconnect = () => {
+		console.log('close connection');
+		this.connection.end();
 	};
 }
 
@@ -38,4 +36,4 @@ class Database {
 //   // before sending a COM_QUIT packet to the MySQL server.
 // });
 
-module.exports = Database;
+module.exports = DAO;
