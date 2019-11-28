@@ -3,4 +3,6 @@
 	color: white;
 	padding: 5px;
 	cursor: pointer;
+	margin-bottom: 15px;
+	width: min-content;
 }

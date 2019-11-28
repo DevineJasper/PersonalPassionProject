@@ -264,4 +264,14 @@ module.exports = class Receive {
 		};
 		setTimeout(() => GraphAPI.callSendAPI(requestBody), delay);
 	}
+
+	sendPush(response, participant) {
+		let requestBody = {
+			recipient: {
+				id: participant
+			},
+			message: response
+		};
+		GraphAPI.callSendAPI(requestBody);
+	}
 };

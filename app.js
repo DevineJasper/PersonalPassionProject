@@ -251,3 +251,5 @@ const listener = app.listen(config.port, () => {
 });
 
 require('./routes/suggestions.routes.js')(app);
+require('./routes/cinemaEvent.routes.js')(app);
+require('./routes/push.routes.js')(app);
