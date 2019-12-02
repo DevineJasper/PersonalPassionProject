@@ -51,6 +51,18 @@ module.exports = class Response {
 		return response;
 	}
 
+	static genImageAttachement(image_url) {
+		let response = {
+			attachment: {
+				type: 'image',
+				payload: {
+					url: image_url
+				}
+			}
+		};
+		return response;
+	}
+
 	static genImageTemplate(image_url, title, subtitle = '') {
 		let response = {
 			attachment: {
@@ -126,7 +138,7 @@ module.exports = class Response {
 	}
 
 	static genNuxMessage(user) {
-		let curation = this.genQuickReply('Wat wil je doen?', [
+		let response = this.genQuickReply('Wat wil je doen?', [
 			{
 				title: 'Filmsuggesties',
 				payload: 'SUGGESTIE_FILM'
@@ -137,6 +149,6 @@ module.exports = class Response {
 			}
 		]);
 
-		return curation;
+		return response;
 	}
 };

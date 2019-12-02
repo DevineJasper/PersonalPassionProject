@@ -1,50 +1,120 @@
 console.log('hey admin');
-const $plus = document.querySelector('.plus');
-const $min = document.querySelector('.min');
-let fase = 1;
+const url = document.querySelector('.url').innerHTML;
+let currentPhase;
+let vrijwilligers = [];
 
-const handlePlusClick = () => {
-	// fase++;
-	const data = {
-		payload: 'REMINDER',
-		phase: 1
+const handleResetClick = async () => {
+	currentPhase = 1;
+	const eventBody = {
+		eventPhase: currentPhase
 	};
-	// update(`https://pink-mule-87.localtunnel.me/cinemaEvent`, data);
-	push(`https://pink-mule-87.localtunnel.me/webhook/push`, data);
-};
-
-const push = (url, data) => {
-	fetch(url, getOptions('post', data));
-};
-
-const handleMinClick = () => {
-	fase--;
-	const data = {
-		fase: fase
+	const pushMessage = {
+		payload: 'GET_STARTED',
+		phase: currentPhase
 	};
-	update(`https://pink-mule-87.localtunnel.me/cinemaEvent`, data);
+	updateEventPhase(eventBody);
+	postMessage(pushMessage);
 };
 
-const update = (url, data) => {
-	fetch(url, getOptions('put', data));
+const updateEventPhase = async eventBody => {
+	await update(`${url}/cinemaEvent/phase`, eventBody);
+	renderPhase();
 };
 
-const getOptions = (method, body = null) => {
-	const options = {
-		method: method.toUpperCase(),
-		headers: {
-			'content-type': `application/json`
-		}
-	};
-	if (body) {
-		options.body = JSON.stringify(body);
+const postMessage = async pushMessage => {
+	if ('participantsPhase' in pushMessage) {
+		console.log('zit een fase in');
+	} else {
+		let finalRecipients = [];
+		await get(`${url}/participants`).then(r => {
+			r.forEach(participant => {
+				finalRecipients.push(participant);
+			});
+		});
+		const finalMessage = {
+			payload: pushMessage.payload,
+			recipients: finalRecipients,
+			phase: pushMessage.phase
+		};
+		console.log(finalMessage);
+		await post(`${url}/admin/push`, finalMessage);
 	}
-	return options;
 };
 
-init = () => {
+const handlePlusClick = async () => {
+	currentPhase++;
+	const eventBody = {
+		eventPhase: currentPhase
+	};
+	const pushMessage = {
+		payload: 'GET_STARTED',
+		phase: currentPhase
+	};
+	updateEventPhase(eventBody);
+	postMessage(pushMessage);
+};
+
+const handleMinClick = async () => {
+	currentPhase--;
+	const eventBody = {
+		eventPhase: currentPhase
+	};
+	const pushMessage = {
+		payload: 'GET_STARTED',
+		phase: currentPhase
+	};
+	updateEventPhase(eventBody);
+	postMessage(pushMessage);
+};
+
+// const getEventPhase = async () => {
+// 	await get(`${url}/cinemaEvent/phase`).then(data => (currentPhase = data));
+// 	renderFase(currentPhase);
+// };
+
+const renderPhase = () => {
+	document.querySelector('.fase').innerHTML = currentPhase;
+};
+
+const fetchVrijwilligers = async () => {
+	await get(`${url}/participants/vrijwilligers`).then(r => {
+		r.forEach(volunteer => {
+			vrijwilligers.push(volunteer);
+		});
+	});
+	renderVrijwilligers();
+};
+
+const renderVrijwilligers = () => {
+	vrijwilligers.forEach(vrijwilliger => {
+		const $newLi = document.createElement('li');
+		const $firstName = document.createElement('p');
+		const $lastName = document.createElement('p');
+
+		$firstName.innerHTML = vrijwilliger.firstName;
+		$lastName.innerHTML = vrijwilliger.lastName;
+
+		$newLi.appendChild($firstName);
+		$newLi.appendChild($lastName);
+
+		document.querySelector('.vrijwilligersLijst').appendChild($newLi);
+	});
+};
+
+const init = () => {
+	//fetch stuff
+	fetchVrijwilligers();
+	//select stuff
+	currentPhase = document.querySelector('.fase').innerHTML;
+	const $plus = document.querySelector('.plus');
+	const $min = document.querySelector('.min');
+	const $reset = document.querySelector('.reset');
+	const $reload = document.querySelector('.reload');
+	//event listeners
 	$plus.addEventListener('click', handlePlusClick);
 	$min.addEventListener('click', handleMinClick);
+	$reset.addEventListener('click', handleResetClick);
+	$reload.addEventListener('click', fetchVrijwilligers);
 };
 
 init();

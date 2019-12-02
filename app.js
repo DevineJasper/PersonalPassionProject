@@ -3,43 +3,87 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const request = require('request');
 require('dotenv').config();
+//Controllers
+const CinemaEventController = require('./controllers/CinemaEventController');
+const ParticipantsController = require('./controllers/ParticipantsController');
 
-app.use(morgan('short'));
+const AdminController = require('./controllers/AdminController');
+
 app.use(cors());
+app.use(morgan('short'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
-const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+let projectPhase;
 
 app.get('/', (req, res) => {
-	res.render(__dirname + '/views/index');
+	res.render(__dirname + '/views/index', { url: config.appUrl });
 });
 
 app.get('/admin', (req, res) => {
-	res.render(__dirname + '/views/admin');
+	res.render(__dirname + '/views/admin', {
+		url: config.appUrl,
+		projectFase: projectPhase
+	});
 });
 
-// app.get('/api/test', async (req, res) => {
-// 	const tests = await db.getAll();
-// 	await console.log(tests);
-// 	res.json(tests);
-// });
+app.get('/suggesties/films', (req, res) => {
+	res.render(__dirname + '/views/suggesties/films', { url: config.appUrl });
+});
 
-// app.post('/api/test', async (req, res) => {
-// 	const test = await {
-// 		id: '',
-// 		psId: req.body.psId,
-// 		movieId: req.body.movieId
-// 	};
-// 	await db.setAll(test);
-// 	res.status(201).json({
-// 		message: 'post test...',
-// 		entry: test
-// 	});
-// });
+app.get('/suggesties/snacks', (req, res) => {
+	res.render(__dirname + '/views/suggesties/snacks', { url: config.appUrl });
+});
+
+app.get('/suggesties/drinks', (req, res) => {
+	res.render(__dirname + '/views/suggesties/drinks', { url: config.appUrl });
+});
+
+app.get('/suggesties/themas', (req, res) => {
+	res.render(__dirname + '/views/suggesties/themas', { url: config.appUrl });
+});
+
+app.get('/stemming', (req, res) => {
+	res.render(__dirname + '/views/stemming', { url: config.appUrl });
+});
+
+app.put('/cinemaEvent/phase', (req, res) => {
+	// console.log(req.body.eventPhase);
+	projectPhase = req.body.eventPhase;
+	CinemaEventController.setEventPhase(projectPhase);
+	res.status(201).json(projectPhase);
+});
+
+app.get('/cinemaEvent/phase', async (req, res) => {
+	projectPhase = await CinemaEventController.getEventPhase();
+	res.json(projectPhase);
+});
+
+app.post('/admin/push', (req, res) => {
+	const recipients = req.body.recipients;
+	const payload = req.body.payload;
+	const phase = req.body.phase;
+	recipients.forEach(recipient => {
+		AdminController.handlePayload(payload, recipient, phase);
+	});
+	res.json({
+		message: 'Goed gepost!'
+	});
+});
+
+app.get('/participants', async (req, res) => {
+	const participants = await ParticipantsController.getUsers();
+	res.json(participants);
+});
+
+app.get('/participants/vrijwilligers', async (req, res) => {
+	const vrijwilligers = await ParticipantsController.getVolunteers();
+	res.json(vrijwilligers);
+});
 
 // -------------------------------------------------------- //
 // -------------------------------------------------------- //
@@ -52,7 +96,7 @@ const User = require('./services/user');
 const Receive = require('./services/receive');
 const config = require('./services/config');
 
-let users = [];
+let participants = [];
 
 app.use(bodyParser.json({ verify: verifyRequestSignature }));
 
@@ -68,7 +112,7 @@ app.get('/webhook', (req, res) => {
 		// Checks the mode and token sent is correct
 		if (mode === 'subscribe' && token === config.verifyToken) {
 			// Responds with the challenge token from the request
-			console.log('WEBHOOK_VERIFIED');
+			// console.log('WEBHOOK_VERIFIED');
 			res.status(200).send(challenge);
 		} else {
 			// Responds with '403 Forbidden' if verify tokens do not match
@@ -82,8 +126,8 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 	// Parse the request body from the POST
 	let body = req.body;
-	console.log('DEZE BODY MOET IK ZENDEN VIA FETCH');
-	console.log(body);
+	// console.log('DEZE BODY MOET IK ZENDEN VIA FETCH');
+	// console.log(body);
 
 	// Check the webhook event is from a Page subscription
 	if (body.object === 'page') {
@@ -92,8 +136,8 @@ app.post('/webhook', (req, res) => {
 			// Get the webhook event. entry.messaging is an array, but
 			// will only ever contain one event, so we get index 0
 			let webhookEvent = entry.messaging[0];
-			console.log('!!!!!!!!!!!!!!! DIT IS HET WEBHOOKEVENT IN DE APP.POST:');
-			console.log(webhookEvent);
+			// console.log('!!!!!!!!!!!!!!! DIT IS HET WEBHOOKEVENT IN DE APP.POST:');
+			// console.log(webhookEvent);
 
 			// Get the sender PSID
 			let senderPsid = webhookEvent.sender.id;
@@ -110,9 +154,9 @@ app.post('/webhook', (req, res) => {
 				return;
 			}
 
-			if (!(senderPsid in users)) {
+			if (!(senderPsid in participants)) {
+				console.log(`we got a new user: ${senderPsid}`);
 				let user = new User(senderPsid);
-
 				GraphAPI.getUserProfile(senderPsid)
 					.then(userProfile => {
 						user.setProfile(userProfile);
@@ -122,14 +166,23 @@ app.post('/webhook', (req, res) => {
 						console.log('Profile is unavailable:', error);
 					})
 					.finally(() => {
-						users[senderPsid] = user;
+						participants[senderPsid] = user;
+						ParticipantsController.setUser(user);
 						// console.log('New Profile PSID:', senderPsid);
-						let receiveMessage = new Receive(users[senderPsid], webhookEvent);
+						let receiveMessage = new Receive(
+							participants[senderPsid],
+							webhookEvent,
+							projectPhase
+						);
 						return receiveMessage.handleMessage();
 					});
 			} else {
-				// console.log('Profile already exists PSID:', senderPsid);
-				let receiveMessage = new Receive(users[senderPsid], webhookEvent);
+				console.log('Profile already exists PSID:', senderPsid);
+				let receiveMessage = new Receive(
+					participants[senderPsid],
+					webhookEvent,
+					projectPhase
+				);
 				return receiveMessage.handleMessage();
 			}
 		});
@@ -180,18 +233,18 @@ app.get('/profile', (req, res) => {
 			// 	res.write(`<li>PERSONA_SALES = ${config.personaSales.id}</li>`);
 			// 	res.write('</ul>');
 			// }
-			if (mode == 'nlp' || mode == 'all') {
-				GraphAPI.callNLPConfigsAPI();
-				res.write(`<p>Enable Built-in NLP for Page ${config.pageId}</p>`);
-			}
+			// if (mode == 'nlp' || mode == 'all') {
+			// 	GraphAPI.callNLPConfigsAPI();
+			// 	res.write(`<p>Enable Built-in NLP for Page ${config.pageId}</p>`);
+			// }
 			if (mode == 'domains' || mode == 'all') {
 				Profile.setWhitelistedDomains();
 				res.write(`<p>Whitelisting domains: ${config.whitelistedDomains}</p>`);
 			}
-			if (mode == 'private-reply') {
-				Profile.setPageFeedWebhook();
-				res.write(`<p>Set Page Feed Webhook for Private Replies.</p>`);
-			}
+			// if (mode == 'private-reply') {
+			// 	Profile.setPageFeedWebhook();
+			// 	res.write(`<p>Set Page Feed Webhook for Private Replies.</p>`);
+			// }
 			res.status(200).end();
 		} else {
 			// Responds with '403 Forbidden' if verify tokens do not match
@@ -226,7 +279,21 @@ function verifyRequestSignature(req, res, buf) {
 config.checkEnvVariables();
 
 // listen for requests :)
-const listener = app.listen(config.port, () => {
+const listener = app.listen(config.port, async () => {
+	users = await ParticipantsController.getUsers();
+	users.forEach(participant => {
+		const profile = {
+			firstName: participant.firstName,
+			lastName: participant.lastName,
+			phase: participant.fase,
+			volunteer: participant.vrijwilliger
+		};
+		let user = new User(participant.psid);
+		user.setProfile(profile);
+		participants[user.psid] = user;
+	});
+	projectPhase = await CinemaEventController.getEventPhase();
+	console.log(`project is in fase ${projectPhase}`);
 	console.log('Your app is listening on port ' + listener.address().port);
 
 	if (
@@ -251,5 +318,5 @@ const listener = app.listen(config.port, () => {
 });
 
 require('./routes/suggestions.routes.js')(app);
-require('./routes/cinemaEvent.routes.js')(app);
-require('./routes/push.routes.js')(app);
+// require('./routes/cinemaEvent.routes.js')(app);
+// require('./routes/adminRoutes.js')(app);

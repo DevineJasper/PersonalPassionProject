@@ -4,11 +4,13 @@ let currentSuggestions = [];
 let user;
 let amountSuggestions = 0;
 let userSuggestionsDb = false;
-let originalSuggestions = [];
+let newSuggestions = [];
 let removedSuggestions = [];
 
 const $ul = document.querySelector('.list');
 const $suggestionsUl = document.querySelector('.currentSuggestions');
+
+const url = document.querySelector('.url').innerHTML;
 
 //messenger extensions js SDK
 const loadMessengerSDK = (d, s, id) => {
@@ -45,24 +47,17 @@ window.extAsyncInit = function() {
 
 //AJAX API
 const getUserSuggestions = user => {
-	const userSuggestions = fetch(
-		`https://pink-mule-87.localtunnel.me/suggestions/movies/${user}`,
-		getOptions('get')
-	)
-		.then(r => r.json())
-		.then(data => {
-			if (data.suggestions.length == 0) {
-				document.querySelector('.zoek').classList.remove('hidden');
-				$ul.classList.remove('hidden');
-			} else {
-				userSuggestionsDb = true;
-				console.log(userSuggestionsDb);
-				data.suggestions.forEach(movieId => {
-					originalSuggestions.push(movieId);
-					addUserSuggestions(movieId);
-				});
-			}
-		});
+	get(`${url}/suggestions/movies/${user}`).then(r => {
+		if (r.length == 0) {
+			document.querySelector('.zoek').classList.remove('hidden');
+			$ul.classList.remove('hidden');
+		} else {
+			userSuggestionsDb = true;
+			r.forEach(object => {
+				addUserSuggestions(object.movieId);
+			});
+		}
+	});
 };
 
 const addUserSuggestions = async movieId => {
@@ -80,9 +75,7 @@ const addUserSuggestions = async movieId => {
 };
 
 const fetchAll = url => {
-	fetch(url)
-		.then(r => r.json())
-		.then(data => addMovies(data));
+	get(url).then(data => addMovies(data));
 };
 
 const addMovies = data => {
@@ -116,7 +109,7 @@ const renderList = () => {
 			const poster = row.poster_path;
 			$newImg.src = `https://image.tmdb.org/t/p/w185/${poster}`;
 		} else {
-			$newImg.src = `../backdrop_poster.png`;
+			$newImg.src = `../assets/images/backdrop_poster.png`;
 		}
 		const id = row.id;
 
@@ -160,11 +153,13 @@ const handleAdd = async e => {
 		});
 		if (objectInArray === false) {
 			currentSuggestions.push(movieObject);
+			newSuggestions.push(movieObject);
 			console.log(currentSuggestions);
 			renderSuggestions();
 		}
 	} else if (amountSuggestions == 0) {
 		currentSuggestions.push(movieObject);
+		newSuggestions.push(movieObject);
 		console.log(currentSuggestions);
 		renderSuggestions();
 	} else {
@@ -241,42 +236,24 @@ const handleSuggestionsClick = e => {
 };
 
 const handleSubmit = e => {
-	let currentSuggestionsId = [];
-	currentSuggestions.forEach(suggestion => {
-		currentSuggestionsId.push(suggestion.id);
+	let suggestionsToAdd = [];
+	newSuggestions.forEach(suggestion => {
+		suggestionsToAdd.push({ movieId: suggestion.id, psid: user });
 	});
 	if (userSuggestionsDb) {
 		if (removedSuggestions.length > 0) {
 			const toRemove = {
-				psId: user,
+				psid: user,
 				movieId: removedSuggestions
 			};
-			remove(
-				`https://pink-mule-87.localtunnel.me/suggestions/movies/${user}`,
-				toRemove
-			);
+			remove(`${url}/suggestions/movies/${user}`, toRemove);
 		}
-		const updateSuggestions = {
-			psId: user,
-			original: originalSuggestions,
-			new: currentSuggestionsId
-		};
-		update(
-			`https://pink-mule-87.localtunnel.me/suggestions/movies/${user}`,
-			updateSuggestions
-		);
-	} else {
-		currentSuggestionsId.forEach(id => {
-			const movieSuggestion = {
-				psId: user,
-				movieId: id
-			};
-			create(
-				`https://pink-mule-87.localtunnel.me/suggestions/movies/${user}`,
-				movieSuggestion
-			);
-		});
 	}
+	const toPost = {
+		movies: suggestionsToAdd
+	};
+	post(`${url}/suggestions/movies/${user}`, toPost);
+
 	const $submit = document.querySelector('.submit');
 	$submit.innerHTML = 'Verzonden!';
 	MessengerExtensions.requestCloseBrowser(
@@ -286,31 +263,6 @@ const handleSubmit = e => {
 		(error = err => {})
 	);
 	// redirect('http://pink-mule-87.localtunnel.me/webhook');
-};
-
-const remove = (url, data) => {
-	fetch(url, getOptions('delete', data));
-};
-
-const update = (url, data) => {
-	fetch(url, getOptions('put', data));
-};
-
-const create = (url, data) => {
-	fetch(url, getOptions('post', data));
-};
-
-const getOptions = (method, body = null) => {
-	const options = {
-		method: method.toUpperCase(),
-		headers: {
-			'content-type': `application/json`
-		}
-	};
-	if (body) {
-		options.body = JSON.stringify(body);
-	}
-	return options;
 };
 
 const higherBottom = () => {

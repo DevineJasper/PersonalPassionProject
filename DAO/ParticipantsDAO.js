@@ -1,13 +1,17 @@
 const DAO = require('./dao');
 const knex = require('knex')(DAO);
+const User = require('../services/user');
+const GraphAPI = require('../services/graph-api');
 
 module.exports = class ParticipantsDAO {
-	static setEvent = async data => {
-		console.log('in dao');
-		const edit = { fase: data.fase };
-		await knex(`CinemaEvent`)
-			.where({ id: 1 })
-			.update(edit);
+	static setUser = async user => {
+		await knex.from(`Participants`).insert({
+			psId: user.psid,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			fase: 0,
+			vrijwilliger: 0
+		});
 	};
 
 	static getPhase = async phase => {
@@ -22,5 +26,48 @@ module.exports = class ParticipantsDAO {
 				})
 			);
 		return result;
+	};
+
+	static getAll = async () => {
+		let result = [];
+		await knex
+			.from(`Participants`)
+			.select(`*`)
+			.then(r => (result = r));
+		return result;
+	};
+
+	static setVolunteer = async id => {
+		await knex
+			.from(`Participants`)
+			.update({ vrijwilliger: 1 })
+			.where({ psId: id });
+	};
+
+	static getVolunteers = async () => {
+		let volunteers;
+		await knex
+			.from(`Participants`)
+			.select('*')
+			.where({ vrijwilliger: 1 })
+			.then(r => {
+				volunteers = r;
+			});
+		return await volunteers;
+	};
+
+	static getUserProfile = async data => {
+		// console.log(data);
+		let user = new User(data);
+		GraphAPI.getUserProfile(data)
+			.then(userProfile => {
+				user.setProfile(userProfile);
+			})
+			.catch(error => {
+				console.log('Profile is unavailable:', error);
+			})
+			.finally(() => {
+				return user;
+			});
 	};
 };

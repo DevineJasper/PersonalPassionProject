@@ -8,9 +8,16 @@
 		<title>Cinematjes organisatie</title>
 	</head>
 	<body>
-		<h1>Hello, organisator!</h1>
-		<div class="plus click">Plus</div>
-		<div class="min click">Min</div>
+		<p class="url" hidden><%= url %></p>
+		<h1 hidden>Organisatie</h1>
+		<p>Fase van het project: <span class="fase"><%= projectFase %></span></p>
+		<div class="reset click">Reset</div>
+		<div class="plus click">+ Fase</div>
+		<div class="min click">- Fase</div>
+		<h2>Vrijwilligers</h2>
+		<div class="reload">🔄</div>
+		<ul class="vrijwilligersLijst"></ul>
+		<script src="./js/api.js"></script>
 		<script src="./js/admin.js"></script>
 	</body>
 </html>
