@@ -14,7 +14,8 @@ const $suggestionsUl = document.querySelector('.currentSuggestions');
 const url = document.querySelector('.url').innerHTML;
 
 //messenger extensions js SDK
-const loadMessengerSDK = (d, s, id) => {
+function loadMessengerSDK(d, s, id) {
+	console.log('Messenger SDK inladen: INIT');
 	let js;
 	const fjs = d.getElementsByTagName(s)[0];
 	if (d.getElementById(id)) {
@@ -24,9 +25,10 @@ const loadMessengerSDK = (d, s, id) => {
 	js.id = id;
 	js.src = '//connect.facebook.net/en_US/messenger.Extensions.js';
 	fjs.parentNode.insertBefore(js, fjs);
-};
+}
 
 window.extAsyncInit = function() {
+	console.log('Messenger SDK inladen: COMPLETED');
 	MessengerExtensions.getContext(
 		674330989637338,
 		function success(thread_context) {
@@ -35,6 +37,7 @@ window.extAsyncInit = function() {
 			getUserSuggestions(user);
 		},
 		function error(err) {
+			console.log('Kan facebook profiel niet bereiken');
 			const link = document.createElement('a');
 			link.innerHTML = 'https://www.facebook.com/messages/t/cinematjes';
 			link.href = 'https://www.facebook.com/messages/t/cinematjes';
