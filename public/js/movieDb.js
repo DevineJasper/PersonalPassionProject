@@ -23,7 +23,7 @@ function loadMessengerSDK(d, s, id) {
 	}
 	js = d.createElement(s);
 	js.id = id;
-	js.src = '//connect.facebook.net/en_US/messenger.Extensions.js';
+	js.src = './messenger.Extensions.js';
 	fjs.parentNode.insertBefore(js, fjs);
 }
 
