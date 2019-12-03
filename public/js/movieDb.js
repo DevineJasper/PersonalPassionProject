@@ -6,6 +6,7 @@ let amountSuggestions = 0;
 let userSuggestionsDb = false;
 let newSuggestions = [];
 let removedSuggestions = [];
+let originalSuggestions = [];
 
 const $ul = document.querySelector('.list');
 const $suggestionsUl = document.querySelector('.currentSuggestions');
@@ -54,6 +55,7 @@ const getUserSuggestions = user => {
 		} else {
 			userSuggestionsDb = true;
 			r.forEach(object => {
+				originalSuggestions.push(object.movieId);
 				addUserSuggestions(object.movieId);
 			});
 		}
@@ -204,6 +206,12 @@ const renderSuggestions = () => {
 const removeSuggestion = suggestion => {
 	removedSuggestions.push(suggestion.id);
 	console.log(removedSuggestions);
+	newSuggestions.forEach(movie => {
+		if (movie.id === suggestion.id) {
+			newSuggestions.splice(newSuggestions.indexOf(movie), 1);
+			removedSuggestions.splice(removedSuggestions.indexOf(movie), 1);
+		}
+	});
 	currentSuggestions.forEach(movie => {
 		if (movie.id === suggestion.id) {
 			currentSuggestions.splice(currentSuggestions.indexOf(movie), 1);
@@ -235,24 +243,27 @@ const handleSuggestionsClick = e => {
 	document.querySelector('.searchContainer').classList.toggle('transparant');
 };
 
-const handleSubmit = e => {
+const handleSubmit = async () => {
 	let suggestionsToAdd = [];
 	newSuggestions.forEach(suggestion => {
 		suggestionsToAdd.push({ movieId: suggestion.id, psid: user });
 	});
+	console.log(suggestionsToAdd);
 	if (userSuggestionsDb) {
 		if (removedSuggestions.length > 0) {
 			const toRemove = {
 				psid: user,
 				movieId: removedSuggestions
 			};
-			remove(`${url}/suggestions/movies/${user}`, toRemove);
+			await remove(`${url}/suggestions/movies/${user}`, toRemove);
 		}
 	}
-	const toPost = {
-		movies: suggestionsToAdd
-	};
-	post(`${url}/suggestions/movies/${user}`, toPost);
+	if (suggestionsToAdd.length > 0) {
+		const toPost = {
+			movies: suggestionsToAdd
+		};
+		await post(`${url}/suggestions/movies/${user}`, toPost);
+	}
 
 	const $submit = document.querySelector('.submit');
 	$submit.innerHTML = 'Verzonden!';

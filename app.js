@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const request = require('request');
 require('dotenv').config();
+//database connection
+const DAO = require('./DAO/dao');
+const knex = require('knex')(DAO);
 //Controllers
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
