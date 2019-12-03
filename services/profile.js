@@ -2,9 +2,7 @@
 
 // Imports dependencies
 const GraphAPI = require('./graph-api'),
-	// i18n = require('../i18n.config'),
 	config = require('./config');
-// locales = i18n.getLocales();
 
 module.exports = class Profile {
 	setWebhook() {
