@@ -34,25 +34,37 @@ app.get('/admin', (req, res) => {
 	});
 });
 
-app.get('/suggesties/films', (req, res) => {
-	res.render(__dirname + '/views/suggesties/films', { url: config.appUrl });
-});
+// app.get('/suggesties/films', (req, res) => {
+// 	res.render(__dirname + '/views/suggesties/films', { url: config.appUrl });
+// });
 
-app.get('/suggesties/snacks', (req, res) => {
-	res.render(__dirname + '/views/suggesties/snacks', { url: config.appUrl });
-});
+// app.get('/suggesties/snacks', (req, res) => {
+// 	res.render(__dirname + '/views/suggesties/snacks', { url: config.appUrl });
+// });
 
-app.get('/suggesties/drinks', (req, res) => {
-	res.render(__dirname + '/views/suggesties/drinks', { url: config.appUrl });
-});
+// app.get('/suggesties/drinks', (req, res) => {
+// 	res.render(__dirname + '/views/suggesties/drinks', { url: config.appUrl });
+// });
 
-app.get('/suggesties/themas', (req, res) => {
-	res.render(__dirname + '/views/suggesties/themas', { url: config.appUrl });
-});
+// app.get('/suggesties/themas', (req, res) => {
+// 	res.render(__dirname + '/views/suggesties/themas', { url: config.appUrl });
+// });
 
-app.get('/stemming', (req, res) => {
-	res.render(__dirname + '/views/stemming', { url: config.appUrl });
-});
+// app.get('/stemming/films', (req, res) => {
+// 	res.render(__dirname + '/views/stemming/films', { url: config.appUrl });
+// });
+
+// app.get('/stemming/drinks', (req, res) => {
+// 	res.render(__dirname + '/views/stemming/drinks', { url: config.appUrl });
+// });
+
+// app.get('/stemming/snacks', (req, res) => {
+// 	res.render(__dirname + '/views/stemming/snacks', { url: config.appUrl });
+// });
+
+// app.get('/stemming/themas', (req, res) => {
+// 	res.render(__dirname + '/views/stemming/themas', { url: config.appUrl });
+// });
 
 app.put('/cinemaEvent/phase', (req, res) => {
 	// console.log(req.body.eventPhase);
@@ -66,27 +78,27 @@ app.get('/cinemaEvent/phase', async (req, res) => {
 	res.json(projectPhase);
 });
 
-app.post('/admin/push', (req, res) => {
-	const recipients = req.body.recipients;
-	const payload = req.body.payload;
-	const phase = req.body.phase;
-	recipients.forEach(recipient => {
-		AdminController.handlePayload(payload, recipient, phase);
-	});
-	res.json({
-		message: 'Goed gepost!'
-	});
-});
+// app.post('/admin/push', (req, res) => {
+// 	const recipients = req.body.recipients;
+// 	const payload = req.body.payload;
+// 	const phase = req.body.phase;
+// 	recipients.forEach(recipient => {
+// 		AdminController.handlePayload(payload, recipient, phase);
+// 	});
+// 	res.json({
+// 		message: 'Goed gepost!'
+// 	});
+// });
 
-app.get('/participants', async (req, res) => {
-	const participants = await ParticipantsController.getUsers();
-	res.json(participants);
-});
+// app.get('/participants', async (req, res) => {
+// 	const participants = await ParticipantsController.getUsers();
+// 	res.json(participants);
+// });
 
-app.get('/participants/vrijwilligers', async (req, res) => {
-	const vrijwilligers = await ParticipantsController.getVolunteers();
-	res.json(vrijwilligers);
-});
+// app.get('/participants/vrijwilligers', async (req, res) => {
+// 	const vrijwilligers = await ParticipantsController.getVolunteers();
+// 	res.json(vrijwilligers);
+// });
 
 // -------------------------------------------------------- //
 // -------------------------------------------------------- //
@@ -320,6 +332,8 @@ const listener = app.listen(config.port, async () => {
 	}
 });
 
-require('./routes/suggestions.routes.js')(app);
+require('./routes/suggestieRoutes.js')(app);
+require('./routes/stemmingRoutes.js')(app);
 // require('./routes/cinemaEvent.routes.js')(app);
-// require('./routes/adminRoutes.js')(app);
+require('./routes/adminRoutes.js')(app);
+require('./routes/participantRoutes.js')(app);

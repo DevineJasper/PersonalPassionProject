@@ -1,0 +1,17 @@
+.nav-bg {
+	background-color: black;
+}
+
+.nav-container {
+	list-style: none;
+	display: flex;
+	width: 100%;
+	padding: 1rem 0 1rem 0;
+	justify-content: space-around;
+}
+
+.nav-item {
+	color: white;
+	cursor: pointer;
+	font-size: 2rem;
+}

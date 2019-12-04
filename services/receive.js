@@ -81,7 +81,7 @@ module.exports = class Receive {
 		console.log(message);
 
 		if (message.includes('hey' || 'hallo' || 'hi' || 'yeet')) {
-			let response = Response.genText('Hey ;)');
+			response = Response.genText('Hey ;)');
 		} else {
 			if (this.projectPhase === 1) {
 				let suggestie = new Suggestie(this.user, this.webhookevent);
