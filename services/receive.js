@@ -10,17 +10,13 @@
 
 'use strict';
 
-const /* Curation = require('./curation'), */
-	// Order = require('./order'),
-	Response = require('./response'),
-	// Care = require("./care"),
-	// Survey = require("./survey"),
+const Response = require('./response'),
 	Suggestie = require('./suggestie'),
 	Stemming = require('./stemming'),
+	Wachten = require('./wachten'),
 	Final = require('./final'),
 	GraphAPI = require('./graph-api'),
 	User = require('./user'),
-	// ParticipantsController = require('../controllers/ParticipantsController'),
 	config = require('./config');
 
 module.exports = class Receive {
@@ -83,7 +79,10 @@ module.exports = class Receive {
 		if (message.includes('hey' || 'hallo' || 'hi' || 'yeet')) {
 			response = Response.genText('Hey ;)');
 		} else {
-			if (this.projectPhase === 1) {
+			if (this.projectPhase === 0) {
+				let wachten = new Wachten(this.user, this.webhookEvent);
+				response = wachten.genFirstWachten(this.user);
+			} else if (this.projectPhase === 1) {
 				let suggestie = new Suggestie(this.user, this.webhookevent);
 				response = suggestie.genFirstSuggestie(this.user);
 			} else if (this.projectPhase === 2) {
@@ -91,7 +90,7 @@ module.exports = class Receive {
 				response = stemming.genFirstStemming(this.user);
 			} else if (this.projectPhase === 3) {
 				let final = new Final(this.user, this.webhookevent);
-				respone = final.genFirstFinal(this.user);
+				response = final.genFirstFinal(this.user);
 			}
 		}
 
@@ -179,7 +178,10 @@ module.exports = class Receive {
 
 		// Set the response based on the payload
 		if (payload === 'GET_STARTED') {
-			if (this.projectPhase === 1) {
+			if (this.projectPhase === 0) {
+				let wachten = new Wachten(this.user, this.webhookEvent);
+				response = wachten.genFirstWachten(this.user);
+			} else if (this.projectPhase === 1) {
 				let suggestie = new Suggestie(this.user, this.webhookevent);
 				response = suggestie.genFirstSuggestie(this.user);
 			} else if (this.projectPhase === 2) {
@@ -195,6 +197,9 @@ module.exports = class Receive {
 		} else if (payload.includes('STEMMING')) {
 			let stemming = new Stemming(this.user, this.webhookevent);
 			response = stemming.handlePayload(payload);
+		} else if (payload.includes('WACHTEN')) {
+			let wachten = new Wachten(this.user, this.webhookevent);
+			response = wachten.handlePayload(payload);
 		}
 
 		return response;
@@ -224,7 +229,10 @@ module.exports = class Receive {
 
 		switch (payload) {
 			case 'GET_STARTED':
-				if (this.projectPhase === 1) {
+				if (this.projectPhase === 0) {
+					let wachten = new Wachten(this.user, null);
+					responses = wachten.genFirstWachten(this.user);
+				} else if (this.projectPhase === 1) {
 					console.log('we willen naar fase 1');
 					let suggestie = new Suggestie(this.user, null);
 					responses = suggestie.genFirstSuggestie();

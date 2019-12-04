@@ -9,3 +9,19 @@ html {
 	height: 100%;
 	font-family: 'Comic Sans', 'Helvetica', 'Arial', sans-serif;
 }
+
+.content-wrapper {
+	width: 96rem;
+	margin: 0 auto;
+}
+
+.subtitle {
+	font-size: 1.8rem;
+}
+
+.fase {
+	font-size: 2rem;
+	font-weight: bold;
+	text-transform: uppercase;
+	line-height: 3rem;
+}

@@ -79,7 +79,7 @@ module.exports = class Suggestie {
 				]);
 				break;
 			case 'SUGGESTIE_HELPEN':
-				this.addVrijwilliger();
+				ParticipantsController.setVolunteer(this.user.psid);
 				let bedankt = Response.genText(
 					`Bedankt ${this.user.firstName} 🥳 Wij nemen zo snel mogelijk contact met je op!`
 				);
@@ -124,10 +124,6 @@ module.exports = class Suggestie {
 		}
 
 		return response;
-	};
-
-	addVrijwilliger = () => {
-		ParticipantsController.setVolunteer(this.user.psid);
 	};
 
 	genFirstSuggestie = () => {

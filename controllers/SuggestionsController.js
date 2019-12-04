@@ -5,6 +5,11 @@ module.exports = class SuggestionsController {
 		SuggestionsDAO.setMovieSuggestions(movies);
 	};
 
+	static getAllMovieSuggestions = async () => {
+		const userSuggestions = await SuggestionsDAO.getAllMovieSuggestions();
+		return userSuggestions;
+	};
+
 	static getMovieSuggestions = async psid => {
 		const userSuggestions = await SuggestionsDAO.getMovieSuggestions(psid);
 		return userSuggestions;

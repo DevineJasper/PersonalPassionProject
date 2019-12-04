@@ -44,6 +44,13 @@ module.exports = class ParticipantsDAO {
 			.where({ psId: id });
 	};
 
+	static removeVolunteer = async id => {
+		await knex
+			.from(`Participants`)
+			.update({ vrijwilliger: 0 })
+			.where({ psId: id });
+	};
+
 	static getVolunteers = async () => {
 		let volunteers;
 		await knex

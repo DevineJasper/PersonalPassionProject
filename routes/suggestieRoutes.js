@@ -25,6 +25,11 @@ module.exports = app => {
 		});
 	});
 	//API routes
+	app.get('/api/suggestions/movies', async (req, res) => {
+		const userSuggestions = await SuggestionsController.getAllMovieSuggestions();
+		res.json(userSuggestions);
+	});
+
 	app.post('/suggestions/movies/:psid', async (req, res) => {
 		const movies = req.body.movies;
 		const userSuggestions = await SuggestionsController.setMovieSuggestions(

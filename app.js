@@ -8,6 +8,7 @@ require('dotenv').config();
 //database connection
 const DAO = require('./DAO/dao');
 const knex = require('knex')(DAO);
+const compression = require('compression');
 //Controllers
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
@@ -15,6 +16,7 @@ const ParticipantsController = require('./controllers/ParticipantsController');
 const AdminController = require('./controllers/AdminController');
 
 app.use(cors());
+app.use(compression());
 app.use(morgan('short'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
@@ -76,6 +78,11 @@ app.put('/cinemaEvent/phase', (req, res) => {
 app.get('/cinemaEvent/phase', async (req, res) => {
 	projectPhase = await CinemaEventController.getEventPhase();
 	res.json(projectPhase);
+});
+
+app.get('/cinemaEvent/datas', async (req, res) => {
+	const dates = await CinemaEventController.getEventDates();
+	res.json(dates);
 });
 
 // app.post('/admin/push', (req, res) => {
@@ -141,8 +148,8 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', (req, res) => {
 	// Parse the request body from the POST
 	let body = req.body;
-	// console.log('DEZE BODY MOET IK ZENDEN VIA FETCH');
-	// console.log(body);
+	console.log('DEZE BODY MOET IK ZENDEN VIA FETCH');
+	console.log(body);
 
 	// Check the webhook event is from a Page subscription
 	if (body.object === 'page') {

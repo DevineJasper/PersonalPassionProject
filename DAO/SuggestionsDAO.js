@@ -18,6 +18,17 @@ module.exports = class SuggestionsDAO {
 		return await suggestions;
 	};
 
+	static getAllMovieSuggestions = async () => {
+		let suggestions = [];
+		await knex
+			.from(`MovieSuggestions`)
+			.select(`movieId`)
+			.then(r => {
+				suggestions = r;
+			});
+		return suggestions;
+	};
+
 	static removeMovieSuggestions = async (user, movies) => {
 		await knex
 			.from(`MovieSuggestions`)

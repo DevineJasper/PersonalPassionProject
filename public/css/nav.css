@@ -1,3 +1,8 @@
+.projectfase-cont {
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
 .nav-bg {
 	background-color: black;
 }
@@ -13,5 +18,10 @@
 .nav-item {
 	color: white;
 	cursor: pointer;
-	font-size: 2rem;
+	font-size: 1.4rem;
+	text-transform: uppercase;
+}
+
+.nav-item:hover {
+	text-decoration: underline;
 }

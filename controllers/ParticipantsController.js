@@ -21,4 +21,8 @@ module.exports = class ParticipantsController {
 	static setVolunteer = async id => {
 		await ParticipantsDAO.setVolunteer(id);
 	};
+
+	static removeVolunteer = async id => {
+		await ParticipantsDAO.removeVolunteer(id);
+	};
 };
