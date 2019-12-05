@@ -9,6 +9,8 @@ require('dotenv').config();
 const DAO = require('./DAO/dao');
 const knex = require('knex')(DAO);
 const compression = require('compression');
+// const redom = require('redom');
+const nodom = require('nodom');
 //Controllers
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
@@ -30,9 +32,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/admin', (req, res) => {
+	const module = nodom;
 	res.render(__dirname + '/views/admin', {
 		url: config.appUrl,
-		projectFase: projectPhase
+		projectFase: projectPhase,
+		module: nodom
 	});
 });
 

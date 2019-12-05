@@ -73,7 +73,7 @@ const fetchVrijwilligers = async () => {
 	renderVrijwilligers();
 };
 
-getMovieSuggestions = () => {
+const getMovieSuggestions = () => {
 	get(`${url}/api/suggestions/movies`).then(r => {
 		r.forEach(object => {
 			movieSuggestions.push(object.movieId);
@@ -83,7 +83,7 @@ getMovieSuggestions = () => {
 
 //Renderers
 
-renderProjectPhase = () => {
+const renderProjectPhase = () => {
 	console.log(currentPhase);
 	const $fase = document.querySelector('.fase');
 	if (currentPhase == 0) {
