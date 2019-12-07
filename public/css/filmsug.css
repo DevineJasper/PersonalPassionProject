@@ -1,3 +1,5 @@
+@import url('./components/userSuggestionMovie.css');
+
 body {
 	width: 100%;
 	height: 100%;
@@ -26,21 +28,15 @@ li {
 	align-content: center;
 	justify-content: flex-start;
 }
-.zoekContainer {
+.lijstContainer {
 	position: relative;
 	overflow: auto;
-	overflow-x: hidden;
 	display: flex;
 	flex-direction: column;
 	opacity: 1;
 	transition: opacity ease-in-out 0.4s;
 }
-.zoekContainer::-webkit-scrollbar {
-	display: none;
-}
-.zoekContainer {
-	-ms-overflow-style: none;
-}
+
 input[type='text'] {
 	font-size: 16px;
 	border-radius: 0;
@@ -49,10 +45,10 @@ input[type='text'] {
 	line-height: 20px;
 }
 .zoek {
+	position: fixed;
+	top: -0.2rem;
 	width: 100vw;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 30px;
+	padding: 1rem;
 	align-self: center;
 	z-index: 998;
 }
@@ -60,9 +56,9 @@ input[type='text'] {
 	outline: none;
 }
 .list {
+	margin-top: 6rem;
 	position: relative;
 	z-index: 800;
-	padding-inline-start: 16px;
 }
 .submit {
 	display: flex;
@@ -115,12 +111,12 @@ input[type='text'] {
 	position: relative;
 	z-index: 998;
 }
-.currentSuggestions div:first-child {
+/* .currentSuggestions div:first-child {
 	margin-left: 16px;
 }
 .currentSuggestions div:last-child {
 	padding-right: 16px;
-}
+} */
 .suggestionsBtn {
 	cursor: pointer;
 	width: max-content;
@@ -154,18 +150,37 @@ input[type='text'] {
 .instruction {
 	color: darkgray;
 }
+
 .movieGrid {
 	display: grid;
-	grid-template-columns: auto auto;
-	grid-auto-rows: auto auto;
+	margin-bottom: 2rem;
+	grid-template-columns: 1.6rem auto 1fr 1.6rem;
+	grid-auto-rows: auto 1fr auto;
 	grid-template-areas:
-		'img title'
-		'img desc';
+		'. img title .'
+		'. img desc .'
+		'. img buttons .';
 }
+
+.buttons {
+	grid-area: buttons;
+	display: flex;
+}
+
+.add {
+	cursor: pointer;
+	color: black;
+	border: 0.2rem solid black;
+	padding: 1rem;
+}
+
+.info {
+}
+
 .moviePoster {
 	grid-area: img;
-	height: 200px;
-	width: auto;
+	height: 20rem;
+	width: 14.2rem;
 }
 .movieOverview {
 	grid-area: desc;
@@ -175,4 +190,6 @@ input[type='text'] {
 }
 .movieTitle {
 	grid-area: title;
+	font-size: 1.8rem;
+	font-weight: 700;
 }

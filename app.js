@@ -3,18 +3,15 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const request = require('request');
 require('dotenv').config();
 //database connection
-const DAO = require('./DAO/dao');
-const knex = require('knex')(DAO);
 const compression = require('compression');
-// const redom = require('redom');
-const nodom = require('nodom');
+const fetch = require('node-fetch');
+const ejsLint = require('ejs-lint');
 //Controllers
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
-
+const SuggestionsController = require('./controllers/SuggestionsController');
 const AdminController = require('./controllers/AdminController');
 
 app.use(cors());
@@ -26,18 +23,38 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 let projectPhase;
+let images;
 
 app.get('/', (req, res) => {
 	res.render(__dirname + '/views/index', { url: config.appUrl });
 });
 
-app.get('/admin', (req, res) => {
-	const module = nodom;
-	res.render(__dirname + '/views/admin', {
-		url: config.appUrl,
-		projectFase: projectPhase,
-		module: nodom
+app.get('/admin', async (req, res) => {
+	// ejsLint('/views/partials/suggestion_movie', '');
+	movies = [];
+	counter = 0;
+	const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
+	movieSuggestions.forEach(async suggestion => {
+		await fetch(
+			`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+		)
+			.then(r => r.json())
+			.then(data => {
+				movies.push(data);
+				counter++;
+				if (counter === movieSuggestions.length) {
+					console.log(movies);
+					render();
+				}
+			});
 	});
+	render = () => {
+		res.render(__dirname + '/views/admin', {
+			url: config.appUrl,
+			projectFase: projectPhase,
+			suggestions_movie: movies
+		});
+	};
 });
 
 // app.get('/suggesties/films', (req, res) => {

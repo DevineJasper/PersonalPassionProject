@@ -1,8 +1,7 @@
 console.log('movieDb.js');
 let movies = [];
 let currentSuggestions = [];
-let user;
-let amountSuggestions = 0;
+let amountSuggestions = document.querySelector('.suggestionsLength').innerHTML;
 let userSuggestionsDb = false;
 let newSuggestions = [];
 let removedSuggestions = [];
@@ -12,6 +11,7 @@ const $ul = document.querySelector('.list');
 const $suggestionsUl = document.querySelector('.currentSuggestions');
 
 const url = document.querySelector('.url').innerHTML;
+const user = document.querySelector('.psid').innerHTML;
 
 //messenger extensions js SDK
 function loadMessengerSDK(d, s, id) {
@@ -23,20 +23,22 @@ function loadMessengerSDK(d, s, id) {
 	}
 	js = d.createElement(s);
 	js.id = id;
-	js.src = '../js/messenger.Extensions.js';
+	js.src = '../../js/messenger.Extensions.js';
 	fjs.parentNode.insertBefore(js, fjs);
+	console.log('Messenger SDK inladen: COMPLETED');
 }
 
-window.extAsyncInit = function() {
-	console.log('Messenger SDK inladen: COMPLETED');
+window.fbAsyncInit = () => {
+	console.log('hey');
 	MessengerExtensions.getContext(
 		674330989637338,
-		function success(thread_context) {
-			user = thread_context.psid;
-			console.log(user);
-			getUserSuggestions(user);
-		},
-		function error(err) {
+		(success = thread_context => {
+			console.log('thread_context ophalen: INIT');
+			if (thread_context.psid) {
+				console.log('We zitten op FB');
+			}
+		}),
+		(error = err => {
 			console.log('Kan facebook profiel niet bereiken');
 			const link = document.createElement('a');
 			link.innerHTML = 'https://www.facebook.com/messages/t/cinematjes';
@@ -45,12 +47,12 @@ window.extAsyncInit = function() {
 			$redirect.innerHTML = 'Ga naar: ';
 			$redirect.appendChild(link);
 			document.querySelector('.suggestionsWindow').style.display = 'none';
-		}
+		})
 	);
 };
 
 //AJAX API
-const getUserSuggestions = user => {
+const getUserSuggestions = () => {
 	get(`${url}/suggestions/movies/${user}`).then(r => {
 		if (r.length == 0) {
 			document.querySelector('.zoek').classList.remove('hidden');
@@ -67,15 +69,13 @@ const getUserSuggestions = user => {
 
 const addUserSuggestions = async movieId => {
 	let movieObject = await fetch(
-		`https://api.themoviedb.org/3/movie/${movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=nl-NL`
+		`https://api.themoviedb.org/3/movie/${movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-EN`
 	)
 		.then(r => r.json())
 		.then(data => {
 			return data;
 		});
 	currentSuggestions.push(movieObject);
-	document.querySelector('.zoek').classList.remove('hidden');
-	$ul.classList.remove('hidden');
 	renderSuggestions();
 };
 
@@ -97,8 +97,8 @@ const renderList = () => {
 	movies.forEach(row => {
 		console.log(row.poster_path);
 		const $newLi = document.createElement('li');
-		const $newDiv = document.createElement('div');
-		$newDiv.classList.add('movieGrid');
+		const $newArticle = document.createElement('article');
+		$newArticle.classList.add('movieGrid');
 		const $newHeading = document.createElement('h3');
 		$newHeading.classList.add('movieTitle');
 		const $newParagraph = document.createElement('p');
@@ -106,7 +106,13 @@ const renderList = () => {
 		const $newImg = document.createElement('img');
 		$newImg.classList.add('moviePoster');
 		const $newAnchor = document.createElement('a');
+		$newAnchor.classList.add('info');
 		const $newAdd = document.createElement('p');
+		$newAdd.classList.add('add');
+		const $newButtons = document.createElement('div');
+		$newButtons.classList.add('buttons');
+		$newButtons.appendChild($newAdd);
+		$newButtons.appendChild($newAnchor);
 
 		const title = row.title;
 		const overview = row.overview;
@@ -114,27 +120,23 @@ const renderList = () => {
 			const poster = row.poster_path;
 			$newImg.src = `https://image.tmdb.org/t/p/w185/${poster}`;
 		} else {
-			$newImg.src = `../assets/images/backdrop_poster.png`;
+			$newImg.src = `/assets/images/backdrop_poster.png`;
 		}
 		const id = row.id;
 
 		$newAdd.innerHTML = 'ADD';
 		$newAdd.dataset.movieId = row.id;
-		$newAdd.setAttribute(
-			'style',
-			'cursor: pointer; background-color: black; color: white;'
-		);
 		$newAdd.addEventListener('click', handleAdd);
 		$newAnchor.setAttribute('target', '_blank');
-		$newAnchor.href = `https://themoviedb.org/movie/${id}?language=nl-NL`;
-		$newDiv.appendChild($newImg);
+		$newAnchor.href = `https://themoviedb.org/movie/${id}?language=en-EN`;
+		$newAnchor.innerHTML = 'meer info';
+		$newArticle.appendChild($newImg);
 		$newHeading.innerHTML = title;
-		$newDiv.appendChild($newHeading);
+		$newArticle.appendChild($newHeading);
 		$newParagraph.innerHTML = overview;
-		$newDiv.appendChild($newParagraph);
-		$newAnchor.appendChild($newDiv);
-		$newLi.appendChild($newAnchor);
-		$newLi.appendChild($newAdd);
+		$newArticle.appendChild($newParagraph);
+		$newArticle.appendChild($newButtons);
+		$newLi.appendChild($newArticle);
 		$ul.appendChild($newLi);
 	});
 };
@@ -192,14 +194,11 @@ const renderSuggestions = () => {
 
 		$newDiv.innerHTML = 'X';
 		$newHeader.innerHTML = suggestion.title;
-		$newCont.style = 'margin-right: 40px';
 		$newCont.appendChild($newThumb);
 		$newCont.appendChild($newHeader);
 		$newCont.appendChild($newDiv);
 		$suggestionsUl.appendChild($newCont);
-		$suggestionsUl.setAttribute('style', 'position: relative; z-index: 998');
 		$newThumb.src = `https://image.tmdb.org/t/p/w185/${suggestion.poster_path}`;
-		$newThumb.setAttribute('style', 'width: 100px; height: auto');
 		$newDiv.addEventListener('click', () => {
 			removeSuggestion(suggestion);
 		});
@@ -228,7 +227,7 @@ const handleZoek = e => {
 	console.log(value);
 	if (value !== '') {
 		fetchAll(
-			`https://api.themoviedb.org/3/search/movie?api_key=a108ea578de94e9156c38073bbd89613&language=nl-NL&query=${value}&page=1&include_adult=false`
+			`https://api.themoviedb.org/3/search/movie?api_key=a108ea578de94e9156c38073bbd89613&language=en-EN&query=${value}&page=1&include_adult=false`
 		);
 	} else {
 		while ($ul.firstChild) $ul.removeChild($ul.firstChild);
@@ -290,6 +289,7 @@ const lowerBottom = () => {
 
 const init = () => {
 	loadMessengerSDK(document, 'script', 'Messenger');
+	// getUserSuggestions();
 	document.querySelector('.submit').addEventListener('click', handleSubmit);
 	if (
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(

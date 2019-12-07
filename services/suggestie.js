@@ -19,7 +19,7 @@ module.exports = class Suggestie {
 			case 'SUGGESTIE_FILM':
 				const webButton = Response.genWebUrlButton(
 					'Mijn suggesties',
-					`${config.siteUrl}/suggesties/films`
+					`${config.siteUrl}/suggesties/films/${this.user.psid}`
 				);
 				response = Response.genGenericTemplate(
 					`${config.appUrl}/assets/images/movieDb.png`,

@@ -1,4 +1,6 @@
 const SuggestionsDAO = require('../DAO/SuggestionsDAO.js');
+const request = require('request');
+const fetch = require('node-fetch');
 
 module.exports = class SuggestionsController {
 	static setMovieSuggestions = async movies => {
@@ -10,8 +12,8 @@ module.exports = class SuggestionsController {
 		return userSuggestions;
 	};
 
-	static getMovieSuggestions = async psid => {
-		const userSuggestions = await SuggestionsDAO.getMovieSuggestions(psid);
+	static getMovieSuggestionsById = async psid => {
+		const userSuggestions = await SuggestionsDAO.getMovieSuggestionsById(psid);
 		return userSuggestions;
 	};
 

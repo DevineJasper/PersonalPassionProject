@@ -1,0 +1,23 @@
+<li class="userMovieItem">
+	<article class="userMovieGrid">
+		<header class="userMovieHeader">
+			<h2 class="userMovieTitle"><%= movie.title %></h2>
+		</header>
+		<!-- laden van poster -->
+		<% if(movie.poster_path !== null) { %>
+		<img
+			src="https://image.tmdb.org/t/p/w185/<%= movie.poster_path %>"
+			alt="poster"
+			class="userMoviePoster"
+		/>
+		<% } else { %>
+		<img
+			src="<%= url %>/assets/images/backdrop_poster.png"
+			alt="poster"
+			class="userMoviePoster"
+		/>
+		<% } %>
+		<!-- buttons -->
+		<div class="userMovieDelete"><span>delete</span></div>
+	</article>
+</li>

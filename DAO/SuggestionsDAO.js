@@ -6,7 +6,7 @@ module.exports = class SuggestionsDAO {
 		await knex.from(`MovieSuggestions`).insert(movies);
 	};
 
-	static getMovieSuggestions = async user => {
+	static getMovieSuggestionsById = async user => {
 		let suggestions = [];
 		await knex
 			.from(`MovieSuggestions`)

@@ -1,0 +1,68 @@
+<li class="adminMovieItem">
+	<article class="adminMovieGrid">
+		<header class="adminMovieHeader">
+			<!-- laden van rating -->
+			<% if (movie.vote_average > 7) { %>
+			<p class="adminMovieRating darkGreen">
+				<span
+					><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+				>
+			</p>
+			<% } else if (movie.vote_average > 5) { %>
+			<p class="adminMovieRating lightGreen">
+				<span
+					><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+				>
+			</p>
+			<% } else if (movie.vote_average > 2.5) { %>
+			<p class="adminMovieRating orange">
+				<span
+					><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+				>
+			</p>
+			<% } else if (movie.vote_average > 0) { %>
+			<p class="adminMovieRating red">
+				<span
+					><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+				>
+			</p>
+			<% } else if (movie.vote_average == 0) { %>
+			<p class="adminMovieRating grey">
+				<span>N/R</span>
+			</p>
+			<% } %>
+			<h2 class="adminMovieTitle"><%= movie.title %></h2>
+			<p class="adminMovieRelease"><%= movie.release_date %></p>
+		</header>
+		<!-- laden van poster -->
+		<% if(movie.poster_path !== null) { %>
+		<img
+			src="https://image.tmdb.org/t/p/w185/<%= movie.poster_path %>"
+			alt="poster"
+			class="adminMoviePoster"
+		/>
+		<% } else { %>
+		<img
+			src="<%= url %>/assets/images/backdrop_poster.png"
+			alt="poster"
+			class="adminMoviePoster"
+		/>
+		<% } %>
+		<!-- laden van overview tekst -->
+		<% if(movie.overview !== '') { %>
+		<p class="adminMovieOverview"><%= movie.overview %></p>
+		<% } else { %>
+		<p class="adminMovieOverview">Geen beschrijving beschikbaar</p>
+		<% } %>
+		<!-- buttons -->
+		<div class="adminMovieButtons">
+			<a
+				target="_blank"
+				href="https://themoviedb.org/movie/<%= movie.id %>?language=en-US"
+				class="adminMovieInfo"
+				><span>meer info</span><span class="ext-link"></span
+			></a>
+			<div class="adminMovieAdd"><span>add</span></div>
+		</div>
+	</article>
+</li>

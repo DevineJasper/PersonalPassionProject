@@ -1,10 +1,35 @@
 const SuggestionsController = require('../controllers/SuggestionsController.js');
 const config = require('../services/config');
+const fetch = require('node-fetch');
 
 module.exports = app => {
 	//render routes
-	app.get('/suggesties/films', (req, res) => {
-		res.render('../views/suggesties/films', { url: config.appUrl });
+	app.get('/suggesties/films/:psid', async (req, res) => {
+		counter = 0;
+		movies = [];
+		const id = req.params.psid;
+		const userMovies = await SuggestionsController.getMovieSuggestionsById(id);
+		userMovies.forEach(async suggestion => {
+			await fetch(
+				`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+			)
+				.then(r => r.json())
+				.then(data => {
+					movies.push(data);
+					counter++;
+					if (counter === userMovies.length) {
+						render();
+					}
+				});
+		});
+		render = () => {
+			console.log('hij rendert!');
+			res.render('../views/suggesties/suggestionFilms', {
+				url: config.appUrl,
+				psid: id,
+				suggestions_movie: movies
+			});
+		};
 	});
 
 	app.get('/suggesties/snacks', (req, res) => {

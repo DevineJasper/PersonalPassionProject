@@ -2,27 +2,12 @@ console.log('hey admin');
 const url = document.querySelector('.url').innerHTML;
 let currentPhase;
 let vrijwilligers = [];
-let movieSuggestions = [];
+let activeHeadNav;
+let activeSubNav;
+let previousContent;
+let previousSection;
 
-// Event Handlers //
-
-const handlePlanningClick = () => {
-	renderContent('planning');
-};
-
-const handleBerichtenClick = () => {
-	renderContent('berichten');
-};
-
-const handleInzendingenClick = async () => {
-	await getMovieSuggestions();
-	renderContent('inzendingen');
-};
-
-const handleVrijwilligersClick = () => {
-	renderContent('vrijwilligers');
-};
-
+//EXTRA Event Handlers //
 const handleResetClick = async () => {
 	currentPhase = 0;
 	const eventBody = {
@@ -62,29 +47,55 @@ const handleMinClick = async () => {
 	postMessage(pushMessage);
 };
 
-//API actions
-
-const fetchVrijwilligers = async () => {
-	await get(`${url}/participants/vrijwilligers`).then(r => {
-		r.forEach(volunteer => {
-			vrijwilligers.push(volunteer);
-		});
-	});
-	renderVrijwilligers();
+//DATE CALCULATOR
+const handleDatumFilmavond = e => {
+	const startDate = new Date(e.currentTarget.value);
+	//set start suggesties
+	document.querySelector('#datumStartSuggesties').value = calculateDate(
+		startDate,
+		19
+	);
+	//set end suggesties
+	document.querySelector('#datumEndSuggesties').value = calculateDate(
+		startDate,
+		14
+	);
+	//set start stemming
+	document.querySelector('#datumStartStemming').value = calculateDate(
+		startDate,
+		12
+	);
+	//set end stemming
+	document.querySelector('#datumEndStemming').value = calculateDate(
+		startDate,
+		7
+	);
 };
 
-const getMovieSuggestions = () => {
-	get(`${url}/api/suggestions/movies`).then(r => {
-		r.forEach(object => {
-			movieSuggestions.push(object.movieId);
-		});
-	});
+const calculateDate = (startDate, timeDiff) => {
+	let newDate = new Date(startDate.getTime() - timeDiff * 24 * 60 * 60 * 1000),
+		month = '' + (newDate.getMonth() + 1),
+		day = '' + newDate.getDate(),
+		year = newDate.getFullYear();
+	if (month.length < 2) month = '0' + month;
+	if (day.length < 2) day = '0' + day;
+	return [year, month, day].join('-');
 };
 
-//Renderers
+const handleOpslaan = () => {
+	let alert = confirm(
+		'Druk pas op OK als je alles in jullie agenda hebt geschreven hé!'
+	);
+	if (alert == true) {
+		console.log('datums in database');
+	} else {
+		console.log('pas nog wa aan');
+	}
+};
+
+//Content Bepaling
 
 const renderProjectPhase = () => {
-	console.log(currentPhase);
 	const $fase = document.querySelector('.fase');
 	if (currentPhase == 0) {
 		$fase.innerHTML = 'WACHTEN OP NIEUWE FILMAVOND';
@@ -99,27 +110,71 @@ const renderProjectPhase = () => {
 	}
 };
 
-const renderContent = section => {
-	console.log(section);
-	const $content = document.querySelector('.content');
-	let html;
-	switch (true) {
-		case section == 'planning' && currentPhase == 0:
-			html = `<p>hallo!</p>`;
+const renderContent = (e, section) => {
+	if (previousContent != null) {
+		previousContent.classList.add('hidden');
+	}
+	if (activeHeadNav != null) {
+		activeHeadNav.style.textDecoration = 'none';
+		activeHeadNav = e.currentTarget;
+		activeHeadNav.style.textDecoration = 'underline';
+	} else {
+		activeHeadNav = e;
+		activeHeadNav.style.textDecoration = 'underline';
+	}
+	switch (section) {
+		case 'planning':
+			previousContent = document.querySelector('.planningContent');
+			previousContent.classList.remove('hidden');
 			break;
-		case section == 'berichten' && currentPhase == 0:
-			html = `<p>hello</p>`;
+		case 'berichten':
+			previousContent = document.querySelector('.berichtenContent');
+			previousContent.classList.remove('hidden');
 			break;
-		case section == 'inzendingen' && currentPhase == 0:
-			const items = movieSuggestions.map(suggestion => {
-				return `<li>${suggestion}</li>`;
-			});
-			html = `<ul>${items.join()}</ul>`;
+		case 'inzendingen':
+			previousContent = document.querySelector('.inzendingenContent');
+			previousContent.classList.remove('hidden');
 			break;
 		case 'vrijwilligers':
 			break;
 	}
-	$content.innerHTML = html;
+};
+
+const renderInzendingen = (e, picker) => {
+	if (previousSection != null) {
+		previousSection.classList.add('hide');
+	}
+	if (activeSubNav != null) {
+		activeSubNav.style.textDecoration = 'none';
+		activeSubNav = e.currentTarget;
+		activeSubNav.style.textDecoration = 'underline';
+	} else {
+		activeSubNav = e;
+		activeSubNav.style.textDecoration = 'underline';
+	}
+	if (currentPhase == 0) {
+		const $inzendingenPicker = document.querySelector('.inzendingenPicker');
+		$inzendingenPicker.classList.add('hide');
+		previousSection = document.querySelector('.wachten');
+		previousSection.classList.remove('hide');
+	} else {
+		switch (picker) {
+			case 'films':
+				if (currentPhase == 1) {
+					previousSection = document.querySelector('.suggestionsMoviesGrid');
+					previousSection.classList.remove('hide');
+				}
+				break;
+			case 'drinks':
+				if (currentPhase == 1) {
+					previousSection = document.querySelector('.suggestionsDrinksGrid');
+					previousSection.classList.remove('hide');
+				}
+				break;
+			case 'snacks':
+				break;
+		}
+	}
 };
 
 const renderVrijwilligers = () => {
@@ -169,32 +224,46 @@ const postMessage = async pushMessage => {
 // };
 
 const init = () => {
-	//fetch stuff
-	fetchVrijwilligers();
-	//select stuff
-	const $fase = document.querySelector('.fase');
-	const $plus = document.querySelector('.plus');
-	const $min = document.querySelector('.min');
-	const $reset = document.querySelector('.reset');
-	const $reload = document.querySelector('.reload');
 	//select navigation elements
 	const $planning = document.querySelector('.planning');
 	const $berichten = document.querySelector('.berichten');
 	const $inzendingen = document.querySelector('.inzendingen');
 	const $vrijwilligers = document.querySelector('.vrijwilligers');
+	//navigation elements eventlisteners
+	$planning.addEventListener('click', e => renderContent(e, 'planning'));
+	$berichten.addEventListener('click', e => renderContent(e, 'berichten'));
+	$inzendingen.addEventListener('click', e => renderContent(e, 'inzendingen'));
+	$vrijwilligers.addEventListener('click', e =>
+		renderContent(e, 'vrijwilligers')
+	);
+	//select subnavigation elements
+	const $filmsBtn = document.querySelector('.pickerFilms');
+	const $drinksBtn = document.querySelector('.pickerDrinks');
+	const $snacksBtn = document.querySelector('.pickerSnacks');
+	//subnavigation elements eventlisteners
+	$filmsBtn.addEventListener('click', e => renderInzendingen(e, 'films'));
+	$drinksBtn.addEventListener('click', e => renderInzendingen(e, 'drinks'));
+	$snacksBtn.addEventListener('click', e => renderInzendingen(e, 'snacks'));
+	//select datum setter
+	const $datumFilmavond = document.querySelector('#datumFilmavond');
+	const $datumsOpslaan = document.querySelector('.datumsOpslaan');
+	//evenlistener datum setter
+	$datumFilmavond.addEventListener('input', handleDatumFilmavond);
+	$datumsOpslaan.addEventListener('click', handleOpslaan);
+	//select extra stuff
+	const $fase = document.querySelector('.fase');
+	const $plus = document.querySelector('.plus');
+	const $min = document.querySelector('.min');
+	const $reset = document.querySelector('.reset');
 	//set stuff
 	currentPhase = $fase.innerHTML;
 	renderProjectPhase();
-	renderContent('planning');
-	//event listeners
-	$planning.addEventListener('click', handlePlanningClick);
-	$berichten.addEventListener('click', handleBerichtenClick);
-	$inzendingen.addEventListener('click', handleInzendingenClick);
-	$vrijwilligers.addEventListener('click', handleVrijwilligersClick);
+	renderContent($planning, 'planning');
+	renderInzendingen($filmsBtn, 'films');
+	//extra event listeners
 	$plus.addEventListener('click', handlePlusClick);
 	$min.addEventListener('click', handleMinClick);
 	$reset.addEventListener('click', handleResetClick);
-	// $reload.addEventListener('click', fetchVrijwilligers);
 };
 
 init();

@@ -1,6 +1,7 @@
 @import url('./admin.css');
 @import url('./filmsug.css');
 @import url('./nav.css');
+@import url('./typo.css');
 
 html {
 	font-size: 62.5%;
