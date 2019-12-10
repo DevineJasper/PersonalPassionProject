@@ -42,6 +42,7 @@ input[type='text'] {
 	outline: none;
 }
 .list {
+	max-width: 100%;
 	margin: 6rem auto;
 	position: relative;
 	z-index: 800;
@@ -86,7 +87,7 @@ input[type='text'] {
 }
 .currentSuggestions {
 	display: flex;
-	justify-content: space-around;
+	justify-content: space-between;
 	overflow-x: auto;
 	max-width: 100vw;
 	position: relative;
@@ -131,8 +132,9 @@ input[type='text'] {
 
 .amountIndicator {
 	position: absolute;
-	right: 4rem;
-	font-size: 6rem;
+	top: 0.5rem;
+	right: 1rem;
+	font-size: 5vw;
 }
 
 .fullScreen {
@@ -158,12 +160,13 @@ input[type='text'] {
 	}
 }
 .instruction {
+	margin-left: 1.6rem;
 	font-size: 1.4rem;
 	color: darkgray;
 }
 
 .movieGrid {
-	max-width: 30rem;
+	max-width: 100vw;
 	display: grid;
 	margin-bottom: 6rem;
 	grid-template-columns: 1.6rem auto 1rem 1fr 1.6rem;

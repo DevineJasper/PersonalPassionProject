@@ -11,9 +11,38 @@ html {
 	font-family: 'Comic Sans', 'Helvetica', 'Arial', sans-serif;
 }
 
-.content-wrapper {
-	width: 96rem;
-	margin: 0 auto;
+@media (min-width: 0px) {
+	.content-wrapper {
+		width: 100vw;
+		margin: 0 auto;
+	}
+}
+@media (min-width: 540px) {
+	.content-wrapper {
+		width: 50rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 768px) {
+	.content-wrapper {
+		width: 64rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1024px) {
+	.content-wrapper {
+		width: 96rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1200px) {
+	.content-wrapper {
+		width: 96rem;
+		margin: 0 auto;
+	}
 }
 
 .subtitle {

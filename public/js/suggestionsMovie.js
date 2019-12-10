@@ -307,14 +307,14 @@ const init = () => {
 	}
 	loadMessengerSDK(document, 'script', 'Messenger');
 	document.querySelector('.submit').addEventListener('click', handleSubmit);
-	if (
-		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-			navigator.userAgent
-		)
-	) {
-		document.querySelector('.zoek').addEventListener('focus', lowerBottom);
-		document.querySelector('.zoek').addEventListener('blur', higherBottom);
-	}
+	// if (
+	// 	/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+	// 		navigator.userAgent
+	// 	)
+	// ) {
+	// 	document.querySelector('.zoek').addEventListener('focus', lowerBottom);
+	// 	document.querySelector('.zoek').addEventListener('blur', higherBottom);
+	// }
 	document.querySelector('.zoek').addEventListener('input', handleZoek);
 	document
 		.querySelector('.suggestionsBtnCont')

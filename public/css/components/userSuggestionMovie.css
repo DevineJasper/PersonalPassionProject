@@ -7,7 +7,7 @@
 } */
 
 .userMovieGrid {
-	width: 30rem;
+	width: 23rem;
 	height: auto;
 	display: grid;
 	grid-template-rows: 1rem auto 1rem 4.4rem 1rem min-content 1rem;
