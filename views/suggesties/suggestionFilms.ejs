@@ -13,35 +13,55 @@
 		<title>Filmsuggesties</title>
 	</head>
 	<body>
-		<p class="psid" hidden><%= psid %></p>
-		<p class="url" hidden><%= url %></p>
-		<p class="suggestionsLength" hidden><%= suggestions_movie.length %></p>
 		<h1 hidden>Cinematjes</h1>
-		<input
-			class="zoek"
-			type="text"
-			value=""
-			placeholder="&#128269;  Type hier een filmtitel"
-		/>
-		<section class="lijstContainer">
-			<ul class="list">
-				<li class="instruction">Zoek naar een film!</li>
-			</ul>
-		</section>
+		<div class="searchContainer">
+			<input
+				class="zoek"
+				type="text"
+				value=""
+				placeholder="&#128269;  Type hier een filmtitel"
+			/>
+			<section class="lijstContainer">
+				<ul class="list">
+					<li class="instruction">Zoek naar een film...</li>
+				</ul>
+			</section>
+		</div>
 		<section class="submitContainer">
 			<div class="suggestionsWindow">
 				<h2 hidden>Huidige suggesties</h2>
-				<p class="suggestionsBtn">
-					Huidige suggesties (<span class="amount">0</span>/3)
-				</p>
-				<ul class="currentSuggestions">
-					<% suggestions_movie.forEach(suggestion => { %> <%-
-					include('../partials/userSuggestionMovie', {movie: suggestion, url:
-					url}); %> <% }) %>
-				</ul>
-				<div class="submit">Verzend suggesties</div>
+				<div class="suggestionsBtnCont">
+					<p class="suggestionsArrow"></p>
+					<p class="suggestionsBtn button">
+						Huidige suggesties
+					</p>
+					<p class="amountIndicator"><span class="amount">0</span> / 3</p>
+				</div>
+				<ul class="currentSuggestions"></ul>
+				<div class="submit button">Verzend suggesties</div>
 			</div>
 		</section>
+		<script>
+			const url =<%- JSON.stringify(url) %>;
+			const user =<%- psid %>;
+			console.log(url);
+			console.log(user);
+			let amountSuggestions = 0;
+			let currentSuggestions = [];
+			let originalSuggestions = [];
+			let userSuggestionsDb = false;
+			let receivedSuggestions =<%- JSON.stringify(suggestions_movie) %>;
+			if(receivedSuggestions.length > 0){
+				userSuggestionsDb = true;
+				receivedSuggestions.forEach(received => {
+					currentSuggestions.push(received);
+					originalSuggestions.push(received);
+				});
+				console.log(currentSuggestions);
+				console.log(amountSuggestions);
+				console.log(userSuggestionsDb);
+			}
+		</script>
 		<script src="../../js/api.js"></script>
 		<script src="../../js/suggestionsMovie.js"></script>
 	</body>

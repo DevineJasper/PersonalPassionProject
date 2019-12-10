@@ -31,7 +31,7 @@
 				<span>N/R</span>
 			</p>
 			<% } %>
-			<h2 class="adminMovieTitle"><%= movie.title %></h2>
+			<h5 class="adminMovieTitle"><%= movie.title %></h5>
 			<p class="adminMovieRelease"><%= movie.release_date %></p>
 		</header>
 		<!-- laden van poster -->
@@ -59,10 +59,10 @@
 			<a
 				target="_blank"
 				href="https://themoviedb.org/movie/<%= movie.id %>?language=en-US"
-				class="adminMovieInfo"
+				class="adminMovieInfo button"
 				><span>meer info</span><span class="ext-link"></span
 			></a>
-			<div class="adminMovieAdd"><span>add</span></div>
+			<div class="adminMovieAdd button"><span>add</span></div>
 		</div>
 	</article>
 </li>
