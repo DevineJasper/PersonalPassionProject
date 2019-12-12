@@ -11,10 +11,13 @@
 'use strict';
 
 const Response = require('./response'),
-	Suggestie = require('./suggestie'),
-	Stemming = require('./stemming'),
+	NoFilmavond = require('./noFilmavond'),
 	Wachten = require('./wachten'),
+	Suggestie = require('./suggestie'),
+	Selectie = require('./selectie'),
+	Stemming = require('./stemming'),
 	Final = require('./final'),
+	Filmavond = require('./filmavond'),
 	GraphAPI = require('./graph-api'),
 	User = require('./user'),
 	config = require('./config');
@@ -79,21 +82,36 @@ module.exports = class Receive {
 		if (message.includes('hey' || 'hallo' || 'hi' || 'yeet')) {
 			response = Response.genText('Hey ;)');
 		} else {
-			if (this.projectPhase === 0) {
-				let wachten = new Wachten(this.user, this.webhookEvent);
-				response = wachten.genFirstWachten(this.user);
-			} else if (this.projectPhase === 1) {
-				let suggestie = new Suggestie(this.user, this.webhookevent);
-				response = suggestie.genFirstSuggestie(this.user);
-			} else if (this.projectPhase === 2) {
-				let stemming = new Stemming(this.user, this.webhookevent);
-				response = stemming.genFirstStemming(this.user);
-			} else if (this.projectPhase === 3) {
-				let final = new Final(this.user, this.webhookevent);
-				response = final.genFirstFinal(this.user);
-			}
+			response = this.checkProjectPhase();
 		}
 
+		return response;
+	}
+
+	checkProjectPhase() {
+		let response;
+		if (this.projectPhase === 0) {
+			let noFilmavond = new NoFilmavond(this.user, this.webhookEvent);
+			response = noFilmavond.genFirstResponse(this.user);
+		} else if (this.projectPhase === 1) {
+			let wachten = new Wachten(this.user, this.webhookevent);
+			response = wachten.genFirstResponse(this.user);
+		} else if (this.projectPhase === 2) {
+			let suggestie = new Suggestie(this.user, this.webhookevent);
+			response = suggestie.genFirstResponse(this.user);
+		} else if (this.projectPhase === 3) {
+			let selectie = new Selectie(this.user, this.webhookevent);
+			response = selectie.genFirstResponse(this.user);
+		} else if (this.projectPhase === 4) {
+			let stemming = new Stemming(this.user, this.webhookevent);
+			response = stemming.genFirstResponse(this.user);
+		} else if (this.projectPhase === 5) {
+			let final = new Final(this.user, this.webhookevent);
+			response = final.genFirstResponse(this.user);
+		} else if (this.projectPhase === 6) {
+			let filmavond = new Filmavond(this.user, this.webhookEvent);
+			response = filmavond.genFirstResponse(this.user);
+		}
 		return response;
 	}
 
@@ -229,20 +247,7 @@ module.exports = class Receive {
 
 		switch (payload) {
 			case 'GET_STARTED':
-				if (this.projectPhase === 0) {
-					let wachten = new Wachten(this.user, null);
-					responses = wachten.genFirstWachten(this.user);
-				} else if (this.projectPhase === 1) {
-					console.log('we willen naar fase 1');
-					let suggestie = new Suggestie(this.user, null);
-					responses = suggestie.genFirstSuggestie();
-				} else if (this.projectPhase === 2) {
-					let stemming = new Stemming(this.user, null);
-					responses = stemming.genFirstStemming();
-				} else if (this.projectPhase === 3) {
-					let final = new Final(this.user, null);
-					responses = final.genFirstFinal();
-				}
+				responses = this.checkProjectPhase();
 				break;
 			case 'REMINDER':
 				responses = Response.genText('Héla, blijf es van mijn knoppen');

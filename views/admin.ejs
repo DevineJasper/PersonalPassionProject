@@ -63,7 +63,7 @@
 						<% } else if(projectFase < 4) { %>
 						<p>Volgende fase: <span>Stemmingronde</span></p>
 						<p><%= dates.startSuggesties %></p>
-						<% } else if(projectiFase < 5) { %>
+						<% } else if(projectFase < 5) { %>
 						<p>Volgende fase: <span>Voorbereiding filmavond</span></p>
 						<p><%= dates.startSuggesties %></p>
 						<% } else if(projectFase < 6) { %>
@@ -106,7 +106,7 @@
 						url}); %> <% }) %>
 					</ul>
 				</section>
-				<div class="selectionToolCont content-wrapper">
+				<div class="selectionToolCont content-wrapper hide">
 					<div class="selectionTool">
 						<header class="selectionToolHeader">
 							<h5>Films Selectie</h5>
@@ -132,6 +132,16 @@
 						<% suggestions_snack.forEach(suggestion => { %> <%-
 						include('./partials/adminConsumpties', {consumptie: suggestion, url:
 						url}); %> <% }) %>
+					</ul>
+				</section>
+				<!-- #INZENDINGEN ##stemming_films -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Stemming films</h3>
+					<ul class="votesMovieGrid hide">
+						<% stemming_movies.forEach(vote => { %>
+						<p><%= vote.film.title %></p>
+						<p><%= vote.votes %></p>
+						<% }) %>
 					</ul>
 				</section>
 			</section>

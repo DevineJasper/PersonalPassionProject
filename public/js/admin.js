@@ -19,29 +19,31 @@ const handleResetClick = async () => {
 };
 
 const handlePlusClick = async () => {
-	currentPhase++;
-	const eventBody = {
-		eventPhase: currentPhase
-	};
-	const pushMessage = {
-		payload: 'GET_STARTED',
-		phase: currentPhase
-	};
-	updateEventPhase();
-	postMessage(pushMessage);
+	if (currentPhase != 6) {
+		currentPhase++;
+		const pushMessage = {
+			payload: 'GET_STARTED',
+			phase: currentPhase
+		};
+		updateEventPhase();
+		postMessage(pushMessage);
+	} else {
+		console.log('we zitten aan max fase');
+	}
 };
 
 const handleMinClick = async () => {
-	currentPhase--;
-	const eventBody = {
-		eventPhase: currentPhase
-	};
-	const pushMessage = {
-		payload: 'GET_STARTED',
-		phase: currentPhase
-	};
-	updateEventPhase();
-	postMessage(pushMessage);
+	if (currentPhase != 0) {
+		currentPhase--;
+		const pushMessage = {
+			payload: 'GET_STARTED',
+			phase: currentPhase
+		};
+		updateEventPhase();
+		postMessage(pushMessage);
+	} else {
+		console.log('we zitten aan min fase');
+	}
 };
 
 //DATE CALCULATOR
@@ -109,14 +111,6 @@ const handleOpslaan = () => {
 	update(`${url}/api/cinemaEvent/dates`, datesBody);
 	currentPhase++;
 	updateEventPhase();
-	activeHeadNav = null;
-	activeSubNav = null;
-	const $planningPlanner = document.querySelector('.planningPlanner');
-	$planningPlanner.classList.add('hide');
-	const $planning = document.querySelector('.planning');
-	const $filmsBtn = document.querySelector('.pickerFilms');
-	renderContent($planning, 'planning');
-	renderInzendingen($filmsBtn, 'films');
 };
 
 //Content Bepaling
@@ -200,20 +194,39 @@ const renderInzendingen = (e, picker) => {
 		switch (picker) {
 			case 'films':
 				const $addBtn = document.querySelectorAll('.adminMovieAdd');
+				const $selectionTool = document.querySelector('.selectionToolCont');
 				if (currentPhase == 2) {
 					previousSection = document.querySelector('.suggestionsMoviesGrid');
 					previousSection.classList.remove('hide');
+					if (!$selectionTool.classList.contains('hide')) {
+						$selectionTool.classList.add('hide');
+					}
 					$addBtn.forEach(btn => {
-						btn.classList.add('disabledButton');
-						btn.addEventListener('click', () =>
-							handleFilmAdd(btn.dataset.movie)
-						);
+						if (!btn.classList.contains('disabledButton')) {
+							btn.classList.add('disabledBtn');
+						}
 					});
 				} else if (currentPhase == 3) {
 					previousSection = document.querySelector('.suggestionsMoviesGrid');
 					previousSection.classList.remove('hide');
-					$selectionTool = document.querySelector('.selectionToolCont');
 					$selectionTool.classList.remove('hide');
+					$addBtn.forEach(btn => {
+						btn.classList.remove('disabledButton');
+						btn.addEventListener('click', () =>
+							handleFilmAdd(btn.dataset.movie)
+						);
+					});
+				} else if (currentPhase == 4) {
+					previousSection = document.querySelector('.votesMovieGrid');
+					previousSection.classList.remove('hide');
+					if (!$selectionTool.classList.contains('hide')) {
+						$selectionTool.classList.add('hide');
+					}
+					$addBtn.forEach(btn => {
+						if (!btn.classList.contains('disabledButton')) {
+							btn.classList.add('disabledBtn');
+						}
+					});
 				}
 				break;
 			case 'drinks':
@@ -349,6 +362,14 @@ const updateEventPhase = async () => {
 	};
 	await update(`${url}/api/cinemaEvent/phase`, eventBody);
 	renderProjectPhase();
+	activeHeadNav = null;
+	activeSubNav = null;
+	const $planningPlanner = document.querySelector('.planningPlanner');
+	$planningPlanner.classList.add('hide');
+	const $planning = document.querySelector('.planning');
+	const $filmsBtn = document.querySelector('.pickerFilms');
+	renderContent($planning, 'planning');
+	renderInzendingen($filmsBtn, 'films');
 };
 
 const postMessage = async pushMessage => {
@@ -375,6 +396,18 @@ const postMessage = async pushMessage => {
 const handleSelectionClick = () => {
 	const $selectionTool = document.querySelector('.selectionToolCont');
 	$selectionTool.classList.toggle('selectionFullscreen');
+};
+
+const handleSubmitClick = () => {
+	console.log('clicked');
+	if (movieSelection.length < 3) {
+		console.log('te weinig movies selected');
+	} else {
+		const selectionBody = {
+			movies: movieSelection
+		};
+		post(`${url}/api/selection/films`, selectionBody);
+	}
 };
 
 // const getEventPhase = async () => {
@@ -415,6 +448,7 @@ const init = () => {
 	const $min = document.querySelector('.min');
 	const $reset = document.querySelector('.reset');
 	const $selection = document.querySelector('.selectionToolHeader');
+	const $submit = document.querySelector('.submit');
 	//set stuff
 	currentPhase = $fase.innerHTML;
 	renderProjectPhase();
@@ -425,6 +459,7 @@ const init = () => {
 	$min.addEventListener('click', handleMinClick);
 	$reset.addEventListener('click', handleResetClick);
 	$selection.addEventListener('click', handleSelectionClick);
+	$submit.addEventListener('click', handleSubmitClick);
 };
 
 init();

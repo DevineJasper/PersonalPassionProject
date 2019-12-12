@@ -17,7 +17,7 @@ module.exports = class Stemming {
 			case 'STEMMING_FILM':
 				const webButton = Response.genWebUrlButton(
 					'Stemmen op film',
-					`${config.siteUrl}/stemming/films`
+					`${config.siteUrl}/stemming/${this.user.psid}`
 				);
 				response = Response.genGenericTemplate(
 					`${config.appUrl}/assets/images/movieDb.png`,
@@ -99,21 +99,15 @@ module.exports = class Stemming {
 		return response;
 	};
 
-	genFirstStemming = () => {
+	genFirstResponse = () => {
 		// let image = Response.genImageAttachement(`${config.appUrl}/stemming.gif`);
-		let hello = Response.genText(`Hey ${this.user.firstName}!`);
+		let hello = Response.genText(
+			`We hebben een selectie gemaakt uit jullie geweldige suggesties!`
+		);
 		let instructie = Response.genText(
-			'De filmavond van 21 februari krijgt steeds meer vorm!'
+			'Vanaf nu kan jij stemmen op jouw favoriet uit onze selectie!'
 		);
-		let bis = Response.genText(
-			'We hebben een selectie gemaakt uit al jullie suggesties.'
-		);
-		let result = Response.genText(
-			'wie weet zitten jouw suggesties er wel bij...'
-		);
-		let final = Response.genText(
-			'Je kan stemmen op jouw favorieten tot 20 februari. De film, drink, snack en thema met de meeste stemmen, die worden gebruikt!'
-		);
+		let bis = Response.genText('Nu wordt het echt spannend ;)');
 		let action = Response.genQuickReply('Waarop wil je stemmen?', [
 			{
 				title: 'Stemmen op film',
@@ -124,6 +118,6 @@ module.exports = class Stemming {
 				payload: 'STEMMING_ANDERE'
 			}
 		]);
-		return [hello, instructie, bis, result, final, action];
+		return [hello, instructie, bis, action];
 	};
 };

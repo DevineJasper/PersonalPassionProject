@@ -12,6 +12,7 @@ const ejsLint = require('ejs-lint');
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
 const SuggestionsController = require('./controllers/SuggestionsController');
+const StemmingController = require('./controllers/StemmingController');
 const AdminController = require('./controllers/AdminController');
 
 app.use(cors());
@@ -41,10 +42,10 @@ app.get('/admin', async (req, res) => {
 	let snackSuggestions;
 	if (projectPhase != 0 || projectPhase != 1) {
 		datums = await CinemaEventController.getDates();
-		console.log(datums);
 		const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
 		drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
 		snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
+		stemmingMovies = await StemmingController.getVotes();
 		movieSuggestions.forEach(async suggestion => {
 			try {
 				await fetch(
@@ -71,6 +72,7 @@ app.get('/admin', async (req, res) => {
 			suggestions_movie: movies,
 			suggestions_drink: drinkSuggestions,
 			suggestions_snack: snackSuggestions,
+			stemming_movies: stemmingMovies,
 			dates: datums
 		});
 	};
@@ -386,6 +388,7 @@ const listener = app.listen(config.port, async () => {
 
 require('./routes/suggestieRoutes.js')(app);
 require('./routes/stemmingRoutes.js')(app);
+require('./routes/selectieRoutes.js')(app);
 // require('./routes/cinemaEvent.routes.js')(app);
 require('./routes/adminRoutes.js')(app);
 require('./routes/participantRoutes.js')(app);

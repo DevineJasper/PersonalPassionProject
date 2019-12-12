@@ -4,7 +4,7 @@
 const Response = require('./response'),
 	config = require('./config');
 
-module.exports = class Final {
+module.exports = class Filmavond {
 	constructor(user, webhookEvent) {
 		this.user = user;
 		this.webhookEvent = webhookEvent;
@@ -59,12 +59,10 @@ module.exports = class Final {
 	genFirstResponse = () => {
 		// let image = Response.genImageAttachement(`${config.appUrl}/stemming.gif`);
 		let hello = Response.genText(
-			`De filmavond van <DATUM> ligt helemaal vast!`
+			`${this.user.firstName}, vanavond is het de filmavond!`
 		);
-		let instructie = Response.genText(
-			'De organisatie zal nu alles voorbereiden ;)'
-		);
-		let bis = Response.genText('Jij komt toch ook!?');
+		let instructie = Response.genText('Alles staat klaar voor jullie.');
+		let bis = Response.genText('Jullie zijn welkom vanaf XX uur!');
 		let action = Response.genQuickReply('Waarop wil je stemmen?', [
 			{
 				title: 'Stemmen op film',

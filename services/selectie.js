@@ -6,7 +6,7 @@ const Response = require('./response'),
 	request = require('request'),
 	ParticipantsController = require('../controllers/ParticipantsController');
 
-module.exports = class Suggestie {
+module.exports = class Selectie {
 	constructor(user, webhookEvent) {
 		this.user = user;
 		this.webhookEvent = webhookEvent;
@@ -123,13 +123,13 @@ module.exports = class Suggestie {
 
 	genFirstResponse = () => {
 		let hello = Response.genText(
-			`Stuur jouw filmsuggesties door tot en met <DATUM>!`
+			`Jullie suggesties zijn goed ontvangen! Alvast bedankt <3`
 		);
 		let instructie = Response.genText(
-			'Je kan nu ook suggesties doorsturen voor snacks & drinks ;)'
+			'De organisatie zal jullie suggesties nu bekijken en er een selectie uit maken.'
 		);
 		let result = Response.genText(
-			'Wie weet selecteren we jouw suggesties voor de filmavond van <DATUM>'
+			'En jij kan vanaf <DATUM> stemmen op jouw favoriet uit onze selectie!'
 		);
 		let action = Response.genQuickReply(
 			'Welke soort suggestie wil je doorsturen?',

@@ -4,7 +4,7 @@
 const Response = require('./response'),
 	ParticipantsController = require('../controllers/ParticipantsController');
 
-module.exports = class Suggestie {
+module.exports = class noFilmavond {
 	constructor(user, webhookEvent) {
 		this.user = user;
 		this.webhookEvent = webhookEvent;
@@ -44,12 +44,12 @@ module.exports = class Suggestie {
 	};
 
 	genFirstResponse = () => {
-		let hello = Response.genText(`Er is een Filmavond gepland op <DATUM>!`);
+		let hello = Response.genText(`Hey ${this.user.firstName}!`);
 		let instructie = Response.genText(
-			'En vanaf <DATUM> kan jij jouw filmsuggesties doorsturen voor die filmavond!'
+			'Momenteel staat er nog geen filmavond ingepland.'
 		);
 		let result = Response.genText(
-			'Neem zeker een kijkje op de facebookpagina van Cinematjes voor meer info :D'
+			'Als daar verandering in komt, dan laten we je het hier onmiddellijk weten ;)'
 		);
 		let helpen = Response.genQuickReply(
 			'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',

@@ -1,0 +1,73 @@
+<li class="stemmingMovieItem">
+	<article class="stemmingMovieGrid">
+		<header class="stemmingMovieHeader">
+			<h5 class="stemmingMovieTitle"><%= movie.title %></h5>
+			<p class="stemmingMovieRelease"><%= movie.release_date %></p>
+		</header>
+		<!-- laden van rating -->
+		<% if (movie.vote_average > 7) { %>
+		<p class="stemmingMovieRating darkGreen">
+			<span
+				><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+			>
+		</p>
+		<% } else if (movie.vote_average > 5) { %>
+		<p class="stemmingMovieRating lightGreen">
+			<span
+				><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+			>
+		</p>
+		<% } else if (movie.vote_average > 2.5) { %>
+		<p class="stemmingMovieRating orange">
+			<span
+				><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+			>
+		</p>
+		<% } else if (movie.vote_average > 0) { %>
+		<p class="stemmingMovieRating red">
+			<span
+				><%= movie.vote_average * 10 %><span class="percentage">%</span></span
+			>
+		</p>
+		<% } else if (movie.vote_average == 0) { %>
+		<p class="stemmingMovieRating grey">
+			<span>N/R</span>
+		</p>
+		<% } %>
+		<!-- laden van poster -->
+		<% if(movie.poster_path !== null) { %>
+		<img
+			src="https://image.tmdb.org/t/p/w185/<%= movie.poster_path %>"
+			alt="poster"
+			class="stemmingMoviePoster"
+		/>
+		<% } else { %>
+		<img
+			src="<%= url %>/assets/images/backdrop_poster.png"
+			alt="poster"
+			class="stemmingMoviePoster"
+		/>
+		<% } %>
+		<!-- laden van overview tekst -->
+		<% if(movie.overview !== '') { %>
+		<p class="stemmingMovieOverview"><%= movie.overview %></p>
+		<% } else { %>
+		<p class="stemmingMovieOverview">Geen beschrijving beschikbaar</p>
+		<% } %>
+		<!-- buttons -->
+		<div class="stemmingMovieButtons">
+			<a
+				target="_blank"
+				href="https://themoviedb.org/movie/<%= movie.movie_id %>?language=en-US"
+				class="stemmingMovieInfo button"
+				><span>meer info</span><span class="ext-link"></span
+			></a>
+			<div
+				class="stemmingMovieAdd button disabledButton"
+				data-movie="<%= JSON.stringify(movie.movie_id) %>"
+			>
+				<span>stem!</span>
+			</div>
+		</div>
+	</article>
+</li>
