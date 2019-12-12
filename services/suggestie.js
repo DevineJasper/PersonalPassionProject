@@ -38,20 +38,15 @@ module.exports = class Suggestie {
 			case 'SUGGESTIE_ANDERE':
 				const drinksBtn = Response.genWebUrlButton(
 					'Drinks',
-					`${config.siteUrl}/suggesties/drinks`
+					`${config.siteUrl}/suggesties/drinks/${this.user.psid}`
 				);
 				const snacksBtn = Response.genWebUrlButton(
 					'Snacks',
-					`${config.siteUrl}/suggesties/snacks`
-				);
-				const themaBtn = Response.genWebUrlButton(
-					'Thema',
-					`${config.siteUrl}/suggesties/themas`
+					`${config.siteUrl}/suggesties/snacks/${this.user.psid}`
 				);
 				const buttons = Response.genButtonTemplate('Welke suggestie?', [
 					drinksBtn,
-					snacksBtn,
-					themaBtn
+					snacksBtn
 				]);
 				const back = Response.genQuickReply('Als je klaar bent kan je terug!', [
 					{

@@ -3,7 +3,27 @@ const request = require('request');
 const fetch = require('node-fetch');
 
 module.exports = class SuggestionsController {
-	static setMovieSuggestions = async movies => {
+	static addDrinkSuggestion = async (psid, drinkBody) => {
+		console.log(psid);
+		console.log(drinkBody);
+		SuggestionsDAO.addDrinkSuggestion(psid, drinkBody);
+	};
+
+	static getAllDrinkSuggestions = async () => {
+		const drinkSuggestions = await SuggestionsDAO.getAllDrinkSuggestions();
+		return drinkSuggestions;
+	};
+
+	static getAllSnackSuggestions = async () => {
+		const snackSuggestions = await SuggestionsDAO.getAllSnackSuggestions();
+		return snackSuggestions;
+	};
+
+	static addSnackSuggestion = async (psid, snackBody) => {
+		SuggestionsDAO.addSnackSuggestoin(psid, snackBody);
+	};
+
+	static setMovieSuggestions = movies => {
 		SuggestionsDAO.setMovieSuggestions(movies);
 	};
 

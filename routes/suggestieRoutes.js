@@ -23,7 +23,6 @@ module.exports = app => {
 				});
 		});
 		render = () => {
-			console.log('hij rendert!');
 			res.render('../views/suggesties/suggestionFilms', {
 				url: config.appUrl,
 				psid: id,
@@ -32,24 +31,36 @@ module.exports = app => {
 		};
 	});
 
-	app.get('/suggesties/snacks', (req, res) => {
-		res.render('../views/suggesties/snacks', {
-			url: config.appUrl
+	app.get('/suggesties/snacks/:psid', (req, res) => {
+		res.render('../views/suggesties/suggestionSnacks', {
+			url: config.appUrl,
+			soort: 'snack'
 		});
 	});
 
-	app.get('/suggesties/drinks', (req, res) => {
-		res.render('../views/suggesties/drinks', {
-			url: config.appUrl
+	app.get('/suggesties/drinks/:psid', (req, res) => {
+		res.render('../views/suggesties/suggestionDrinks', {
+			url: config.appUrl,
+			soort: 'drink',
+			psid: req.params.psid
 		});
 	});
 
-	app.get('/suggesties/themas', (req, res) => {
-		res.render('../views/suggesties/themas', {
-			url: config.appUrl
-		});
-	});
 	//API routes
+	app.post('/api/suggesties/drinks/:psid', (req, res) => {
+		const psid = req.params.psid;
+		const drinkBody = req.body.suggestion;
+		SuggestionsController.addDrinkSuggestion(psid, drinkBody);
+		res.status(201).json('Drink suggestion added');
+	});
+
+	app.post('/api/suggesties/snacks/:psid', (req, res) => {
+		const psid = req.params.psid;
+		const snackBody = req.body.suggestion;
+		SuggestionsController.addDrinkSuggestion(psid, snackBody);
+		res.status(201).json('Drink suggestion added');
+	});
+
 	app.get('/api/suggestions/movies', async (req, res) => {
 		const userSuggestions = await SuggestionsController.getAllMovieSuggestions();
 		res.json(userSuggestions);

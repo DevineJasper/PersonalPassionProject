@@ -10,14 +10,11 @@ let previousSection;
 //EXTRA Event Handlers //
 const handleResetClick = async () => {
 	currentPhase = 0;
-	const eventBody = {
-		eventPhase: currentPhase
-	};
 	const pushMessage = {
 		payload: 'GET_STARTED',
 		phase: currentPhase
 	};
-	updateEventPhase(eventBody);
+	updateEventPhase();
 	postMessage(pushMessage);
 };
 
@@ -30,7 +27,7 @@ const handlePlusClick = async () => {
 		payload: 'GET_STARTED',
 		phase: currentPhase
 	};
-	updateEventPhase(eventBody);
+	updateEventPhase();
 	postMessage(pushMessage);
 };
 
@@ -43,7 +40,7 @@ const handleMinClick = async () => {
 		payload: 'GET_STARTED',
 		phase: currentPhase
 	};
-	updateEventPhase(eventBody);
+	updateEventPhase();
 	postMessage(pushMessage);
 };
 
@@ -83,14 +80,43 @@ const calculateDate = (startDate, timeDiff) => {
 };
 
 const handleOpslaan = () => {
-	let alert = confirm(
-		'Druk pas op OK als je alles in jullie agenda hebt geschreven hé!'
-	);
-	if (alert == true) {
-		console.log('datums in database');
-	} else {
-		console.log('pas nog wa aan');
-	}
+	console.log('opslaan die datums!');
+	// let alert = confirm(
+	// 	'Druk pas op OK als je alles in jullie agenda hebt geschreven hé!'
+	// );
+	// if (alert == true) {
+	// 	console.log('datums in database');
+	// } else {
+	// 	console.log('pas nog wa aan');
+	// }
+	const valFilmavond = document.querySelector('#datumFilmavond').value;
+	const valStartSug = document.querySelector('#datumStartSuggesties').value;
+	const valEndSug = document.querySelector('#datumEndSuggesties').value;
+	const valStartStem = document.querySelector('#datumStartStemming').value;
+	const valEndStem = document.querySelector('#datumEndStemming').value;
+	const finalValFilmavond = `${valFilmavond}T10:00:00.`;
+	const finalValStartSug = `${valStartSug}T10:00:00`;
+	const finalValEndSug = `${valEndSug}T10:00:00`;
+	const finalValStartStem = `${valStartStem}T10:00:00`;
+	const finalValEndStem = `${valEndStem}T10:00:00`;
+	const datesBody = {
+		startSuggesties: finalValStartSug,
+		endSuggesties: finalValEndSug,
+		startStemming: finalValStartStem,
+		endStemming: finalValEndStem,
+		filmAvond: finalValFilmavond
+	};
+	update(`${url}/api/cinemaEvent/dates`, datesBody);
+	currentPhase++;
+	updateEventPhase();
+	activeHeadNav = null;
+	activeSubNav = null;
+	const $planningPlanner = document.querySelector('.planningPlanner');
+	$planningPlanner.classList.add('hide');
+	const $planning = document.querySelector('.planning');
+	const $filmsBtn = document.querySelector('.pickerFilms');
+	renderContent($planning, 'planning');
+	renderInzendingen($filmsBtn, 'films');
 };
 
 //Content Bepaling
@@ -98,15 +124,19 @@ const handleOpslaan = () => {
 const renderProjectPhase = () => {
 	const $fase = document.querySelector('.fase');
 	if (currentPhase == 0) {
-		$fase.innerHTML = 'WACHTEN OP NIEUWE FILMAVOND';
+		$fase.innerHTML = 'NIEUWE FILMAVOND INPLANNEN';
 	} else if (currentPhase == 1) {
-		$fase.innerHTML = 'SUGGESTIES INZAMELEN';
+		$fase.innerHTML = 'WACHTEN TOT START SUGGESTIERONDE';
 	} else if (currentPhase == 2) {
-		$fase.innerHTML = 'SELECTIE MAKEN';
+		$fase.innerHTML = 'SUGGESTIERONDE';
 	} else if (currentPhase == 3) {
-		$fase.innerHTML = 'STEMMING';
+		$fase.innerHTML = 'SELECTIE MAKEN';
 	} else if (currentPhase == 4) {
+		$fase.innerHTML = 'STEMMINGRONDE';
+	} else if (currentPhase == 5) {
 		$fase.innerHTML = 'VOORBEREIDING FILMAVOND';
+	} else if (currentPhase == 6) {
+		$fase.innerHTML = 'FILMAVOND VANDAAG';
 	}
 };
 
@@ -126,6 +156,13 @@ const renderContent = (e, section) => {
 		case 'planning':
 			previousContent = document.querySelector('.planningContent');
 			previousContent.classList.remove('hidden');
+			if (currentPhase == 0) {
+				const $planner = document.querySelector('.planningPlanner');
+				$planner.classList.remove('hide');
+			} else {
+				const $planning = document.querySelector('.planningPlanning');
+				$planning.classList.remove('hide');
+			}
 			break;
 		case 'berichten':
 			previousContent = document.querySelector('.berichtenContent');
@@ -136,6 +173,8 @@ const renderContent = (e, section) => {
 			previousContent.classList.remove('hidden');
 			break;
 		case 'vrijwilligers':
+			previousContent = document.querySelector('.inzendingenContent');
+			previousContent.classList.remove('hidden');
 			break;
 	}
 };
@@ -152,7 +191,7 @@ const renderInzendingen = (e, picker) => {
 		activeSubNav = e;
 		activeSubNav.style.textDecoration = 'underline';
 	}
-	if (currentPhase == 0) {
+	if (currentPhase == 0 || currentPhase == 1) {
 		const $inzendingenPicker = document.querySelector('.inzendingenPicker');
 		$inzendingenPicker.classList.add('hide');
 		previousSection = document.querySelector('.wachten');
@@ -160,13 +199,25 @@ const renderInzendingen = (e, picker) => {
 	} else {
 		switch (picker) {
 			case 'films':
-				if (currentPhase == 1) {
+				const $addBtn = document.querySelectorAll('.adminMovieAdd');
+				if (currentPhase == 2) {
 					previousSection = document.querySelector('.suggestionsMoviesGrid');
 					previousSection.classList.remove('hide');
+					$addBtn.forEach(btn => {
+						btn.classList.add('disabledButton');
+						btn.addEventListener('click', () =>
+							handleFilmAdd(btn.dataset.movie)
+						);
+					});
+				} else if (currentPhase == 3) {
+					previousSection = document.querySelector('.suggestionsMoviesGrid');
+					previousSection.classList.remove('hide');
+					$selectionTool = document.querySelector('.selectionToolCont');
+					$selectionTool.classList.remove('hide');
 				}
 				break;
 			case 'drinks':
-				if (currentPhase == 1) {
+				if (currentPhase == 2) {
 					previousSection = document.querySelector('.suggestionsDrinksGrid');
 					previousSection.classList.remove('hide');
 				}
@@ -175,6 +226,105 @@ const renderInzendingen = (e, picker) => {
 				break;
 		}
 	}
+};
+
+let movieSelection = [];
+let amountSelection = 0;
+const $movieSelectionUl = document.querySelector('.movieSelectionUl');
+
+const handleFilmAdd = suggestion => {
+	const movie = JSON.parse(suggestion);
+
+	switch (true) {
+		case amountSelection == 0:
+			console.log('nog geen suggestions');
+			movieSelection.push(movie);
+			// newSuggestions.push(movie);
+			renderSelectedMovies();
+			// renderList(movies);
+			break;
+		case amountSelection > 0 && amountSelection < 3:
+			let isInArray = false;
+			movieSelection.forEach(suggestion => {
+				if (suggestion.id === movie.id) {
+					isInArray = true;
+				}
+			});
+			if (isInArray === false) {
+				console.log('welkom');
+				// newSuggestions.push(movie);
+				movieSelection.push(movie);
+				renderSelectedMovies();
+				// renderList(movies);
+			}
+			break;
+		case amountSelection >= 3:
+			console.log('meer dan 3');
+			// document.querySelector('.amount').classList.add('redAnimation');
+			// setTimeout(
+			// 	() =>
+			// 		document.querySelector('.amount').classList.remove('redAnimation'),
+			// 	500
+			// );
+			break;
+	}
+};
+
+const removeSelectedItem = item => {
+	movieSelection.splice(movieSelection.indexOf(item), 1);
+	renderSelectedMovies();
+};
+
+const renderSelectedMovies = () => {
+	while ($movieSelectionUl.firstChild)
+		$movieSelectionUl.removeChild($movieSelectionUl.firstChild);
+	amountSelection = 0;
+	movieSelection.forEach(suggestion => {
+		amountSelection++;
+		console.log(amountSelection);
+		const $userMovieItem = document.createElement('li');
+		$userMovieItem.classList.add('userMovieItem');
+
+		const $userMovieGrid = document.createElement('article');
+		$userMovieGrid.classList.add('userMovieGrid');
+
+		const $userMovieHeader = document.createElement('header');
+		$userMovieHeader.classList.add('userMovieHeader');
+
+		const $userMovieTitle = document.createElement('h2');
+		$userMovieTitle.classList.add('userMovieTitle');
+		$userMovieTitle.innerHTML = suggestion.title;
+
+		$userMovieHeader.appendChild($userMovieTitle);
+		$userMovieGrid.appendChild($userMovieHeader);
+
+		const $userMoviePoster = document.createElement('img');
+		$userMoviePoster.classList.add('userMoviePoster');
+		if (suggestion.poster_path !== null) {
+			$userMoviePoster.src = `https://image.tmdb.org/t/p/w185/${suggestion.poster_path}`;
+		} else {
+			$userMoviePoster.src = `/assets/images/backdrop_poster.png`;
+		}
+
+		$userMovieGrid.appendChild($userMoviePoster);
+
+		const $userMovieDelete = document.createElement('div');
+		$userMovieDelete.classList.add('userMovieDelete');
+
+		const $span = document.createElement('span');
+		$span.innerHTML = 'verwijder';
+		$userMovieDelete.appendChild($span);
+
+		$userMovieDelete.addEventListener('click', () => {
+			removeSelectedItem(suggestion);
+		});
+
+		$userMovieGrid.appendChild($userMovieDelete);
+
+		$userMovieItem.appendChild($userMovieGrid);
+
+		$movieSelectionUl.appendChild($userMovieItem);
+	});
 };
 
 const renderVrijwilligers = () => {
@@ -193,8 +343,11 @@ const renderVrijwilligers = () => {
 	});
 };
 
-const updateEventPhase = async eventBody => {
-	await update(`${url}/cinemaEvent/phase`, eventBody);
+const updateEventPhase = async () => {
+	const eventBody = {
+		eventPhase: currentPhase
+	};
+	await update(`${url}/api/cinemaEvent/phase`, eventBody);
 	renderProjectPhase();
 };
 
@@ -216,6 +369,12 @@ const postMessage = async pushMessage => {
 		console.log(finalMessage);
 		await post(`${url}/admin/push`, finalMessage);
 	}
+};
+
+//SelectionTool
+const handleSelectionClick = () => {
+	const $selectionTool = document.querySelector('.selectionToolCont');
+	$selectionTool.classList.toggle('selectionFullscreen');
 };
 
 // const getEventPhase = async () => {
@@ -255,6 +414,7 @@ const init = () => {
 	const $plus = document.querySelector('.plus');
 	const $min = document.querySelector('.min');
 	const $reset = document.querySelector('.reset');
+	const $selection = document.querySelector('.selectionToolHeader');
 	//set stuff
 	currentPhase = $fase.innerHTML;
 	renderProjectPhase();
@@ -264,6 +424,7 @@ const init = () => {
 	$plus.addEventListener('click', handlePlusClick);
 	$min.addEventListener('click', handleMinClick);
 	$reset.addEventListener('click', handleResetClick);
+	$selection.addEventListener('click', handleSelectionClick);
 };
 
 init();

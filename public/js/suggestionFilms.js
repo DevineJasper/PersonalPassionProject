@@ -63,7 +63,6 @@ const renderList = () => {
 		$ul.appendChild($newLi);
 	} else {
 		movies.forEach(row => {
-			console.log(row.poster_path);
 			const $newLi = document.createElement('li');
 			const $newArticle = document.createElement('article');
 			$newArticle.classList.add('movieGrid');
@@ -86,6 +85,11 @@ const renderList = () => {
 
 			const title = row.title;
 			const overview = row.overview;
+			if (overview == '') {
+				$newParagraph.innerHTML = 'Geen beschrijving beschikbaar';
+			} else {
+				$newParagraph.innerHTML = overview;
+			}
 			if (row.poster_path !== null) {
 				const poster = row.poster_path;
 				$newImg.src = `https://image.tmdb.org/t/p/w185/${poster}`;
@@ -100,12 +104,25 @@ const renderList = () => {
 					inCurrentArray = true;
 				}
 			});
-			if (inCurrentArray == false) {
+
+			if (inCurrentArray == false && amountSuggestions < 3) {
 				$newAdd.innerHTML = 'voeg toe';
 				$newAdd.classList.add('button');
-			} else {
-				$newAdd.innerHTML = 'toegevoegd';
+			} else if (inCurrentArray == false && amountSuggestions == 3) {
+				$newAdd.innerHTML = 'voeg toe';
+				$newAdd.classList.add('button');
 				$newAdd.classList.add('disabledButton');
+				$newToegevoegd = document.createElement('p');
+				$newToegevoegd.innerHTML = 'maximum suggesties';
+				$newToegevoegd.classList.add('maxSuggesties');
+				$newArticle.appendChild($newToegevoegd);
+			} else if (inCurrentArray) {
+				$newAdd.innerHTML = 'voeg toe';
+				$newAdd.classList.add('disabledButton');
+				$newToegevoegd = document.createElement('p');
+				$newToegevoegd.innerHTML = 'toegevoegd';
+				$newToegevoegd.classList.add('toegevoegd');
+				$newArticle.appendChild($newToegevoegd);
 			}
 			$newAdd.addEventListener('click', () => handleAdd(row));
 			$newAnchor.setAttribute('target', '_blank');
@@ -115,7 +132,6 @@ const renderList = () => {
 			$newArticle.appendChild($newImg);
 			$newHeading.innerHTML = title;
 			$newArticle.appendChild($newHeading);
-			$newParagraph.innerHTML = overview;
 			$newArticle.appendChild($newParagraph);
 			$newArticle.appendChild($newButtons);
 			$newLi.appendChild($newArticle);
@@ -155,7 +171,7 @@ const handleAdd = movie => {
 			setTimeout(
 				() =>
 					document.querySelector('.amount').classList.remove('redAnimation'),
-				1000
+				500
 			);
 			break;
 	}
@@ -255,7 +271,6 @@ const handleSuggestionsClick = e => {
 	suggestionsWindow.classList.toggle('fullScreen');
 	const suggestionsArrow = document.querySelector('.suggestionsArrow');
 	suggestionsArrow.classList.toggle('down');
-	document.querySelector('html').classList.toggle('noScrollY');
 	document.querySelector('.searchContainer').classList.toggle('transparant');
 };
 
@@ -295,10 +310,14 @@ const handleSubmit = async () => {
 const higherBottom = () => {
 	const $submitContainter = document.querySelector('.submitContainer');
 	$submitContainter.setAttribute('style', `bottom: 0;`);
+	const $footer = document.querySelector('.footer');
+	$footer.setAttribute('style', `display: auto;`);
 };
 const lowerBottom = () => {
 	const $submitContainer = document.querySelector('.submitContainer');
 	$submitContainer.setAttribute('style', `bottom: -5000px;`);
+	const $footer = document.querySelector('.footer');
+	$footer.setAttribute('style', `display: none;`);
 };
 
 const init = () => {
@@ -307,14 +326,14 @@ const init = () => {
 	}
 	loadMessengerSDK(document, 'script', 'Messenger');
 	document.querySelector('.submit').addEventListener('click', handleSubmit);
-	// if (
-	// 	/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-	// 		navigator.userAgent
-	// 	)
-	// ) {
-	// 	document.querySelector('.zoek').addEventListener('focus', lowerBottom);
-	// 	document.querySelector('.zoek').addEventListener('blur', higherBottom);
-	// }
+	if (
+		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+			navigator.userAgent
+		)
+	) {
+		document.querySelector('.zoek').addEventListener('focus', lowerBottom);
+		document.querySelector('.zoek').addEventListener('blur', higherBottom);
+	}
 	document.querySelector('.zoek').addEventListener('input', handleZoek);
 	document
 		.querySelector('.suggestionsBtnCont')

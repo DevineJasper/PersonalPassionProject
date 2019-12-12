@@ -1,5 +1,6 @@
 @import url('./admin.css');
-@import url('./filmsug.css');
+@import url('./suggestionFilms.css');
+@import url('./suggestionSnacks.css');
 @import url('./nav.css');
 @import url('./typo.css');
 
@@ -13,7 +14,7 @@ html {
 
 @media (min-width: 0px) {
 	.content-wrapper {
-		width: 100vw;
+		width: 95%;
 		margin: 0 auto;
 	}
 }
@@ -24,7 +25,7 @@ html {
 	}
 }
 
-@media (min-width: 768px) {
+@media (min-width: 660px) {
 	.content-wrapper {
 		width: 64rem;
 		margin: 0 auto;
@@ -54,4 +55,23 @@ html {
 	font-weight: bold;
 	text-transform: uppercase;
 	line-height: 3rem;
+}
+
+.footer {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	padding-bottom: 10rem;
+}
+
+.submit {
+	z-index: 1000;
+	background: #4999ff;
+	cursor: pointer;
+	color: white;
+	padding: 1.5rem;
+	max-width: max-content;
+
+	align-self: center;
+	margin-bottom: 0.5rem;
 }

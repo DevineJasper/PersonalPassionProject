@@ -1,0 +1,39 @@
+/* #suggestieTitle,
+#suggestieBody,
+#suggestieLink {
+	display: block;
+} */
+
+.block {
+	display: block;
+	margin-bottom: 2rem;
+}
+
+input,
+textarea {
+	box-sizing: border-box;
+	font-size: 1.6rem;
+	min-width: 100%;
+	padding: 0.5rem;
+	border-radius: 0;
+	border: 0.1rem darkgray solid;
+	resize: none;
+	outline: none;
+	line-height: 1.8rem;
+}
+
+.textAreaCont {
+	position: relative;
+	display: inline-block;
+	min-width: 100%;
+}
+
+.characterCount {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	font-weight: 400;
+	width: 100%;
+	text-align: right;
+	color: darkgray;
+}

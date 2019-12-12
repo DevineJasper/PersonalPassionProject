@@ -29,30 +29,49 @@ app.get('/', (req, res) => {
 	res.render(__dirname + '/views/index', { url: config.appUrl });
 });
 
+app.get('/privacy', (req, res) => {
+	res.render(__dirname + '/views/privacy');
+});
+
 app.get('/admin', async (req, res) => {
-	// ejsLint('/views/partials/suggestion_movie', '');
-	movies = [];
-	counter = 0;
-	const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
-	movieSuggestions.forEach(async suggestion => {
-		await fetch(
-			`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
-		)
-			.then(r => r.json())
-			.then(data => {
-				movies.push(data);
-				counter++;
-				if (counter === movieSuggestions.length) {
-					console.log(movies);
-					render();
-				}
-			});
-	});
+	let movies = [];
+	let counter = 0;
+	let datums = [];
+	let drinkSuggestions;
+	let snackSuggestions;
+	if (projectPhase != 0 || projectPhase != 1) {
+		datums = await CinemaEventController.getDates();
+		console.log(datums);
+		const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
+		drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
+		snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
+		movieSuggestions.forEach(async suggestion => {
+			try {
+				await fetch(
+					`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+				)
+					.then(r => r.json())
+					.then(data => {
+						movies.push(data);
+						counter++;
+						if (counter === movieSuggestions.length) {
+							render();
+						}
+					});
+			} catch (error) {
+				res.status(500).send({ message: 'fetch error', error });
+			}
+		});
+	} else {
+	}
 	render = () => {
 		res.render(__dirname + '/views/admin', {
 			url: config.appUrl,
 			projectFase: projectPhase,
-			suggestions_movie: movies
+			suggestions_movie: movies,
+			suggestions_drink: drinkSuggestions,
+			suggestions_snack: snackSuggestions,
+			dates: datums
 		});
 	};
 });
@@ -89,21 +108,26 @@ app.get('/admin', async (req, res) => {
 // 	res.render(__dirname + '/views/stemming/themas', { url: config.appUrl });
 // });
 
-app.put('/cinemaEvent/phase', (req, res) => {
+app.put('/api/cinemaEvent/phase', (req, res) => {
 	// console.log(req.body.eventPhase);
 	projectPhase = req.body.eventPhase;
 	CinemaEventController.setEventPhase(projectPhase);
 	res.status(201).json(projectPhase);
 });
 
-app.get('/cinemaEvent/phase', async (req, res) => {
-	projectPhase = await CinemaEventController.getEventPhase();
-	res.json(projectPhase);
+// app.get('/cinemaEvent/phase', async (req, res) => {
+// 	projectPhase = await CinemaEventController.getEventPhase();
+// 	res.json(projectPhase);
+// });
+
+app.get('/api/cinemaEvent/dates', async (req, res) => {
+	const dates = await CinemaEventController.Dates();
+	res.json(dates);
 });
 
-app.get('/cinemaEvent/datas', async (req, res) => {
-	const dates = await CinemaEventController.getEventDates();
-	res.json(dates);
+app.put('/api/cinemaEvent/dates', async (req, res) => {
+	CinemaEventController.updateDates(req.body);
+	res.json('dates aangepast!');
 });
 
 // app.post('/admin/push', (req, res) => {

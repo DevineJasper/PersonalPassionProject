@@ -25,37 +25,58 @@
 			<!-- ####  PLANNING  #### -->
 			<!-- #PLANNING ##OPZETTEN -->
 			<section class="planningContent hidden">
-				<section class="content-wrapper">
-					<label for="datumFilmavond" class="block">
-						Gewenste datum voor filmavond:
-						<input type="date" id="datumFilmavond" autocomplete="off" />
-					</label>
-					<label for="datumStartSuggesties" class="block">
-						Voorgestelde datum start suggesties:
-						<input type="date" id="datumStartSuggesties" />
-					</label>
-					<label for="datumEndSuggesties" class="block">
-						Voorgestelde datum deadline suggesties:
-						<input type="date" id="datumEndSuggesties" />
-					</label>
-					<label for="datumStartStemming" class="block">
-						Voorgestelde datum start stemming:
-						<input type="date" id="datumStartStemming" />
-					</label>
-					<label for="datumEndStemming" class="block">
-						Voorgestelde datum deadline stemming:
-						<input type="date" id="datumEndStemming" />
-					</label>
-					<div class="datumsOpslaan">OPSLAAN</div>
-				</section>
-				<!-- #PLANNING ##OVERZICHT -->
+				<h3 class="hidden">Planning</h3>
+				<div class="content-wrapper">
+					<section class="planningPlanner hide">
+						<h4>Planner</h4>
+						<label for="datumFilmavond" class="block">
+							Gewenste datum voor filmavond:
+							<input type="date" id="datumFilmavond" autocomplete="off" />
+						</label>
+						<label for="datumStartSuggesties" class="block">
+							Voorgestelde datum start suggesties:
+							<input type="date" id="datumStartSuggesties" />
+						</label>
+						<label for="datumEndSuggesties" class="block">
+							Voorgestelde datum deadline suggesties:
+							<input type="date" id="datumEndSuggesties" />
+						</label>
+						<label for="datumStartStemming" class="block">
+							Voorgestelde datum start stemming:
+							<input type="date" id="datumStartStemming" />
+						</label>
+						<label for="datumEndStemming" class="block">
+							Voorgestelde datum deadline stemming:
+							<input type="date" id="datumEndStemming" />
+						</label>
+						<div class="datumsOpslaan">OPSLAAN</div>
+					</section>
+					<!-- #PLANNING ##OVERZICHT -->
+					<section class="planningPlanning hide">
+						<h4>Planning</h4>
+						<% if(projectFase < 2) { %>
+						<p>Volgende fase: <span>Suggestieronde</span></p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 3) { %>
+						<p>Volgende fase: <span>Selectie maken</span></p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 4) { %>
+						<p>Volgende fase: <span>Stemmingronde</span></p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectiFase < 5) { %>
+						<p>Volgende fase: <span>Voorbereiding filmavond</span></p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 6) { %>
+						<p>Volgende fase: <span>Filmavond!</span></p>
+						<p><%= dates.startSuggesties %></p>
+						<% } %>
+					</section>
+				</div>
 			</section>
 			<!-- ####  BERICHTEN  #### -->
 			<section class="berichtenContent hidden">
 				<h2 class="hidden">Berichten</h2>
-				<div class="content-wrapper">
-					<p>Zend een berichje</p>
-				</div>
+				<div class="content-wrapper"></div>
 			</section>
 			<!-- ####  INZENDINGEN  #### -->
 			<section class="inzendingenContent hidden">
@@ -71,12 +92,12 @@
 				</div>
 				<!-- #INZENDINGEN ##WACHTEN -->
 				<section class="content-wrapper">
-					<h3></h3>
-					<p class="wachten">
+					<h3 class="hidden">Wachten</h3>
+					<p class="wachten hide">
 						Nog Efkes wachten tot het project begonnen is ;)
 					</p>
 				</section>
-				<!-- #INZENDINGEN ##FILM SUGGESTIES -->
+				<!-- #INZENDINGEN ##suggesties_films -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Film suggesties</h3>
 					<ul class="suggestionsMoviesGrid hide">
@@ -85,26 +106,51 @@
 						url}); %> <% }) %>
 					</ul>
 				</section>
-				<!-- #INZENDINGEN ##DRINKS SUGGESTIES -->
+				<div class="selectionToolCont content-wrapper">
+					<div class="selectionTool">
+						<header class="selectionToolHeader">
+							<h5>Films Selectie</h5>
+							<p>0/3</p>
+						</header>
+						<div class="movieSelectionUl"></div>
+						<div class="submit button">opslaan</div>
+					</div>
+				</div>
+				<!-- #INZENDINGEN ##suggesties_drinks -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Drinks Suggesties</h3>
 					<ul class="suggestionsDrinksGrid hide">
-						Drinks
+						<% suggestions_drink.forEach(suggestion => { %> <%-
+						include('./partials/adminConsumpties', {consumptie: suggestion, url:
+						url}); %> <% }) %>
 					</ul>
 				</section>
-				<!-- #INZENDINGEN ##SNACKS SUGGESTIES -->
+				<!-- #INZENDINGEN ##suggesties_snacks -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Snacks Suggesties</h3>
 					<ul class="suggestionsSnacksGrid hide">
-						Snacks
+						<% suggestions_snack.forEach(suggestion => { %> <%-
+						include('./partials/adminConsumpties', {consumptie: suggestion, url:
+						url}); %> <% }) %>
 					</ul>
 				</section>
+			</section>
+			<!-- ### VRIJWILLIGERS ### -->
+			<section class="content-wrapper">
+				<h3 class="hidden">Vrijwilligers</h3>
+				<ul class="vrijwilligersGrid hide">
+					Snacks
+				</ul>
 			</section>
 		</section>
 		<div class="reset click">Reset</div>
 		<div class="plus click">+ Fase</div>
 		<div class="min click">- Fase</div>
 		<ul class="vrijwilligersLijst"></ul>
+		<script>
+			const drinks =<%- JSON.stringify(suggestions_drink) %>;
+			console.log(drinks)
+		</script>
 		<script src="./js/api.js"></script>
 		<script src="./js/admin.js"></script>
 	</body>

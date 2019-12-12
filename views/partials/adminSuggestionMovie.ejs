@@ -62,7 +62,12 @@
 				class="adminMovieInfo button"
 				><span>meer info</span><span class="ext-link"></span
 			></a>
-			<div class="adminMovieAdd button"><span>add</span></div>
+			<div
+				class="adminMovieAdd button"
+				data-movie="<%= JSON.stringify(movie) %>"
+			>
+				<span>add</span>
+			</div>
 		</div>
 	</article>
 </li>
