@@ -40,31 +40,29 @@ app.get('/admin', async (req, res) => {
 	let datums = [];
 	let drinkSuggestions;
 	let snackSuggestions;
-	if (projectPhase != 0 || projectPhase != 1) {
-		datums = await CinemaEventController.getDates();
-		const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
-		drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
-		snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
-		stemmingMovies = await StemmingController.getVotes();
-		movieSuggestions.forEach(async suggestion => {
-			try {
-				await fetch(
-					`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
-				)
-					.then(r => r.json())
-					.then(data => {
-						movies.push(data);
-						counter++;
-						if (counter === movieSuggestions.length) {
-							render();
-						}
-					});
-			} catch (error) {
-				res.status(500).send({ message: 'fetch error', error });
-			}
-		});
-	} else {
-	}
+	datums = await CinemaEventController.getDates();
+	const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
+	drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
+	snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
+	stemmingMovies = await StemmingController.getVotes();
+	movieSuggestions.forEach(async suggestion => {
+		try {
+			await fetch(
+				`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+			)
+				.then(r => r.json())
+				.then(data => {
+					movies.push(data);
+					counter++;
+					if (counter === movieSuggestions.length) {
+						render();
+					}
+				});
+		} catch (error) {
+			res.status(500).send({ message: 'fetch error', error });
+		}
+	});
+
 	render = () => {
 		res.render(__dirname + '/views/admin', {
 			url: config.appUrl,
