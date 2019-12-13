@@ -196,19 +196,7 @@ module.exports = class Receive {
 
 		// Set the response based on the payload
 		if (payload === 'GET_STARTED') {
-			if (this.projectPhase === 0) {
-				let wachten = new Wachten(this.user, this.webhookEvent);
-				response = wachten.genFirstWachten(this.user);
-			} else if (this.projectPhase === 1) {
-				let suggestie = new Suggestie(this.user, this.webhookevent);
-				response = suggestie.genFirstSuggestie(this.user);
-			} else if (this.projectPhase === 2) {
-				let stemming = new Stemming(this.user, this.webhookevent);
-				response = stemming.genFirstStemming(this.user);
-			} else if (this.projectPhase === 3) {
-				let final = new Final(this.user, this.webhookevent);
-				respone = final.genFirstFinal(this.user);
-			}
+			response = this.checkProjectPhase();
 		} else if (payload.includes('SUGGESTIE')) {
 			let suggestie = new Suggestie(this.user, this.webhookevent);
 			response = suggestie.handlePayload(payload);
