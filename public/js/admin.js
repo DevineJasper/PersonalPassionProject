@@ -370,6 +370,7 @@ const updateEventPhase = async () => {
 	const $filmsBtn = document.querySelector('.pickerFilms');
 	renderContent($planning, 'planning');
 	renderInzendingen($filmsBtn, 'films');
+	await postMessage();
 };
 
 const postMessage = async pushMessage => {

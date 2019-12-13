@@ -38,32 +38,12 @@ app.get('/admin', async (req, res) => {
 	let movies = [];
 	let counter = 0;
 	let datums = [];
+	let movieSuggestions;
 	let drinkSuggestions;
 	let snackSuggestions;
-	datums = await CinemaEventController.getDates();
-	const movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
-	drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
-	snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
-	stemmingMovies = await StemmingController.getVotes();
-	movieSuggestions.forEach(async suggestion => {
-		try {
-			await fetch(
-				`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
-			)
-				.then(r => r.json())
-				.then(data => {
-					movies.push(data);
-					counter++;
-					if (counter === movieSuggestions.length) {
-						render();
-					}
-				});
-		} catch (error) {
-			res.status(500).send({ message: 'fetch error', error });
-		}
-	});
-
-	render = () => {
+	let stemmingMovies;
+	const render = () => {
+		console.log('renderen functie');
 		res.render(__dirname + '/views/admin', {
 			url: config.appUrl,
 			projectFase: projectPhase,
@@ -74,6 +54,33 @@ app.get('/admin', async (req, res) => {
 			dates: datums
 		});
 	};
+	datums = await CinemaEventController.getDates();
+	movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
+	drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
+	snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
+	stemmingMovies = await StemmingController.getVotes();
+	console.log(movieSuggestions.length);
+	if (movieSuggestions.length !== 0) {
+		movieSuggestions.forEach(async suggestion => {
+			try {
+				await fetch(
+					`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+				)
+					.then(r => r.json())
+					.then(data => {
+						movies.push(data);
+						counter++;
+						if (counter === movieSuggestions.length) {
+							render();
+						}
+					});
+			} catch (error) {
+				res.status(500).send({ message: 'fetch error', error });
+			}
+		});
+	} else {
+		render();
+	}
 });
 
 // app.get('/suggesties/films', (req, res) => {
