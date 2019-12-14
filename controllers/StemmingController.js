@@ -7,7 +7,7 @@ module.exports = class StemmingController {
 	static setStemming = async (psid, movie) => {
 		const finalBody = {
 			psid: psid,
-			movie_id: movie
+			movieId: movie
 		};
 		StemmingDAO.setStemming(finalBody);
 	};
@@ -18,16 +18,13 @@ module.exports = class StemmingController {
 		let idArray = [];
 		const stemming = await StemmingDAO.getVotes();
 		stemming.forEach(vote => {
-			idArray.push(vote.movie_id);
+			idArray.push(vote.movieId);
 		});
-		console.log(idArray);
 		let countFunc = keys => {
 			countObject[keys] = ++countObject[keys] || 1;
 		};
 		idArray.forEach(countFunc);
-		console.log(countObject);
 		for (let prop in countObject) {
-			console.log(countObject[prop]);
 			const movie = await SelectionDAO.getInfo(prop);
 			const object = {
 				film: movie,
@@ -35,8 +32,20 @@ module.exports = class StemmingController {
 			};
 			final.push(object);
 		}
-		console.log(final);
 		return final;
+	};
+
+	static getHighestVotes = objects => {
+		let count = 0;
+		let highestVotes = [];
+		objects.forEach(object => {
+			console.log(object.votes);
+			if (object.votes > count) {
+				count = object.votes;
+				highestVotes[0] = object;
+			}
+		});
+		return highestVotes;
 	};
 
 	static getOccurence = (array, value) => {};

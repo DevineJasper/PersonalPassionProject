@@ -1,7 +1,7 @@
 class MovieSuggestion {
 	constructor(data) {
 		this.id = '';
-		this.psId = data.psId;
+		this.psid = data.psid;
 		this.movieId = data.movieId;
 	}
 }
@@ -9,7 +9,7 @@ class MovieSuggestion {
 MovieSuggestionSchema = () => {
 	const movie = {
 		id: this.id,
-		psId: this.psId,
+		psid: this.psid,
 		movieId: this.movieId
 	};
 	return movie;

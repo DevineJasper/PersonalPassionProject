@@ -7,8 +7,8 @@ const request = require('request'),
 
 module.exports = class GraphAPI {
 	static callSendAPI(requestBody) {
-		// console.log('dit is de requestBody in callSendAPI');
-		// console.log(requestBody);
+		console.log('dit is de requestBody in callSendAPI');
+		console.log(requestBody);
 		// Send the HTTP request to the Messenger Platform
 		request(
 			{

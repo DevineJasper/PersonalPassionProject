@@ -6,7 +6,7 @@ const GraphAPI = require('../services/graph-api');
 module.exports = class ParticipantsDAO {
 	static setUser = async user => {
 		await knex.from(`Participants`).insert({
-			psId: user.psid,
+			psid: user.psid,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			fase: 0,
@@ -18,13 +18,9 @@ module.exports = class ParticipantsDAO {
 		let result = [];
 		await knex
 			.from(`Participants`)
-			.select(`psId`)
+			.select(`psid`)
 			.where({ fase: phase })
-			.then(r =>
-				r.forEach(object => {
-					result.push(object.psId);
-				})
-			);
+			.then(r => (result = r));
 		return result;
 	};
 
@@ -41,14 +37,21 @@ module.exports = class ParticipantsDAO {
 		await knex
 			.from(`Participants`)
 			.update({ vrijwilliger: 1 })
-			.where({ psId: id });
+			.where({ psid: id });
+	};
+
+	static setParticipantPhase = async (phase, id) => {
+		await knex
+			.from(`Participants`)
+			.update({ fase: phase })
+			.where({ psid: id });
 	};
 
 	static removeVolunteer = async id => {
 		await knex
 			.from(`Participants`)
 			.update({ vrijwilliger: 0 })
-			.where({ psId: id });
+			.where({ psid: id });
 	};
 
 	static getVolunteers = async () => {

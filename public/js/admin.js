@@ -12,7 +12,7 @@ const handleResetClick = async () => {
 	currentPhase = 0;
 	const pushMessage = {
 		payload: 'GET_STARTED',
-		phase: currentPhase
+		text: ''
 	};
 	updateEventPhase();
 	postMessage(pushMessage);
@@ -23,7 +23,7 @@ const handlePlusClick = async () => {
 		currentPhase++;
 		const pushMessage = {
 			payload: 'GET_STARTED',
-			phase: currentPhase
+			text: ''
 		};
 		updateEventPhase();
 		postMessage(pushMessage);
@@ -37,7 +37,7 @@ const handleMinClick = async () => {
 		currentPhase--;
 		const pushMessage = {
 			payload: 'GET_STARTED',
-			phase: currentPhase
+			text: ''
 		};
 		updateEventPhase();
 		postMessage(pushMessage);
@@ -111,6 +111,11 @@ const handleOpslaan = () => {
 	update(`${url}/api/cinemaEvent/dates`, datesBody);
 	currentPhase++;
 	updateEventPhase();
+	const pushMessage = {
+		payload: 'GET_STARTED',
+		phase: currentPhase
+	};
+	postMessage(pushMessage);
 };
 
 //Content Bepaling
@@ -161,6 +166,69 @@ const renderContent = (e, section) => {
 		case 'berichten':
 			previousContent = document.querySelector('.berichtenContent');
 			previousContent.classList.remove('hidden');
+			//
+			let participantsPhase = 0;
+			//
+			const receiverGetStarted = document.createElement('li');
+			receiverGetStarted.classList.add('receiverItem');
+			receiverGetStarted.innerHTML = 'Get Started gedrukt';
+			receiverGetStarted.dataset.participantPhase = 0;
+			//
+			const receiverSuggestie = document.createElement('li');
+			receiverSuggestie.innerHTML = 'Een suggestie doorgestuurd';
+			receiverSuggestie.classList.add('receiverItem');
+			receiverSuggestie.dataset.participantPhase = 1;
+			//
+			const receiverStemming = document.createElement('li');
+			receiverStemming.innerHTML = 'Een stemming doorgestuurd';
+			receiverStemming.classList.add('receiverItem');
+			receiverStemming.dataset.participantPhase = 2;
+			//
+			let receivers = [];
+			if (currentPhase == 0 || currentPhase == 1) {
+				receivers.push(receiverGetStarted);
+			} else if (currentPhase == 2) {
+				receivers.push(receiverGetStarted);
+				receivers.push(receiverSuggestie);
+			} else if (
+				currentPhase == 3 ||
+				currentPhase == 4 ||
+				currentPhase == 5 ||
+				currentPhase == 6
+			) {
+				receivers.push(receiverGetStarted);
+				receivers.push(receiverSuggestie);
+				receivers.push(receiverStemming);
+			}
+			//
+			let selectedParticipants = null;
+			receivers.forEach(receiver => {
+				receiver.addEventListener('click', e => {
+					if (selectedParticipants !== null) {
+						selectedParticipants.classList.remove('selectedParticipants');
+					}
+					selectedParticipants = e.currentTarget;
+					selectedParticipants.classList.add('selectedParticipants');
+					participantsPhase = receiver.dataset.participantPhase;
+					console.log(participantsPhase);
+				});
+			});
+			const $receiverUl = document.querySelector('.receiversList');
+			while ($receiverUl.firstChild)
+				$receiverUl.removeChild($receiverUl.firstChild);
+			receivers.forEach(receiver => {
+				$receiverUl.appendChild(receiver);
+			});
+			const $messageSend = document.querySelector('.messageSubmit');
+			let textToSend;
+			const $messageText = document.querySelector('.messageBody');
+			$messageText.addEventListener('input', e => {
+				textToSend = e.currentTarget.value;
+				console.log(textToSend);
+			});
+			$messageSend.addEventListener('click', () =>
+				handleMessageSend(textToSend, participantsPhase)
+			);
 			break;
 		case 'inzendingen':
 			previousContent = document.querySelector('.inzendingenContent');
@@ -171,6 +239,16 @@ const renderContent = (e, section) => {
 			previousContent.classList.remove('hidden');
 			break;
 	}
+};
+
+const handleMessageSend = (message, phase) => {
+	console.log(message);
+	const pushMessage = {
+		payload: 'REMINDER',
+		participantsPhase: phase,
+		text: message
+	};
+	postMessage(pushMessage);
 };
 
 const renderInzendingen = (e, picker) => {
@@ -227,6 +305,9 @@ const renderInzendingen = (e, picker) => {
 							btn.classList.add('disabledBtn');
 						}
 					});
+				} else if (currentPhase == 5) {
+					previousSection = document.querySelector('.finalFilmGrid');
+					previousSection.classList.remove('hide');
 				}
 				break;
 			case 'drinks':
@@ -242,8 +323,41 @@ const renderInzendingen = (e, picker) => {
 };
 
 let movieSelection = [];
+let originalSelection = [];
+let newSelection = [];
 let amountSelection = 0;
 const $movieSelectionUl = document.querySelector('.movieSelectionUl');
+let removedSelection = [];
+
+getCurrentSelection = async () => {
+	movieSelection = await get('/api/selection/films');
+	originalSelection = [...movieSelection];
+	renderSelectedMovies();
+};
+
+const checkOg = suggestion => {
+	let isInArray = false;
+	originalSelection.forEach(og => {
+		if (og.movieId == suggestion.movieId) {
+			isInArray == true;
+		}
+	});
+	if (isInArray == false) {
+		newSelection.push(suggestion);
+	}
+};
+
+const checkNew = suggestion => {
+	let isInArray = false;
+	newSelection.forEach(newItem => {
+		if (newItem.movieId == suggestion.movieId) {
+			isInArray == true;
+		}
+	});
+	if (isInArray == true) {
+		newSelection.splice(movieSelection.indexOf(suggestion), 1);
+	}
+};
 
 const handleFilmAdd = suggestion => {
 	const movie = JSON.parse(suggestion);
@@ -252,6 +366,7 @@ const handleFilmAdd = suggestion => {
 		case amountSelection == 0:
 			console.log('nog geen suggestions');
 			movieSelection.push(movie);
+			checkOg(movie);
 			// newSuggestions.push(movie);
 			renderSelectedMovies();
 			// renderList(movies);
@@ -273,18 +388,29 @@ const handleFilmAdd = suggestion => {
 			break;
 		case amountSelection >= 3:
 			console.log('meer dan 3');
-			// document.querySelector('.amount').classList.add('redAnimation');
-			// setTimeout(
-			// 	() =>
-			// 		document.querySelector('.amount').classList.remove('redAnimation'),
-			// 	500
-			// );
+			document.querySelector('.selectionAmount').classList.add('redAnimation');
+			setTimeout(
+				() =>
+					document
+						.querySelector('.selectionAmount')
+						.classList.remove('redAnimation'),
+				500
+			);
 			break;
 	}
 };
 
 const removeSelectedItem = item => {
 	movieSelection.splice(movieSelection.indexOf(item), 1);
+	console.log(originalSelection);
+	checkNew(item);
+	originalSelection.forEach(og => {
+		if (item.movieId == og.movieId) {
+			console.log('OG verwijderen');
+			removedSelection.push(og);
+			console.log(removedSelection);
+		}
+	});
 	renderSelectedMovies();
 };
 
@@ -292,9 +418,10 @@ const renderSelectedMovies = () => {
 	while ($movieSelectionUl.firstChild)
 		$movieSelectionUl.removeChild($movieSelectionUl.firstChild);
 	amountSelection = 0;
+	document.querySelector('.selectionAmount').innerHTML = amountSelection;
 	movieSelection.forEach(suggestion => {
 		amountSelection++;
-		console.log(amountSelection);
+		document.querySelector('.selectionAmount').innerHTML = amountSelection;
 		const $userMovieItem = document.createElement('li');
 		$userMovieItem.classList.add('userMovieItem');
 
@@ -370,27 +497,33 @@ const updateEventPhase = async () => {
 	const $filmsBtn = document.querySelector('.pickerFilms');
 	renderContent($planning, 'planning');
 	renderInzendingen($filmsBtn, 'films');
-	await postMessage();
+	// await postMessage();
 };
 
 const postMessage = async pushMessage => {
+	let finalRecipients = [];
 	if ('participantsPhase' in pushMessage) {
-		console.log('zit een fase in');
+		const phase = pushMessage.participantsPhase;
+		await get(`/participants/${phase}`).then(r => {
+			r.forEach(participant => {
+				finalRecipients.push(participant);
+			});
+		});
 	} else {
-		let finalRecipients = [];
 		await get(`${url}/participants`).then(r => {
 			r.forEach(participant => {
 				finalRecipients.push(participant);
 			});
 		});
-		const finalMessage = {
-			payload: pushMessage.payload,
-			recipients: finalRecipients,
-			phase: pushMessage.phase
-		};
-		console.log(finalMessage);
-		await post(`${url}/admin/push`, finalMessage);
 	}
+	const finalMessage = {
+		payload: pushMessage.payload,
+		text: pushMessage.text,
+		recipients: finalRecipients,
+		phase: currentPhase
+	};
+	console.log(finalMessage);
+	await post(`${url}/admin/push`, finalMessage);
 };
 
 //SelectionTool
@@ -455,6 +588,7 @@ const init = () => {
 	renderProjectPhase();
 	renderContent($planning, 'planning');
 	renderInzendingen($filmsBtn, 'films');
+	getCurrentSelection();
 	//extra event listeners
 	$plus.addEventListener('click', handlePlusClick);
 	$min.addEventListener('click', handleMinClick);

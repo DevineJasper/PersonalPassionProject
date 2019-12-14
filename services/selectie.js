@@ -131,19 +131,15 @@ module.exports = class Selectie {
 		let result = Response.genText(
 			'En jij kan vanaf <DATUM> stemmen op jouw favoriet uit onze selectie!'
 		);
-		let action = Response.genQuickReply(
-			'Welke soort suggestie wil je doorsturen?',
+		let helpen = Response.genQuickReply(
+			'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',
 			[
 				{
-					title: 'Filmsuggesties',
-					payload: 'SUGGESTIE_FILM'
-				},
-				{
-					title: 'Andere suggesties',
-					payload: 'SUGGESTIE_ANDERE'
+					title: '💪🏻 Ik wil helpen',
+					payload: 'SUGGESTIE_HELPEN'
 				}
 			]
 		);
-		return [hello, instructie, result, action];
+		return [hello, instructie, result, helpen];
 	};
 };

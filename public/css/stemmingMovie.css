@@ -1,0 +1,22 @@
+.voteFilmItem {
+	display: grid;
+	grid-template-areas:
+		'. . .'
+		'. img .'
+		'. img .'
+		'. title .'
+		'. votes .';
+	grid-template-columns: 1rem auto 1rem;
+}
+
+.voteFilmImage {
+	grid-area: img;
+}
+
+.voteVotes {
+	grid-area: votes;
+	font-size: 2rem;
+}
+.voteTitle {
+	grid-area: title;
+}

@@ -9,26 +9,32 @@ module.exports = app => {
 		movies = [];
 		const id = req.params.psid;
 		const userMovies = await SuggestionsController.getMovieSuggestionsById(id);
-		userMovies.forEach(async suggestion => {
-			await fetch(
-				`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
-			)
-				.then(r => r.json())
-				.then(data => {
-					movies.push(data);
-					counter++;
-					if (counter === userMovies.length) {
-						render();
-					}
-				});
-		});
-		render = () => {
+		const render = () => {
 			res.render('../views/suggesties/suggestionFilms', {
 				url: config.appUrl,
 				psid: id,
 				suggestions_movie: movies
 			});
 		};
+		console.log(userMovies.length);
+		if (userMovies.length !== 0) {
+			console.log('films ophalen');
+			userMovies.forEach(async suggestion => {
+				await fetch(
+					`https://api.themoviedb.org/3/movie/${suggestion.movieId}?api_key=a108ea578de94e9156c38073bbd89613&language=en-En`
+				)
+					.then(r => r.json())
+					.then(data => {
+						movies.push(data);
+						counter++;
+						if (counter === userMovies.length) {
+							render();
+						}
+					});
+			});
+		} else {
+			render();
+		}
 	});
 
 	app.get('/suggesties/snacks/:psid', (req, res) => {

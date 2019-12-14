@@ -26,7 +26,7 @@ module.exports = class SelectionDAO {
 		await knex
 			.from(`SelectionMovies`)
 			.select('*')
-			.where({ movie_id: id })
+			.where({ movieId: id })
 			.then(r => (movie = r[0]));
 		return movie;
 	};

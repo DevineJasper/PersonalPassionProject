@@ -11,7 +11,6 @@ module.exports = app => {
 	});
 
 	app.get('/api/selection/films', async (req, res) => {
-		const psid = req.params.psid;
 		const userSuggestions = await SelectionController.getMovieSelection();
 		res.json(userSuggestions);
 	});

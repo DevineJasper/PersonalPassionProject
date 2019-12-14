@@ -76,7 +76,11 @@
 			<!-- ####  BERICHTEN  #### -->
 			<section class="berichtenContent hidden">
 				<h2 class="hidden">Berichten</h2>
-				<div class="content-wrapper"></div>
+				<div class="content-wrapper">
+					<ul class="receiversList"></ul>
+					<input class="messageBody" type="text" />
+					<div class="messageSubmit button">verzend</div>
+				</div>
 			</section>
 			<!-- ####  INZENDINGEN  #### -->
 			<section class="inzendingenContent hidden">
@@ -110,7 +114,7 @@
 					<div class="selectionTool">
 						<header class="selectionToolHeader">
 							<h5>Films Selectie</h5>
-							<p>0/3</p>
+							<p><span class="selectionAmount">0</span>/3</p>
 						</header>
 						<div class="movieSelectionUl"></div>
 						<div class="submit button">opslaan</div>
@@ -138,10 +142,18 @@
 				<section class="content-wrapper">
 					<h3 class="hidden">Stemming films</h3>
 					<ul class="votesMovieGrid hide">
-						<% stemming_movies.forEach(vote => { %>
-						<p><%= vote.film.title %></p>
-						<p><%= vote.votes %></p>
-						<% }) %>
+						<% stemming_movies.forEach(vote => { %> <%-
+						include('./partials/stemmingMovie', {vote: vote}) %> <% }) %>
+					</ul>
+				</section>
+				<!-- #INZENDINGEN ##final_films -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Final film</h3>
+					<ul class="finalFilmGrid hide">
+						<li class="finalFilmItem">
+							<% highest_votes.forEach(vote => { %> <%-
+							include('./partials/finalFilm', {movie: vote.film}) %> <% }) %>
+						</li>
 					</ul>
 				</section>
 			</section>
@@ -158,8 +170,9 @@
 		<div class="min click">- Fase</div>
 		<ul class="vrijwilligersLijst"></ul>
 		<script>
-			// const drinks =<%- JSON.stringify(suggestions_drink) %>;
-			console.log(drinks);
+			const highest =<%- JSON.stringify(stemming_movies) %>;
+			const drinks =<%- JSON.stringify(suggestions_drink) %>;
+			console.log(drinks)
 		</script>
 		<script src="./js/api.js"></script>
 		<script src="./js/admin.js"></script>

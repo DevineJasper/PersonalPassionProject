@@ -42,6 +42,7 @@ app.get('/admin', async (req, res) => {
 	let drinkSuggestions;
 	let snackSuggestions;
 	let stemmingMovies;
+	let highestVotes;
 	const render = () => {
 		console.log('renderen functie');
 		res.render(__dirname + '/views/admin', {
@@ -51,7 +52,8 @@ app.get('/admin', async (req, res) => {
 			suggestions_drink: drinkSuggestions,
 			suggestions_snack: snackSuggestions,
 			stemming_movies: stemmingMovies,
-			dates: datums
+			dates: datums,
+			highest_votes: highestVotes
 		});
 	};
 	datums = await CinemaEventController.getDates();
@@ -59,7 +61,8 @@ app.get('/admin', async (req, res) => {
 	drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
 	snackSuggestions = await SuggestionsController.getAllSnackSuggestions();
 	stemmingMovies = await StemmingController.getVotes();
-	console.log(movieSuggestions.length);
+	highestVotes = await StemmingController.getHighestVotes(stemmingMovies);
+	console.log(highestVotes);
 	if (movieSuggestions.length !== 0) {
 		movieSuggestions.forEach(async suggestion => {
 			try {
@@ -396,4 +399,5 @@ require('./routes/stemmingRoutes.js')(app);
 require('./routes/selectieRoutes.js')(app);
 // require('./routes/cinemaEvent.routes.js')(app);
 require('./routes/adminRoutes.js')(app);
+require('./routes/finalRoutes.js')(app);
 require('./routes/participantRoutes.js')(app);

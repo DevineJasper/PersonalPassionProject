@@ -279,7 +279,6 @@ const handleSubmit = async () => {
 	newSuggestions.forEach(suggestion => {
 		suggestionsToAdd.push({ movieId: suggestion.id, psid: user });
 	});
-	console.log(suggestionsToAdd);
 	if (userSuggestionsDb) {
 		if (removedSuggestions.length > 0) {
 			const toRemove = {
@@ -298,9 +297,12 @@ const handleSubmit = async () => {
 
 	const $submit = document.querySelector('.submit');
 	$submit.innerHTML = 'Verzonden!';
+	body = {
+		phase: 1
+	};
 	MessengerExtensions.requestCloseBrowser(
-		(success = () => {
-			//close webview
+		(success = async () => {
+			await update(`/participants/${user}`, body);
 		}),
 		(error = err => {})
 	);

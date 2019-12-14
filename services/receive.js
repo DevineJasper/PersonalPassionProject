@@ -230,15 +230,20 @@ module.exports = class Receive {
 		setTimeout(() => GraphAPI.callSendAPI(requestBody), delay);
 	}
 
-	handlePushPayload = payload => {
+	handlePushPayload = (payload, text) => {
 		let responses;
+		const pushText = text;
+		console.log(pushText);
 
 		switch (payload) {
 			case 'GET_STARTED':
 				responses = this.checkProjectPhase();
 				break;
 			case 'REMINDER':
-				responses = Response.genText('Héla, blijf es van mijn knoppen');
+				console.log('payload is reminder');
+				responses = Response.genText(pushText);
+				console.log(responses);
+				console.log(this.user);
 				break;
 		}
 

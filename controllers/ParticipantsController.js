@@ -9,6 +9,11 @@ module.exports = class ParticipantsController {
 		return users;
 	};
 
+	static getUsersByPhase = async phase => {
+		const users = ParticipantsDAO.getPhase(phase);
+		return users;
+	};
+
 	static setUser = async user => {
 		ParticipantsDAO.setUser(user);
 	};
@@ -16,6 +21,10 @@ module.exports = class ParticipantsController {
 	static getVolunteers = async () => {
 		const volunteers = await ParticipantsDAO.getVolunteers();
 		return await volunteers;
+	};
+
+	static updateParticipantPhase = async (fase, id) => {
+		ParticipantsDAO.setParticipantPhase(fase, id);
 	};
 
 	static setVolunteer = async id => {
