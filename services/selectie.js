@@ -16,7 +16,7 @@ module.exports = class Selectie {
 		let response;
 
 		switch (payload) {
-			case 'SUGGESTIE_FILM':
+			case 'SELECTIE_FILM':
 				const webButton = Response.genWebUrlButton(
 					'Mijn suggesties',
 					`${config.siteUrl}/suggesties/films/${this.user.psid}`
@@ -30,12 +30,12 @@ module.exports = class Selectie {
 						{
 							type: 'postback',
 							title: 'Terug',
-							payload: 'SUGGESTIE_TERUG'
+							payload: 'SELECTIE_TERUG'
 						}
 					]
 				);
 				break;
-			case 'SUGGESTIE_ANDERE':
+			case 'SELECTIE_ANDERE':
 				const drinksBtn = Response.genWebUrlButton(
 					'Drinks',
 					`${config.siteUrl}/suggesties/drinks/${this.user.psid}`
@@ -51,29 +51,29 @@ module.exports = class Selectie {
 				const back = Response.genQuickReply('Als je klaar bent kan je terug!', [
 					{
 						title: 'Terug',
-						payload: 'SUGGESTIE_TERUG'
+						payload: 'SELECTIE_TERUG'
 					}
 				]);
 
 				response = [buttons, back];
 				break;
-			case 'SUGGESTIE_TERUG':
+			case 'SELECTIE_TERUG':
 				response = Response.genQuickReply('Wat wil je doen?', [
 					{
 						title: 'Info',
-						payload: 'SUGGESTIE_INFO'
+						payload: 'SELECTIE_INFO'
 					},
 					{
 						title: 'Filmsuggesties',
-						payload: 'SUGGESTIE_FILM'
+						payload: 'SELECTIE_FILM'
 					},
 					{
 						title: 'Andere suggesties',
-						payload: 'SUGGESTIE_ANDERE'
+						payload: 'SELECTIE_ANDERE'
 					}
 				]);
 				break;
-			case 'SUGGESTIE_HELPEN':
+			case 'SELECTIE_HELPEN':
 				ParticipantsController.setVolunteer(this.user.psid);
 				let bedankt = Response.genText(
 					`Bedankt ${this.user.firstName} 🥳 Wij nemen zo snel mogelijk contact met je op!`
@@ -81,20 +81,20 @@ module.exports = class Selectie {
 				let doen = Response.genQuickReply('Wat wil je doen?', [
 					{
 						title: 'Info',
-						payload: 'SUGGESTIE_INFO'
+						payload: 'SELECTIE_INFO'
 					},
 					{
 						title: 'Filmsuggesties',
-						payload: 'SUGGESTIE_FILM'
+						payload: 'SELECTIE_FILM'
 					},
 					{
 						title: 'Andere suggesties',
-						payload: 'SUGGESTIE_ANDERE'
+						payload: 'SELECTIE_ANDERE'
 					}
 				]);
 				response = [bedankt, doen];
 				break;
-			case 'SUGGESTIE_INFO':
+			case 'SELECTIE_INFO':
 				let filmavond = Response.genText(
 					'De filmavond gaat door op 21 februari.'
 				);
@@ -106,11 +106,11 @@ module.exports = class Selectie {
 					[
 						{
 							title: '💪🏻 Ik wil helpen',
-							payload: 'SUGGESTIE_HELPEN'
+							payload: 'SELECTIE_HELPEN'
 						},
 						{
 							title: '◀️ Terug',
-							payload: 'SUGGESTIE_TERUG'
+							payload: 'SELECTIE_TERUG'
 						}
 					]
 				);
@@ -122,24 +122,26 @@ module.exports = class Selectie {
 	};
 
 	genFirstResponse = () => {
-		let hello = Response.genText(
-			`Jullie suggesties zijn goed ontvangen! Alvast bedankt <3`
-		);
-		let instructie = Response.genText(
-			'De organisatie zal jullie suggesties nu bekijken en er een selectie uit maken.'
+		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
+		let instructie = Response.genText('🤖 BELANGRIJK BERICHT 🤖');
+		let selecteren = Response.genText(
+			'‼️ De filmsuggesties zijn goed ontvangen ‼️'
 		);
 		let result = Response.genText(
-			'En jij kan vanaf <DATUM> stemmen op jouw favoriet uit onze selectie!'
+			'🤖 Ik zal nu een selectie maken uit jullie filmsuggesties 🤖'
+		);
+		let stemmen = Response.genText(
+			'🤖 Vanaf <datum> kunnen jullie dan stemmen op jullie favoriete film 🤖'
 		);
 		let helpen = Response.genQuickReply(
-			'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',
+			'🤖 Als je wilt kun je steeds 🍕snack- en 🍺drinksuggesties doorsturen 🤖',
 			[
 				{
-					title: '💪🏻 Ik wil helpen',
-					payload: 'SUGGESTIE_HELPEN'
+					title: '🍕 & 🍺',
+					payload: 'SELECTIE_ANDERE'
 				}
 			]
 		);
-		return [hello, instructie, result, helpen];
+		return [hello, instructie, selecteren, result, stemmen, helpen];
 	};
 };

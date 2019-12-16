@@ -43,7 +43,8 @@
 	margin-bottom: 4rem;
 }
 
-.selectionToolCont {
+.selectionToolCont,
+.drinksSelectionToolCont {
 	position: fixed;
 	width: 100%;
 	bottom: 5vh;
@@ -82,9 +83,10 @@
 }
 
 .receiversList {
-	margin-top: 2rem;
+	background-color: rgb(230, 230, 230);
 	display: flex;
 	flex-direction: column;
+	padding: 2rem;
 }
 
 .receiverItem {
@@ -97,6 +99,12 @@
 	border: solid black 0.1rem;
 	width: 30rem;
 	margin-bottom: 1rem;
+	background-color: white;
+}
+
+.receiverItem:hover {
+	background-color: black;
+	color: white;
 }
 
 .receiverItem:hover {
@@ -106,4 +114,105 @@
 .selectedParticipants {
 	background-color: black;
 	color: white;
+}
+
+.wachten {
+	margin-top: 3rem;
+	font-size: 1.8rem;
+	font-weight: 700;
+}
+
+.geduld {
+	display: block;
+	margin-top: 1rem;
+	font-size: 1.6rem;
+	font-weight: 400;
+}
+
+.vrijwilligerItem {
+	margin-top: 3rem;
+}
+
+.vrijwilligerCont {
+	display: flex;
+	width: 40rem;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.vrijwilligerName {
+	font-size: 1.6rem;
+	color: brown;
+}
+
+.vrijwilligerButtonsCont {
+	display: flex;
+	width: 20rem;
+	justify-content: space-between;
+}
+
+.vrijwilligerChecked,
+.vrijwilligerDelete {
+	border: black solid 0.1rem;
+	padding: 1rem 2rem;
+	cursor: pointer;
+}
+
+.vrijwilligerIsChecked {
+	color: green;
+}
+
+.messageSubmit {
+	background-color: #4999ff;
+	color: white;
+	padding: 1rem 2rem;
+	margin-top: 3rem;
+}
+
+.messageSubmitCont {
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+	width: max-content;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.selectedReceiver {
+	background-color: black;
+	color: white;
+}
+
+.berichtenError {
+	color: red;
+}
+
+.errorPositive {
+	color: green;
+}
+
+.berichtenLabel {
+	text-transform: uppercase;
+	font-size: 1.4rem;
+	margin-top: 2rem;
+}
+
+.planningHeader {
+	font-size: 1.6rem;
+}
+
+.planningVolgendeFase {
+	font-size: 1.8rem;
+	font-weight: 700;
+}
+
+.planningPlanning,
+.planningPlanner {
+	margin-top: 3rem;
+}
+
+.geenVrijwilligers {
+	margin-top: 3rem;
+	font-size: 1.8rem;
+	font-weight: 700;
 }

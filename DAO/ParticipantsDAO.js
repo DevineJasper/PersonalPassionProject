@@ -66,6 +66,14 @@ module.exports = class ParticipantsDAO {
 		return await volunteers;
 	};
 
+	static updateChecked = async (id, value) => {
+		knex
+			.from(`Participants`)
+			.update({ checked: value })
+			.where({ psid: id })
+			.then(console.log('succes!'));
+	};
+
 	static getUserProfile = async data => {
 		// console.log(data);
 		let user = new User(data);

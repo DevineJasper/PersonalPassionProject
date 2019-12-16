@@ -14,7 +14,7 @@ module.exports = class noFilmavond {
 		let response;
 
 		switch (payload) {
-			case 'WACHTEN_HELPEN':
+			case 'NOFILMAVOND_HELPEN':
 				ParticipantsController.setVolunteer(this.user.psid);
 				let bedankt = Response.genText(
 					`Bedankt ${this.user.firstName} 🥳 Wij nemen zo snel mogelijk contact met je op!`
@@ -22,19 +22,19 @@ module.exports = class noFilmavond {
 				let veranderen = Response.genQuickReply('Indien je je bedenkt...', [
 					{
 						title: '😿 Ik help niet',
-						payload: 'WACHTEN_NOT_HELP'
+						payload: 'NOFILMAVOND_NOT_HELP'
 					}
 				]);
 				response = [bedankt, veranderen];
 				break;
-			case 'WACHTEN_NOT_HELP':
+			case 'NOFILMAVOND_NOT_HELP':
 				ParticipantsController.removeVolunteer(this.user.psid);
 				let huilen = Response.genText('😿😿😿😿😿');
 				let huilenNog = Response.genText('😢😢😢😢😢');
 				let helpen = Response.genQuickReply('Als je je bedenkt...', [
 					{
 						title: '💪🏻 Ik wil helpen',
-						payload: 'WACHTEN_HELPEN'
+						payload: 'NOFILMAVOND_HELPEN'
 					}
 				]);
 				response = [huilen, huilenNog, helpen];
@@ -44,19 +44,19 @@ module.exports = class noFilmavond {
 	};
 
 	genFirstResponse = () => {
-		let hello = Response.genText(`Hey ${this.user.firstName}!`);
+		let hello = Response.genText(`👋 Hey ${this.user.firstName}!`);
 		let instructie = Response.genText(
-			'Momenteel staat er nog geen filmavond ingepland.'
+			'❌ Momenteel staat geen filmavond gepland ❌'
 		);
 		let result = Response.genText(
-			'Als daar verandering in komt, dan laten we je het hier onmiddellijk weten ;)'
+			'🤖 Als daar verandering in komt, dan laten ik het je zeker weten 🤖'
 		);
 		let helpen = Response.genQuickReply(
-			'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',
+			'🤖 Ik ben steeds op zoek naar mensen die mij willen helpen bij de organisatie van de filmavond! 🤖',
 			[
 				{
 					title: '💪🏻 Ik wil helpen',
-					payload: 'WACHTEN_HELPEN'
+					payload: 'NOFILMAVOND_HELPEN'
 				}
 			]
 		);

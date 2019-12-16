@@ -12,6 +12,20 @@ module.exports = app => {
 		res.json(vrijwilligers);
 	});
 
+	app.put('/participants/vrijwilligers/:psid', async (req, res) => {
+		const psid = req.params.psid;
+		if (req.body.vrijwilliger == 0) {
+			console.log('verwijderen');
+			await ParticipantsController.removeVolunteer(psid);
+		} else {
+			console.log('in route');
+			console.log(req.body);
+			const value = req.body.checked;
+			await ParticipantsController.updateChecked(psid, value);
+		}
+		res.json({ message: `${psid} is aangepast!` });
+	});
+
 	app.put('/participants/:psid', async (req, res) => {
 		const fase = req.body.phase;
 		const psid = req.params.psid;

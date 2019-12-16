@@ -197,15 +197,27 @@ module.exports = class Receive {
 		// Set the response based on the payload
 		if (payload === 'GET_STARTED') {
 			response = this.checkProjectPhase();
-		} else if (payload.includes('SUGGESTIE')) {
-			let suggestie = new Suggestie(this.user, this.webhookevent);
-			response = suggestie.handlePayload(payload);
-		} else if (payload.includes('STEMMING')) {
-			let stemming = new Stemming(this.user, this.webhookevent);
-			response = stemming.handlePayload(payload);
+		} else if (payload.includes('NOFILMAVOND')) {
+			let noFilmavond = new NoFilmavond(this.user, this.webhookevent);
+			response = noFilmavond.handlePayload(payload);
 		} else if (payload.includes('WACHTEN')) {
 			let wachten = new Wachten(this.user, this.webhookevent);
 			response = wachten.handlePayload(payload);
+		} else if (payload.includes('SUGGESTIE')) {
+			let suggestie = new Suggestie(this.user, this.webhookevent);
+			response = suggestie.handlePayload(payload);
+		} else if (payload.includes('SELECTIE')) {
+			let selectie = new Selection(this.user, this.webhookevent);
+			response = selectie.handlePayload(payload);
+		} else if (payload.includes('STEMMING')) {
+			let stemming = new Stemming(this.user, this.webhookevent);
+			response = stemming.handlePayload(payload);
+		} else if (payload.includes('FINAL')) {
+			let final = new Final(this.user, this.webhookevent);
+			response = final.handlePayload(payload);
+		} else if (payload.includes('FILMAVOND')) {
+			let filmavond = new Filmavond(this.user, this.webhookevent);
+			response = filmavond.handlePayload(payload);
 		}
 
 		return response;

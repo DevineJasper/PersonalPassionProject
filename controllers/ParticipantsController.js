@@ -34,4 +34,8 @@ module.exports = class ParticipantsController {
 	static removeVolunteer = async id => {
 		await ParticipantsDAO.removeVolunteer(id);
 	};
+
+	static updateChecked = async (id, value) => {
+		await ParticipantsDAO.updateChecked(id, value);
+	};
 };

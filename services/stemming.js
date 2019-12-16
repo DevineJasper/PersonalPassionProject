@@ -100,10 +100,7 @@ module.exports = class Stemming {
 	};
 
 	genFirstResponse = () => {
-		// let image = Response.genImageAttachement(`${config.appUrl}/stemming.gif`);
-		let hello = Response.genText(
-			`We hebben een selectie gemaakt uit jullie geweldige suggesties!`
-		);
+		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
 		let instructie = Response.genText(
 			'Vanaf nu kan jij stemmen op jouw favoriet uit onze selectie!'
 		);

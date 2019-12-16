@@ -28,7 +28,7 @@
 				<h3 class="hidden">Planning</h3>
 				<div class="content-wrapper">
 					<section class="planningPlanner hide">
-						<h4>Planner</h4>
+						<h4 class="hidden">Planner</h4>
 						<label for="datumFilmavond" class="block">
 							Gewenste datum voor filmavond:
 							<input type="date" id="datumFilmavond" autocomplete="off" />
@@ -53,21 +53,22 @@
 					</section>
 					<!-- #PLANNING ##OVERZICHT -->
 					<section class="planningPlanning hide">
-						<h4>Planning</h4>
+						<h4 class="hidden">Planning</h4>
+						<p class="planningHeader">Volgende fase:</p>
 						<% if(projectFase < 2) { %>
-						<p>Volgende fase: <span>Suggestieronde</span></p>
+						<p class="planningVolgendeFase">Suggestieronde</p>
 						<p><%= dates.startSuggesties %></p>
 						<% } else if(projectFase < 3) { %>
-						<p>Volgende fase: <span>Selectie maken</span></p>
+						<p class="planningVolgendeFase">Selectie maken</p>
 						<p><%= dates.startSuggesties %></p>
 						<% } else if(projectFase < 4) { %>
-						<p>Volgende fase: <span>Stemmingronde</span></p>
+						<p class="planningVolgendeFase">Stemmingronde</p>
 						<p><%= dates.startSuggesties %></p>
 						<% } else if(projectFase < 5) { %>
-						<p>Volgende fase: <span>Voorbereiding filmavond</span></p>
+						<p class="planningVolgendeFase">Voorbereiding filmavond</p>
 						<p><%= dates.startSuggesties %></p>
 						<% } else if(projectFase < 6) { %>
-						<p>Volgende fase: <span>Filmavond!</span></p>
+						<p class="planningVolgendeFase">Filmavond!</p>
 						<p><%= dates.startSuggesties %></p>
 						<% } %>
 					</section>
@@ -77,9 +78,14 @@
 			<section class="berichtenContent hidden">
 				<h2 class="hidden">Berichten</h2>
 				<div class="content-wrapper">
+					<p class="berichtenLabel">selecteer ontvangers</p>
 					<ul class="receiversList"></ul>
+					<p class="berichtenLabel">Schrijf een bericht</p>
 					<input class="messageBody" type="text" />
-					<div class="messageSubmit button">verzend</div>
+					<div class="messageSubmitCont">
+						<div class="messageSubmit button">verzend</div>
+						<div class="berichtenError"></div>
+					</div>
 				</div>
 			</section>
 			<!-- ####  INZENDINGEN  #### -->
@@ -98,7 +104,10 @@
 				<section class="content-wrapper">
 					<h3 class="hidden">Wachten</h3>
 					<p class="wachten hide">
-						Nog Efkes wachten tot het project begonnen is ;)
+						Nog geen inzendingen.
+						<span class="geduld"
+							>Vanaf de suggestieronde komen hier de inzendingen!</span
+						>
 					</p>
 				</section>
 				<!-- #INZENDINGEN ##suggesties_films -->
@@ -109,17 +118,17 @@
 						include('./partials/adminSuggestionMovie', {movie: suggestion, url:
 						url}); %> <% }) %>
 					</ul>
-				</section>
-				<div class="selectionToolCont content-wrapper hide">
-					<div class="selectionTool">
-						<header class="selectionToolHeader">
-							<h5>Films Selectie</h5>
-							<p><span class="selectionAmount">0</span>/3</p>
-						</header>
-						<div class="movieSelectionUl"></div>
-						<div class="submit button">opslaan</div>
+					<div class="selectionToolCont content-wrapper hide">
+						<div class="selectionTool">
+							<header class="selectionToolHeader">
+								<h5>Films Selectie</h5>
+								<p><span class="selectionAmount">0</span>/3</p>
+							</header>
+							<div class="movieSelectionUl"></div>
+							<div class="submit button">opslaan</div>
+						</div>
 					</div>
-				</div>
+				</section>
 				<!-- #INZENDINGEN ##suggesties_drinks -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Drinks Suggesties</h3>
@@ -129,6 +138,7 @@
 						url}); %> <% }) %>
 					</ul>
 				</section>
+				<%- include('./partials/selectionTool', {soort: 'drinks'}) %>
 				<!-- #INZENDINGEN ##suggesties_snacks -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Snacks Suggesties</h3>
@@ -138,6 +148,7 @@
 						url}); %> <% }) %>
 					</ul>
 				</section>
+				<%- include('./partials/selectionTool', {soort: 'snacks'}) %>
 				<!-- #INZENDINGEN ##stemming_films -->
 				<section class="content-wrapper">
 					<h3 class="hidden">Stemming films</h3>
@@ -160,8 +171,12 @@
 			<!-- ### VRIJWILLIGERS ### -->
 			<section class="content-wrapper">
 				<h3 class="hidden">Vrijwilligers</h3>
-				<ul class="vrijwilligersGrid hide">
-					Snacks
+				<ul class="vrijwilligersGrid hidden">
+					<% vrijwilligers.forEach(volunteer => { %> <%-
+					include('./partials/vrijwilliger', {vrijwilliger: volunteer}) %> <% })
+					%> <% if(vrijwilligers.length == 0) { %>
+					<li class="geenVrijwilligers">Nog geen vrijwilligers</li>
+					<% } %>
 				</ul>
 			</section>
 		</section>

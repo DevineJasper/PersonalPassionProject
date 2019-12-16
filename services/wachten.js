@@ -44,15 +44,19 @@ module.exports = class Suggestie {
 	};
 
 	genFirstResponse = () => {
-		let hello = Response.genText(`Er is een Filmavond gepland op <DATUM>!`);
-		let instructie = Response.genText(
-			'En vanaf <DATUM> kan jij jouw filmsuggesties doorsturen voor die filmavond!'
-		);
+		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
+		let instructie = Response.genText('🤖 BELANGRIJK BERICHT 🤖');
 		let result = Response.genText(
-			'Neem zeker een kijkje op de facebookpagina van Cinematjes voor meer info :D'
+			'‼️ Er is een filmavond gepland op <datum> ‼️'
+		);
+		let action = Response.genText(
+			'‼️ Vanaf <datum> kan jij suggesties doorsturen via de chatbot ‼️'
+		);
+		let info = Response.genText(
+			'🤖 Kijk zeker eens op de cinematjes facebookpagina voor meer informatie 🤖'
 		);
 		let helpen = Response.genQuickReply(
-			'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',
+			'🤖 Ik ben steeds op zoek naar mensen die mij willen helpen bij de organisatie van de filmavond! 🤖',
 			[
 				{
 					title: '💪🏻 Ik wil helpen',
@@ -60,6 +64,6 @@ module.exports = class Suggestie {
 				}
 			]
 		);
-		return [hello, instructie, result, helpen];
+		return [hello, instructie, result, action, info, helpen];
 	};
 };

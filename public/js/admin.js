@@ -139,7 +139,10 @@ const renderProjectPhase = () => {
 	}
 };
 
+let selectedParticipants = null;
+
 const renderContent = (e, section) => {
+	selectedParticipants = null;
 	if (previousContent != null) {
 		previousContent.classList.add('hidden');
 	}
@@ -153,41 +156,58 @@ const renderContent = (e, section) => {
 	}
 	switch (section) {
 		case 'planning':
+			plannerShown = false;
+			planningShown = false;
+			selectedParticipants = null;
 			previousContent = document.querySelector('.planningContent');
 			previousContent.classList.remove('hidden');
+			const $planner = document.querySelector('.planningPlanner');
+			const $planning = document.querySelector('.planningPlanning');
 			if (currentPhase == 0) {
-				const $planner = document.querySelector('.planningPlanner');
+				if (!$planning.classList.contains('hide')) {
+					$planning.classList.add('hide');
+				}
 				$planner.classList.remove('hide');
 			} else {
-				const $planning = document.querySelector('.planningPlanning');
+				if (!$planner.classList.contains('hide')) {
+					$planner.classList.add('hide');
+				}
 				$planning.classList.remove('hide');
 			}
 			break;
 		case 'berichten':
+			selectedParticipants = null;
 			previousContent = document.querySelector('.berichtenContent');
 			previousContent.classList.remove('hidden');
 			//
 			let participantsPhase = 0;
 			//
+			const receiverIedereen = document.createElement('li');
+			receiverIedereen.classList.add('receiverItem');
+			receiverIedereen.innerHTML = 'Iedereen';
+			receiverIedereen.dataset.participantsPhase = 'geen';
+			//
 			const receiverGetStarted = document.createElement('li');
 			receiverGetStarted.classList.add('receiverItem');
 			receiverGetStarted.innerHTML = 'Get Started gedrukt';
-			receiverGetStarted.dataset.participantPhase = 0;
+			receiverGetStarted.dataset.participantsPhase = 0;
 			//
 			const receiverSuggestie = document.createElement('li');
 			receiverSuggestie.innerHTML = 'Een suggestie doorgestuurd';
 			receiverSuggestie.classList.add('receiverItem');
-			receiverSuggestie.dataset.participantPhase = 1;
+			receiverSuggestie.dataset.participantsPhase = 1;
 			//
 			const receiverStemming = document.createElement('li');
 			receiverStemming.innerHTML = 'Een stemming doorgestuurd';
 			receiverStemming.classList.add('receiverItem');
-			receiverStemming.dataset.participantPhase = 2;
+			receiverStemming.dataset.participantsPhase = 2;
 			//
 			let receivers = [];
 			if (currentPhase == 0 || currentPhase == 1) {
+				receivers.push(receiverIedereen);
 				receivers.push(receiverGetStarted);
 			} else if (currentPhase == 2) {
+				receivers.push(receiverIedereen);
 				receivers.push(receiverGetStarted);
 				receivers.push(receiverSuggestie);
 			} else if (
@@ -196,21 +216,27 @@ const renderContent = (e, section) => {
 				currentPhase == 5 ||
 				currentPhase == 6
 			) {
+				receivers.push(receiverIedereen);
 				receivers.push(receiverGetStarted);
 				receivers.push(receiverSuggestie);
 				receivers.push(receiverStemming);
 			}
 			//
-			let selectedParticipants = null;
+			selectedParticipants = null;
 			receivers.forEach(receiver => {
 				receiver.addEventListener('click', e => {
-					if (selectedParticipants !== null) {
-						selectedParticipants.classList.remove('selectedParticipants');
+					if (e.currentTarget.classList.contains('selectedParticipants')) {
+						e.currentTarget.classList.remove('selectedParticipants');
+						selectedParticipants = null;
+					} else {
+						if (selectedParticipants !== null) {
+							selectedParticipants.classList.remove('selectedParticipants');
+						}
+						selectedParticipants = e.currentTarget;
+						selectedParticipants.classList.add('selectedParticipants');
+						participantsPhase = receiver.dataset.participantsPhase;
+						console.log(participantsPhase);
 					}
-					selectedParticipants = e.currentTarget;
-					selectedParticipants.classList.add('selectedParticipants');
-					participantsPhase = receiver.dataset.participantPhase;
-					console.log(participantsPhase);
 				});
 			});
 			const $receiverUl = document.querySelector('.receiversList');
@@ -224,19 +250,83 @@ const renderContent = (e, section) => {
 			const $messageText = document.querySelector('.messageBody');
 			$messageText.addEventListener('input', e => {
 				textToSend = e.currentTarget.value;
-				console.log(textToSend);
 			});
-			$messageSend.addEventListener('click', () =>
-				handleMessageSend(textToSend, participantsPhase)
-			);
+			$messageSend.addEventListener('click', () => {
+				const $errorBericht = document.querySelector('.berichtenError');
+				if ($errorBericht.classList.contains('errorPositive')) {
+					$errorBericht.classList.remove('errorPositive');
+				}
+				if (
+					(textToSend == undefined || textToSend.length < 2) &&
+					selectedParticipants == null
+				) {
+					$errorBericht.innerHTML =
+						'Vul een bericht in en selecteer een ontvanger';
+				} else if (textToSend == undefined || textToSend.length < 2) {
+					$errorBericht.innerHTML = 'Vul een bericht in';
+				} else if (selectedParticipants == null) {
+					$errorBericht.innerHTML = 'Selecteer een ontvanger';
+				} else {
+					handleMessageSend(textToSend, participantsPhase);
+					$errorBericht.innerHTML = 'Verzonden!';
+					$errorBericht.classList.add('errorPositive');
+					selectedParticipants = null;
+					const selected = document.querySelector('.selectedParticipants');
+					selected.classList.remove('selectedParticipants');
+					const $messageText = document.querySelector('.messageBody');
+					$messageText.value = '';
+				}
+			});
 			break;
 		case 'inzendingen':
+			selectedParticipants = null;
 			previousContent = document.querySelector('.inzendingenContent');
 			previousContent.classList.remove('hidden');
 			break;
 		case 'vrijwilligers':
-			previousContent = document.querySelector('.inzendingenContent');
+			selectedParticipants = null;
+			previousContent = document.querySelector('.vrijwilligersGrid');
 			previousContent.classList.remove('hidden');
+			//
+			const vrijwilligersDelete = document.querySelectorAll(
+				'.vrijwilligerDelete'
+			);
+			vrijwilligersDelete.forEach(del => {
+				del.addEventListener('click', async e => {
+					const psid = e.currentTarget.dataset.psid;
+					body = {
+						vrijwilliger: 0
+					};
+					const stringPsid = String(psid);
+					await update(`/participants/vrijwilligers/${psid}`, body);
+					const listItem = previousContent.querySelector(
+						`li[data-psid="${stringPsid}"]`
+					);
+					previousContent.removeChild(listItem);
+				});
+			});
+			//
+			const vrijwilligersChecked = document.querySelectorAll(
+				'.vrijwilligerChecked'
+			);
+			vrijwilligersChecked.forEach(check => {
+				check.addEventListener('click', async e => {
+					const psid = e.currentTarget.dataset.psid;
+					let isChecked = e.currentTarget.dataset.checked;
+					if (isChecked == 1) {
+						isChecked = 0;
+					} else {
+						isChecked = 1;
+					}
+					e.currentTarget.dataset.checked = isChecked;
+					body = {
+						checked: isChecked
+					};
+					const name = document.querySelector(`h4[data-psid="${psid}"]`);
+					name.classList.toggle('vrijwilligerIsChecked');
+					await update(`/participants/vrijwilligers/${psid}`, body);
+				});
+			});
 			break;
 	}
 };
@@ -250,6 +340,8 @@ const handleMessageSend = (message, phase) => {
 	};
 	postMessage(pushMessage);
 };
+
+let currentSelectionTool;
 
 const renderInzendingen = (e, picker) => {
 	if (previousSection != null) {
@@ -273,6 +365,7 @@ const renderInzendingen = (e, picker) => {
 			case 'films':
 				const $addBtn = document.querySelectorAll('.adminMovieAdd');
 				const $selectionTool = document.querySelector('.selectionToolCont');
+				currentSelectionTool = $selectionTool;
 				if (currentPhase == 2) {
 					previousSection = document.querySelector('.suggestionsMoviesGrid');
 					previousSection.classList.remove('hide');
@@ -311,9 +404,32 @@ const renderInzendingen = (e, picker) => {
 				}
 				break;
 			case 'drinks':
-				if (currentPhase == 2) {
+				const drinksSelectionTool = document.querySelector(
+					'.drinksSelectionToolCont'
+				);
+				const headerTool = drinksSelectionTool.querySelector(
+					'.selectionToolHeader'
+				);
+				headerTool.addEventListener('click', () => {
+					console.log(drinksSelectionTool);
+					if (drinksSelectionTool.classList.contains('selectionFullscreen')) {
+						console.log('contains fullscreen');
+						drinksSelectionTool.classList.remove('selectionFullscreen');
+						console.log(drinksSelectionTool);
+					}
+					drinksSelectionTool.classList.add('selectionFullscreen');
+				});
+				console.log(drinksSelectionTool);
+				if (currentSelectionTool !== null) {
+					currentSelectionTool.classList.add('hide');
+				}
+				if (currentPhase > 1 && currentPhase < 5) {
 					previousSection = document.querySelector('.suggestionsDrinksGrid');
 					previousSection.classList.remove('hide');
+				}
+				if (currentPhase > 2) {
+					console.log(drinksSelectionTool);
+					drinksSelectionTool.classList.remove('hide');
 				}
 				break;
 			case 'snacks':
@@ -503,12 +619,20 @@ const updateEventPhase = async () => {
 const postMessage = async pushMessage => {
 	let finalRecipients = [];
 	if ('participantsPhase' in pushMessage) {
-		const phase = pushMessage.participantsPhase;
-		await get(`/participants/${phase}`).then(r => {
-			r.forEach(participant => {
-				finalRecipients.push(participant);
+		if (pushMessage.participantsPhase == 'geen') {
+			await get(`${url}/participants`).then(r => {
+				r.forEach(participant => {
+					finalRecipients.push(participant);
+				});
 			});
-		});
+		} else {
+			const phase = pushMessage.participantsPhase;
+			await get(`/participants/${phase}`).then(r => {
+				r.forEach(participant => {
+					finalRecipients.push(participant);
+				});
+			});
+		}
 	} else {
 		await get(`${url}/participants`).then(r => {
 			r.forEach(participant => {

@@ -122,24 +122,26 @@ module.exports = class Suggestie {
 	};
 
 	genFirstResponse = () => {
-		let hello = Response.genText(
-			`Stuur jouw filmsuggesties door tot en met <DATUM>!`
-		);
-		let instructie = Response.genText(
-			'Je kan nu ook suggesties doorsturen voor snacks & drinks ;)'
-		);
+		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
+		let instructie = Response.genText('🤖 BELANGRIJK BERICHT 🤖');
 		let result = Response.genText(
-			'Wie weet selecteren we jouw suggesties voor de filmavond van <DATUM>'
+			'‼️ Vanaf nu tot en met <datum> kan je jouw filmsuggesties doorsturen ‼️'
+		);
+		let filmsuggesties = Response.genText(
+			'🤖 Je kan zowel 📽filmsuggesties doorsturen 🤖'
+		);
+		let anderesuggesties = Response.genText(
+			'🤖 Als 🍕snack- en 🍺drinksuggesties 🤖'
 		);
 		let action = Response.genQuickReply(
-			'Welke soort suggestie wil je doorsturen?',
+			'🤖 Welke soort suggestie wil je doorsturen? 🤖',
 			[
 				{
-					title: 'Filmsuggesties',
+					title: '📽 Filmsuggesties',
 					payload: 'SUGGESTIE_FILM'
 				},
 				{
-					title: 'Andere suggesties',
+					title: '🍕 & 🍺',
 					payload: 'SUGGESTIE_ANDERE'
 				}
 			]
