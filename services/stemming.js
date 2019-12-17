@@ -20,7 +20,7 @@ module.exports = class Stemming {
 					`${config.siteUrl}/stemming/${this.user.psid}`
 				);
 				response = Response.genGenericTemplate(
-					`${config.appUrl}/assets/images/movieDb.png`,
+					`${config.appUrl}/assets/images/film.png`,
 					`Film stemming van ${this.user.firstName}`,
 					'Stem op jouw favoriet voor op de filmavond!',
 					[
@@ -33,35 +33,9 @@ module.exports = class Stemming {
 					]
 				);
 				break;
-			case 'STEMMING_ANDERE':
-				const drinksBtn = Response.genWebUrlButton(
-					'Drinks',
-					`${config.siteUrl}/stemming/drinks`
-				);
-				const snacksBtn = Response.genWebUrlButton(
-					'Snacks',
-					`${config.siteUrl}/stemming/snacks`
-				);
-				const themaBtn = Response.genWebUrlButton(
-					'Thema',
-					`${config.siteUrl}/stemming/themas`
-				);
-				const buttons = Response.genButtonTemplate('Welke suggestie?', [
-					drinksBtn,
-					snacksBtn,
-					themaBtn
-				]);
-				const back = Response.genQuickReply('Als je klaar bent kan je terug!', [
-					{
-						title: 'Terug',
-						payload: 'STEMMING_TERUG'
-					}
-				]);
-				response = [buttons, back];
-				break;
 			case 'STEMMING_TERUG':
 				const fase = Response.genText(
-					'Je kan momenteel stemmen op jouw favorieten.'
+					'🤖 Je kan momenteel stemmen op jouw favoriete 📽film. 🤖'
 				);
 				const doen = Response.genQuickReply('Wat wil je doen?', [
 					{
@@ -69,30 +43,31 @@ module.exports = class Stemming {
 						payload: 'STEMMING_INFO'
 					},
 					{
-						title: 'Stemmen op film',
+						title: 'Stemmen op 📽film',
 						payload: 'STEMMING_FILM'
-					},
-					{
-						title: 'Stemmen op andere',
-						payload: 'STEMMING_ANDERE'
 					}
 				]);
 				response = [fase, doen];
 				break;
 			case 'STEMMING_INFO':
 				let filmavond = Response.genText(
-					'De filmavond gaat door op 21 februari.'
+					'De filmavond gaat door op <datum>.'
 				);
-				let stemronde = Response.genQuickReply(
-					'En je kan stemmen tot en met 20 februari!',
+				let stemronde = Response.genText('Je kan stemmen op jouw favoriet tot <datum>')
+				let helpen = Response.genQuickReply(
+					'We zoeken altijd naar enthousiaste vrijwilligers om te helpen bij de organisatie van de filmavond :D',
 					[
 						{
-							title: 'Terug',
+							title: '💪🏻 Ik wil helpen',
+							payload: 'STEMMING_HELPEN'
+						},
+						{
+							title: '◀️ Terug',
 							payload: 'STEMMING_TERUG'
 						}
 					]
 				);
-				response = [filmavond, stemronde];
+				response = [filmavond, stemronde, helpen];
 				break;
 		}
 
@@ -101,20 +76,17 @@ module.exports = class Stemming {
 
 	genFirstResponse = () => {
 		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
+		let belangrijk = Respons.genText('🤖 BELANGRIJK BERICHT 🤖')
 		let instructie = Response.genText(
-			'Vanaf nu kan jij stemmen op jouw favoriet uit onze selectie!'
+			'‼️ Vanaf nu kan jij stemmen op jouw favoriet uit onze selectie! ‼️'
 		);
-		let bis = Response.genText('Nu wordt het echt spannend ;)');
-		let action = Response.genQuickReply('Waarop wil je stemmen?', [
+		let bis = Response.genText('🔥 NU WORDT HET WEL ECHT SPANNEND 🔥');
+		let action = Response.genQuickReply('🤖 Waarop wil je stemmen? 🤖', [
 			{
-				title: 'Stemmen op film',
+				title: 'Stemmen op 📽film',
 				payload: 'STEMMING_FILM'
-			},
-			{
-				title: 'Stemmen op andere',
-				payload: 'STEMMING_ANDERE'
 			}
 		]);
-		return [hello, instructie, bis, action];
+		return [hello, belangrijk, instructie, bis, action];
 	};
 };

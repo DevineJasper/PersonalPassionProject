@@ -14,42 +14,11 @@ module.exports = class Final {
 		let response;
 
 		switch (payload) {
-			case 'SUGGESTIE_FILM':
-				const webButton = Response.genWebUrlButton(
-					'Mijn suggesties',
-					config.siteUrl
-				);
-				response = Response.genGenericTemplate(
-					`${config.appUrl}/assets/images/movieDb.png`,
-					`Filmsuggesties van ${this.user.firstName}`,
-					'Welke film wil jij bekijken op de filmavond?',
-					[
-						webButton,
-						{
-							type: 'postback',
-							title: 'Terug',
-							payload: 'GET_STARTED'
-						}
-					]
-				);
+			case 'FINAL_AANWEZIG':
+				response = Response.genText('Super! 🎉')
 				break;
-			case 'SUGGESTIE_ANDERE':
-				const drinksBtn = Response.genWebUrlButton('Drinks', config.siteUrl);
-				const snacksBtn = Response.genWebUrlButton('Snacks', config.siteUrl);
-				const themaBtn = Response.genWebUrlButton('Thema', config.siteUrl);
-				const buttons = Response.genButtonTemplate('Welke suggestie?', [
-					drinksBtn,
-					snacksBtn,
-					themaBtn
-				]);
-				const back = Response.genQuickReply('Als je klaar bent kan je terug!', [
-					{
-						title: 'Terug',
-						payload: 'GET_STARTED'
-					}
-				]);
-
-				response = [buttons, back];
+			case 'FINAL_AFWEZIG':
+				response = Response.genText('Spijtig 😢😢😢')
 				break;
 		}
 
@@ -57,16 +26,17 @@ module.exports = class Final {
 	};
 
 	genFirstResponse = () => {
-		// let image = Response.genImageAttachement(`${config.appUrl}/stemming.gif`);
-		let hello = Response.genText(
-			`De filmavond van <DATUM> ligt helemaal vast! Bekijk hier de resultaten :o`
+		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
+		let belangrijk = Respons.genText('🤖 BELANGRIJK BERICHT 🤖')
+		let vast = Response.genText(
+			`‼️ De filmavond van <DATUM> ligt helemaal vast! Bekijk hier de resultaten ‼️`
 		);
 		let instructie = Response.genText(
-			'De organisatie zal nu alles voorbereiden ;)'
+			'🤖 De organisatie zal nu alles voorbereiden 🤖'
 		);
 		let bis = Response.genQuickReply('Jij komt toch ook!?', [
 			{
-				title: 'Ik kom!',
+				title: 'Ik kom! :D',
 				payload: 'FINAL_AANWEZIG'
 			},
 			{
@@ -83,11 +53,11 @@ module.exports = class Final {
 			`${config.siteUrl}/final/consumpties`
 		);
 		let results = Response.genGenericTemplate(
-			`${config.appUrl}/assets/images/movieDb.png`,
+			`${config.appUrl}/assets/images/film.png`,
 			`Filmavond van <DATUM>`,
 			'Hoe ziet jullie filmavond eruit?',
 			[movieButton, consumptieButton]
 		);
-		return [hello, results, instructie, bis];
+		return [hello, belangrijk, vast, results, instructie, bis];
 	};
 };

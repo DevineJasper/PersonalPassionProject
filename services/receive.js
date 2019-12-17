@@ -207,7 +207,7 @@ module.exports = class Receive {
 			let suggestie = new Suggestie(this.user, this.webhookevent);
 			response = suggestie.handlePayload(payload);
 		} else if (payload.includes('SELECTIE')) {
-			let selectie = new Selection(this.user, this.webhookevent);
+			let selectie = new Selectie(this.user, this.webhookevent);
 			response = selectie.handlePayload(payload);
 		} else if (payload.includes('STEMMING')) {
 			let stemming = new Stemming(this.user, this.webhookevent);

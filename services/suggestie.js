@@ -84,11 +84,11 @@ module.exports = class Suggestie {
 						payload: 'SUGGESTIE_INFO'
 					},
 					{
-						title: 'Filmsuggesties',
+						title: '📽 Filmsuggesties',
 						payload: 'SUGGESTIE_FILM'
 					},
 					{
-						title: 'Andere suggesties',
+						title: '🍕 & 🍺',
 						payload: 'SUGGESTIE_ANDERE'
 					}
 				]);
@@ -146,6 +146,6 @@ module.exports = class Suggestie {
 				}
 			]
 		);
-		return [hello, instructie, result, action];
+		return [hello, instructie, filmsuggesties, anderesuggesties, result, action];
 	};
 };
