@@ -243,6 +243,7 @@ module.exports = class Receive {
 	}
 
 	handlePushPayload = (payload, text) => {
+		console.log('bericht ontvangen');
 		let responses;
 		const pushText = text;
 		console.log(pushText);

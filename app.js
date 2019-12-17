@@ -38,12 +38,13 @@ app.get('/admin', async (req, res) => {
 	let movies = [];
 	let counter = 0;
 	let datums = [];
-	let movieSuggestions;
-	let drinkSuggestions;
-	let snackSuggestions;
-	let stemmingMovies;
+	let movieSuggestions = [];
+	let drinkSuggestions = [];
+	let snackSuggestions = [];
+	let stemmingMovies = [];
 	let highestVotes;
 	let volunteers = [];
+	let currentPhase;
 	const render = () => {
 		console.log('renderen functie');
 		res.render(__dirname + '/views/admin', {
@@ -59,6 +60,8 @@ app.get('/admin', async (req, res) => {
 		});
 	};
 	datums = await CinemaEventController.getDates();
+	currentPhase = await CinemaEventController.getEventPhase();
+	projectPhase = currentPhase;
 	movieSuggestions = await SuggestionsController.getAllMovieSuggestions();
 	drinkSuggestions = await SuggestionsController.getAllDrinkSuggestions();
 	snackSuggestions = await SuggestionsController.getAllSnackSuggestions();

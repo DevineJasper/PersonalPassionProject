@@ -8,7 +8,7 @@ module.exports = class SelectionController {
 		movies.forEach(movie => {
 			const finalMovie = {
 				movieId: movie.id,
-				title: movie.title,
+				title: movie.original_title,
 				vote_average: movie.vote_average,
 				release_date: movie.release_date,
 				overview: movie.overview,

@@ -35,10 +35,6 @@
 	flex-wrap: wrap;
 }
 
-.hide {
-	display: none;
-}
-
 #datumFilmavond {
 	margin-bottom: 4rem;
 }
@@ -215,4 +211,60 @@
 	margin-top: 3rem;
 	font-size: 1.8rem;
 	font-weight: 700;
+}
+
+.datumsOpslaan {
+	cursor: pointer;
+	margin: 0 auto;
+	background-color: #4999ff;
+	padding: 1rem 2rem;
+	width: max-content;
+	color: white;
+}
+
+.suggestionsDrinksGrid, .suggestionsSnacksGrid {
+	width: 60rem;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.suggestionConsumptieArticle {
+	width: 25rem;
+	display: grid;
+	grid-template-areas: 
+	'. . .'
+	'. title .'
+	'. beschrijving.'
+	'. link .'
+	'. . .';
+	grid-template-columns: 1rem 1fr 1rem;
+	grid-template-rows: 1rem 4rem 10rem min-content 1rem;
+	height: auto;
+	box-shadow: 0 0 1.8rem 0.2rem rgba(0, 0, 0, 0.09);
+	margin-top: 3rem;
+}
+
+.consumptieTitle {
+	grid-area: title;
+	font-size: 1.6;
+	max-height: 100%;
+	overflow: hidden;
+}
+
+.consumptieBeschrijving {
+	grid-area: beschrijving;
+}
+
+.consumptieLink {
+	grid-area: link;
+}
+
+.votesMovieGrid{
+	display: flex;
+}
+
+.hide {
+	display: none;
 }

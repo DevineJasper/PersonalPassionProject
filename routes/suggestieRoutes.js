@@ -40,7 +40,8 @@ module.exports = app => {
 	app.get('/suggesties/snacks/:psid', (req, res) => {
 		res.render('../views/suggesties/suggestionSnacks', {
 			url: config.appUrl,
-			soort: 'snack'
+			soort: 'snack',
+			psid: req.params.psid
 		});
 	});
 

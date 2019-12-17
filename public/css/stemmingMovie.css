@@ -1,4 +1,6 @@
 .voteFilmItem {
+	margin-top: 3rem;
+	width: max-content;
 	display: grid;
 	grid-template-areas:
 		'. . .'

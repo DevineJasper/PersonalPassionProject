@@ -114,9 +114,13 @@
 				<section class="content-wrapper">
 					<h3 class="hidden">Film suggesties</h3>
 					<ul class="suggestionsMoviesGrid hide">
+						<% if (suggestions_movie.length > 0) { %>
 						<% suggestions_movie.forEach(suggestion => { %> <%-
 						include('./partials/adminSuggestionMovie', {movie: suggestion, url:
 						url}); %> <% }) %>
+						<% } else { %>
+							<p class="geenVrijwilligers">Nog geen filmsuggesties</p>
+						<% } %>
 					</ul>
 					<div class="selectionToolCont content-wrapper hide">
 						<div class="selectionTool">
@@ -133,9 +137,13 @@
 				<section class="content-wrapper">
 					<h3 class="hidden">Drinks Suggesties</h3>
 					<ul class="suggestionsDrinksGrid hide">
+						<% if (suggestions_drink.length > 0)  { %>
 						<% suggestions_drink.forEach(suggestion => { %> <%-
 						include('./partials/adminConsumpties', {consumptie: suggestion, url:
 						url}); %> <% }) %>
+						<% } else { %>
+							<p class="geenVrijwilligers">Nog geen drink suggesties</p>
+						<% } %>
 					</ul>
 				</section>
 				<%- include('./partials/selectionTool', {soort: 'drinks'}) %>

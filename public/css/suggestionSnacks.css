@@ -1,7 +1,2 @@
 @import url('./components/userSuggestionForm.css');
 
-.snacksHeaderCont {
-	width: 100%;
-	height: 10rem;
-	background-image: url('../../assets/images/snacks.jpg');
-}

@@ -108,7 +108,7 @@ const handleOpslaan = () => {
 		endStemming: finalValEndStem,
 		filmAvond: finalValFilmavond
 	};
-	update(`${url}/api/cinemaEvent/dates`, datesBody);
+	update(`/api/cinemaEvent/dates`, datesBody);
 	currentPhase++;
 	updateEventPhase();
 	const pushMessage = {
@@ -427,12 +427,14 @@ const renderInzendingen = (e, picker) => {
 					previousSection = document.querySelector('.suggestionsDrinksGrid');
 					previousSection.classList.remove('hide');
 				}
-				if (currentPhase > 2) {
+				if (currentPhase > 2 && currentPhase <5) {
 					console.log(drinksSelectionTool);
 					drinksSelectionTool.classList.remove('hide');
 				}
 				break;
 			case 'snacks':
+				previousSection = document.querySelector('.suggestionsSnacksGrid');
+				previousSection.classList.remove('hide');
 				break;
 		}
 	}
@@ -603,7 +605,7 @@ const updateEventPhase = async () => {
 	const eventBody = {
 		eventPhase: currentPhase
 	};
-	await update(`${url}/api/cinemaEvent/phase`, eventBody);
+	await update(`/api/cinemaEvent/phase`, eventBody);
 	renderProjectPhase();
 	activeHeadNav = null;
 	activeSubNav = null;
@@ -620,7 +622,7 @@ const postMessage = async pushMessage => {
 	let finalRecipients = [];
 	if ('participantsPhase' in pushMessage) {
 		if (pushMessage.participantsPhase == 'geen') {
-			await get(`${url}/participants`).then(r => {
+			await get(`/participants`).then(r => {
 				r.forEach(participant => {
 					finalRecipients.push(participant);
 				});
@@ -634,7 +636,7 @@ const postMessage = async pushMessage => {
 			});
 		}
 	} else {
-		await get(`${url}/participants`).then(r => {
+		await get(`/participants`).then(r => {
 			r.forEach(participant => {
 				finalRecipients.push(participant);
 			});
@@ -647,7 +649,7 @@ const postMessage = async pushMessage => {
 		phase: currentPhase
 	};
 	console.log(finalMessage);
-	await post(`${url}/admin/push`, finalMessage);
+	await post(`/admin/push`, finalMessage);
 };
 
 //SelectionTool
@@ -664,7 +666,7 @@ const handleSubmitClick = () => {
 		const selectionBody = {
 			movies: movieSelection
 		};
-		post(`${url}/api/selection/films`, selectionBody);
+		post(`/api/selection/films`, selectionBody);
 	}
 };
 
