@@ -16,9 +16,6 @@ module.exports = app => {
 		});
 	});
 	app.get('/final/consumpties', async (req, res) => {
-	
-		console.log('hey hey heeeyyyy');
-		console.log(selectionMovies);
 		res.render('../views/final/consumpties');
 	});
 };
