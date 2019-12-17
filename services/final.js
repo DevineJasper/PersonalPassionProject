@@ -27,7 +27,7 @@ module.exports = class Final {
 
 	genFirstResponse = () => {
 		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
-		let belangrijk = Respons.genText('🤖 BELANGRIJK BERICHT 🤖')
+		let belangrijk = Response.genText('🤖 BELANGRIJK BERICHT 🤖')
 		let vast = Response.genText(
 			`‼️ De filmavond van <DATUM> ligt helemaal vast! Bekijk hier de resultaten ‼️`
 		);
