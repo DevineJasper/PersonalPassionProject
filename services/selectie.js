@@ -64,11 +64,7 @@ module.exports = class Selectie {
 						payload: 'SELECTIE_INFO'
 					},
 					{
-						title: 'Filmsuggesties',
-						payload: 'SELECTIE_FILM'
-					},
-					{
-						title: 'Andere suggesties',
+						title: '🍕 & 🍺',
 						payload: 'SELECTIE_ANDERE'
 					}
 				]);
@@ -80,15 +76,7 @@ module.exports = class Selectie {
 				);
 				let doen = Response.genQuickReply('Wat wil je doen?', [
 					{
-						title: 'Info',
-						payload: 'SELECTIE_INFO'
-					},
-					{
-						title: 'Filmsuggesties',
-						payload: 'SELECTIE_FILM'
-					},
-					{
-						title: 'Andere suggesties',
+						title: '🍕 & 🍺',
 						payload: 'SELECTIE_ANDERE'
 					}
 				]);

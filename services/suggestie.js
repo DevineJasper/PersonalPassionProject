@@ -22,7 +22,7 @@ module.exports = class Suggestie {
 					`${config.siteUrl}/suggesties/films/${this.user.psid}`
 				);
 				response = Response.genGenericTemplate(
-					`${config.appUrl}/assets/images/movieDb.png`,
+					`${config.appUrl}/assets/images/film.png`,
 					`Filmsuggesties van ${this.user.firstName}`,
 					'Welke film wil jij bekijken op de filmavond?',
 					[
