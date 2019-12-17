@@ -16,12 +16,9 @@ module.exports = app => {
 		});
 	});
 	app.get('/final/consumpties', async (req, res) => {
-		let selectionMovies = await SelectionController.getMovieSelection();
+	
 		console.log('hey hey heeeyyyy');
 		console.log(selectionMovies);
-		res.render('../views/final/consumpties', {
-			final_drinks: drink,
-			final_snacks: snacks
-		});
+		res.render('../views/final/consumpties');
 	});
 };
