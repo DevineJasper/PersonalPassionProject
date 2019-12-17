@@ -76,7 +76,7 @@ module.exports = class Stemming {
 
 	genFirstResponse = () => {
 		let hello = Response.genText(`⚬ ☼☱☴☼ BEEP ☼☵☷☵☼ BOOP ☼☴☱☼ ⚬`);
-		let belangrijk = Respons.genText('🤖 BELANGRIJK BERICHT 🤖')
+		let belangrijk = Response.genText('🤖 BELANGRIJK BERICHT 🤖')
 		let instructie = Response.genText(
 			'‼️ Vanaf nu kan jij stemmen op jouw favoriet uit onze selectie! ‼️'
 		);
