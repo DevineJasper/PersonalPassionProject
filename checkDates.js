@@ -9,7 +9,7 @@ async function checkSetup() {
 	dates = await CinemaEventController.getDates();
 	console.log(dates);
 	phase = await CinemaEventController.getEventPhase();
-	console.log(phase);
+	console.log(`fase project: ${phase}`);
 }
 
 async function sendMessage(phase) {
