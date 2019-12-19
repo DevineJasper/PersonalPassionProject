@@ -1,0 +1,30 @@
+<section>
+	<h1 class="hidden"><%= soort %> suggestie</h1>
+	<div class="content-wrapper">
+		<label class="block" for="suggestieTitle">
+			Naam van <%= soort %>
+			<input id="suggestieTitle" type="text" required maxlength="20" />
+		</label>
+		<label class="textAreaCont block" for="suggestieBody">
+			Beschrijf <%= soort %>
+			<span class="subLabel">(ingrediënten, waar kopen, hoe serveren...)</span>
+			<textarea
+				name=""
+				id="suggestieBody"
+				rows="10"
+				maxlength="200"
+				required
+			></textarea>
+			<span class="characterCount"></span>
+		</label>
+		<label class="block" for="suggestieLink">
+			Eventuele link naar <%= soort %>
+			<input id="suggestieLink" type="text" />
+		</label>
+		<div class="submitContainer">
+			<div class="submit button">
+				Verstuur <%= soort %>suggestie
+			</div>
+		</div>
+	</div>
+</section>

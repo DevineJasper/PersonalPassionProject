@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="../../css/reset.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/style.css" type="text/css" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+		/>
+		<title>Filmsuggesties</title>
+	</head>
+	<body class="noScrollY">
+		<h1 hidden>Cinematjes</h1>
+		<div class="searchContainer">
+			<input
+				class="zoek"
+				type="text"
+				value=""
+				placeholder="&#128269;  Type hier een filmtitel"
+			/>
+			<section class="lijstContainer">
+				<div class="content-wrapper">
+					<ul class="list">
+						<li class="instruction">Zoek naar een film...</li>
+					</ul>
+				</div>
+			</section>
+		</div>
+		<section class="submitContainer">
+			<div class="suggestionsWindow">
+				<h2 hidden>Huidige suggesties</h2>
+				<div class="suggestionsBtnCont">
+					<p class="suggestionsArrow"></p>
+					<p class="suggestionsBtn button">
+						Huidige suggesties
+					</p>
+					<p class="amountIndicator"><span class="amount">0</span> / 3</p>
+				</div>
+				<ul class="currentSuggestions"></ul>
+				<div class="submit button">Verzend suggesties</div>
+			</div>
+		</section>
+		<script>
+			const url =<%- JSON.stringify(url) %>;
+			const user =<%- psid %>;
+			console.log(url);
+			console.log(user);
+			let amountSuggestions = 0;
+			let currentSuggestions = [];
+			let originalSuggestions = [];
+			let userSuggestionsDb = false;
+			let receivedSuggestions =<%- JSON.stringify(suggestions_movie) %>;
+			if(receivedSuggestions.length > 0){
+				userSuggestionsDb = true;
+				receivedSuggestions.forEach(received => {
+					currentSuggestions.push(received);
+					originalSuggestions.push(received);
+				});
+				console.log(currentSuggestions);
+				console.log(amountSuggestions);
+				console.log(userSuggestionsDb);
+			}
+		</script>
+		<script src="../../js/api.js"></script>
+		<script src="../../js/suggestionFilms.js"></script>
+		<% include ../partials/footer.ejs %>
+	</body>
+</html>

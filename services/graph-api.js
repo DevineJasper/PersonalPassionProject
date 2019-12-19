@@ -8,9 +8,7 @@ const request = require('request'),
 module.exports = class GraphAPI {
 	static callSendAPI(requestBody) {
 		console.log('dit is de requestBody in callSendAPI');
-		if (requestBody.message.attachment) {
-			console.log(requestBody.message.attachment.payload.elements[0].buttons);
-		}
+		console.log(requestBody);
 		// Send the HTTP request to the Messenger Platform
 		request(
 			{
@@ -181,110 +179,110 @@ module.exports = class GraphAPI {
 		});
 	}
 
-	static getPersonaAPI() {
-		return new Promise(function(resolve, reject) {
-			let body = [];
+	// static getPersonaAPI() {
+	// 	return new Promise(function(resolve, reject) {
+	// 		let body = [];
 
-			// Send the POST request to the Personas API
-			console.log(`Fetching personas for app ${config.appId}`);
+	// 		// Send the POST request to the Personas API
+	// 		console.log(`Fetching personas for app ${config.appId}`);
 
-			request({
-				uri: `${config.mPlatfom}/me/personas`,
-				qs: {
-					access_token: config.pageAccesToken
-				},
-				method: 'GET'
-			})
-				.on('response', function(response) {
-					// console.log(response.statusCode);
+	// 		request({
+	// 			uri: `${config.mPlatfom}/me/personas`,
+	// 			qs: {
+	// 				access_token: config.pageAccesToken
+	// 			},
+	// 			method: 'GET'
+	// 		})
+	// 			.on('response', function(response) {
+	// 				// console.log(response.statusCode);
 
-					if (response.statusCode !== 200) {
-						reject(Error(response.statusCode));
-					}
-				})
-				.on('data', function(chunk) {
-					body.push(chunk);
-				})
-				.on('error', function(error) {
-					console.error('Unable to fetch personas:' + error);
-					reject(Error('Network Error'));
-				})
-				.on('end', () => {
-					body = Buffer.concat(body).toString();
-					// console.log(JSON.parse(body));
+	// 				if (response.statusCode !== 200) {
+	// 					reject(Error(response.statusCode));
+	// 				}
+	// 			})
+	// 			.on('data', function(chunk) {
+	// 				body.push(chunk);
+	// 			})
+	// 			.on('error', function(error) {
+	// 				console.error('Unable to fetch personas:' + error);
+	// 				reject(Error('Network Error'));
+	// 			})
+	// 			.on('end', () => {
+	// 				body = Buffer.concat(body).toString();
+	// 				// console.log(JSON.parse(body));
 
-					resolve(JSON.parse(body).data);
-				});
-		});
-	}
+	// 				resolve(JSON.parse(body).data);
+	// 			});
+	// 	});
+	// }
 
-	static postPersonaAPI(name, profile_picture_url) {
-		let body = [];
+	// static postPersonaAPI(name, profile_picture_url) {
+	// 	let body = [];
 
-		return new Promise(function(resolve, reject) {
-			// Send the POST request to the Personas API
-			console.log(`Creating a Persona for app ${config.appId}`);
+	// 	return new Promise(function(resolve, reject) {
+	// 		// Send the POST request to the Personas API
+	// 		console.log(`Creating a Persona for app ${config.appId}`);
 
-			let requestBody = {
-				name: name,
-				profile_picture_url: profile_picture_url
-			};
+	// 		let requestBody = {
+	// 			name: name,
+	// 			profile_picture_url: profile_picture_url
+	// 		};
 
-			request({
-				uri: `${config.mPlatfom}/me/personas`,
-				qs: {
-					access_token: config.pageAccesToken
-				},
-				method: 'POST',
-				json: requestBody
-			})
-				.on('response', function(response) {
-					// console.log(response.statusCode);
-					if (response.statusCode !== 200) {
-						reject(Error(response.statusCode));
-					}
-				})
-				.on('data', function(chunk) {
-					body.push(chunk);
-				})
-				.on('error', function(error) {
-					console.error('Unable to create a persona:', error);
-					reject(Error('Network Error'));
-				})
-				.on('end', () => {
-					body = Buffer.concat(body).toString();
-					// console.log(JSON.parse(body));
+	// 		request({
+	// 			uri: `${config.mPlatfom}/me/personas`,
+	// 			qs: {
+	// 				access_token: config.pageAccesToken
+	// 			},
+	// 			method: 'POST',
+	// 			json: requestBody
+	// 		})
+	// 			.on('response', function(response) {
+	// 				// console.log(response.statusCode);
+	// 				if (response.statusCode !== 200) {
+	// 					reject(Error(response.statusCode));
+	// 				}
+	// 			})
+	// 			.on('data', function(chunk) {
+	// 				body.push(chunk);
+	// 			})
+	// 			.on('error', function(error) {
+	// 				console.error('Unable to create a persona:', error);
+	// 				reject(Error('Network Error'));
+	// 			})
+	// 			.on('end', () => {
+	// 				body = Buffer.concat(body).toString();
+	// 				// console.log(JSON.parse(body));
 
-					resolve(JSON.parse(body).id);
-				});
-		}).catch(error => {
-			console.error('Unable to create a persona:', error, body);
-		});
-	}
+	// 				resolve(JSON.parse(body).id);
+	// 			});
+	// 	}).catch(error => {
+	// 		console.error('Unable to create a persona:', error, body);
+	// 	});
+	// }
 
-	static callNLPConfigsAPI() {
-		// Send the HTTP request to the Built-in NLP Configs API
-		// https://developers.facebook.com/docs/graph-api/reference/page/nlp_configs/
+	// static callNLPConfigsAPI() {
+	// 	// Send the HTTP request to the Built-in NLP Configs API
+	// 	// https://developers.facebook.com/docs/graph-api/reference/page/nlp_configs/
 
-		console.log(`Enable Built-in NLP for Page ${config.pageId}`);
-		request(
-			{
-				uri: `${config.mPlatfom}/me/nlp_configs`,
-				qs: {
-					access_token: config.pageAccesToken,
-					nlp_enabled: true
-				},
-				method: 'POST'
-			},
-			(error, _res, body) => {
-				if (!error) {
-					console.log('Request sent callnlpconfigs:', body);
-				} else {
-					console.error('Unable to activate built-in NLP:', error);
-				}
-			}
-		);
-	}
+	// 	console.log(`Enable Built-in NLP for Page ${config.pageId}`);
+	// 	request(
+	// 		{
+	// 			uri: `${config.mPlatfom}/me/nlp_configs`,
+	// 			qs: {
+	// 				access_token: config.pageAccesToken,
+	// 				nlp_enabled: true
+	// 			},
+	// 			method: 'POST'
+	// 		},
+	// 		(error, _res, body) => {
+	// 			if (!error) {
+	// 				console.log('Request sent callnlpconfigs:', body);
+	// 			} else {
+	// 				console.error('Unable to activate built-in NLP:', error);
+	// 			}
+	// 		}
+	// 	);
+	// }
 
 	static callFBAEventsAPI(senderPsid, eventName) {
 		// Construct the message body
@@ -294,11 +292,11 @@ module.exports = class GraphAPI {
 				{
 					_eventName: 'postback_payload',
 					_value: eventName,
-					_origin: 'original_coast_clothing'
+					_origin: 'cinematjes'
 				}
 			]),
-			advertiser_tracking_enabled: 1,
-			application_tracking_enabled: 1,
+			advertiser_tracking_enabled: 0,
+			application_tracking_enabled: 0,
 			extinfo: JSON.stringify(['mb1']),
 			page_id: config.pageId,
 			page_scoped_user_id: senderPsid

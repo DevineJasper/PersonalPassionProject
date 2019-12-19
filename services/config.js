@@ -11,7 +11,11 @@ const ENV_VARS = [
 	'APP_SECRET',
 	'VERIFY_TOKEN',
 	'APP_URL',
-	'SITE_URL'
+	'SITE_URL',
+	'HOST',
+	'USER',
+	'PASSWORD',
+	'DATABASE'
 ];
 
 module.exports = {
@@ -35,6 +39,12 @@ module.exports = {
 
 	// Preferred port (default to 3000)
 	port: process.env.PORT || 3000,
+
+	// Database stuff
+	host: process.env.HOST,
+	user: process.env.USER,
+	password: process.env.PASSWORD,
+	database: process.env.DATABASE,
 
 	get mPlatfom() {
 		return this.mPlatformDomain + '/' + this.mPlatformVersion;

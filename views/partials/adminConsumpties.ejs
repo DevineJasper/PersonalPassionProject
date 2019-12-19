@@ -1,0 +1,9 @@
+<article class="suggestionConsumptieArticle">
+	<h5 class="consumptieTitle"><%= consumptie.title %></h5>
+	<p class="consumptieBeschrijving"><%= consumptie.beschrijving %></p>
+	<% if(consumptie.link != '' || consumptie.link != null) { %>
+	<a class="consumptieLink" href="<%= consumptie.link %>" target="_blank"><%= consumptie.link %></a>
+	<% } else { %>
+	<p class="consumptieLink red">geen link meegegeven</p>
+	<% } %>
+</article>

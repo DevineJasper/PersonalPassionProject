@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="../../css/reset.css" />
+		<link rel="stylesheet" href="../../css/style.css" type="text/css" />
+		<link rel="stylesheet" href="../../css/stemmingFilms.css" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+		/>
+		<title>Stemming Films</title>
+	</head>
+	<body>
+		<ul>
+			<% selection.forEach(selected => { %> <%-
+			include('../partials/stemmingFilms.ejs', {movie: selected}) %> <% }) %>
+		</ul>
+		<script>
+			const psid=<%- JSON.stringify(psid) %>
+			const url=<%- JSON.stringify(url) %>
+		</script>
+		<script src="../js/api.js"></script>
+		<script src="../js/stemmingFilms.js"></script>
+	</body>
+</html>

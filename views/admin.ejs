@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link rel="stylesheet" href="./css/reset.css" type="text/css" />
+		<link rel="stylesheet" href="./css/style.css" type="text/css" />
+		<title>Cinematjes organisatie</title>
+	</head>
+	<body>
+		<header>
+			<div class="content-wrapper">
+				<p class="url" hidden><%= url %></p>
+				<h1 hidden>Organisatie</h1>
+				<div class="projectfase-cont">
+					<p class="subtitle">projectfase</p>
+					<p class="fase"><%= projectFase %></p>
+				</div>
+			</div>
+			<% include ./partials/nav %>
+		</header>
+		<section class="content">
+			<h2 class="hidden">Content</h2>
+			<!-- ####  PLANNING  #### -->
+			<!-- #PLANNING ##OPZETTEN -->
+			<section class="planningContent hidden">
+				<h3 class="hidden">Planning</h3>
+				<div class="content-wrapper">
+					<section class="planningPlanner hide">
+						<h4 class="hidden">Planner</h4>
+						<label for="datumFilmavond" class="block">
+							Gewenste datum voor filmavond:
+							<input type="date" id="datumFilmavond" autocomplete="off" />
+						</label>
+						<label for="datumStartSuggesties" class="block">
+							Voorgestelde datum start suggesties:
+							<input type="date" id="datumStartSuggesties" />
+						</label>
+						<label for="datumEndSuggesties" class="block">
+							Voorgestelde datum deadline suggesties:
+							<input type="date" id="datumEndSuggesties" />
+						</label>
+						<label for="datumStartStemming" class="block">
+							Voorgestelde datum start stemming:
+							<input type="date" id="datumStartStemming" />
+						</label>
+						<label for="datumEndStemming" class="block">
+							Voorgestelde datum deadline stemming:
+							<input type="date" id="datumEndStemming" />
+						</label>
+						<div class="datumsOpslaan">OPSLAAN</div>
+					</section>
+					<!-- #PLANNING ##OVERZICHT -->
+					<section class="planningPlanning hide">
+						<h4 class="hidden">Planning</h4>
+						<p class="planningHeader">Volgende fase:</p>
+						<% if(projectFase < 2) { %>
+						<p class="planningVolgendeFase">Suggestieronde</p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 3) { %>
+						<p class="planningVolgendeFase">Selectie maken</p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 4) { %>
+						<p class="planningVolgendeFase">Stemmingronde</p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 5) { %>
+						<p class="planningVolgendeFase">Voorbereiding filmavond</p>
+						<p><%= dates.startSuggesties %></p>
+						<% } else if(projectFase < 6) { %>
+						<p class="planningVolgendeFase">Filmavond!</p>
+						<p><%= dates.startSuggesties %></p>
+						<% } %>
+					</section>
+				</div>
+			</section>
+			<!-- ####  BERICHTEN  #### -->
+			<section class="berichtenContent hidden">
+				<h2 class="hidden">Berichten</h2>
+				<div class="content-wrapper">
+					<p class="berichtenLabel">selecteer ontvangers</p>
+					<ul class="receiversList"></ul>
+					<p class="berichtenLabel">Schrijf een bericht</p>
+					<input class="messageBody" type="text" />
+					<div class="messageSubmitCont">
+						<div class="messageSubmit button">verzend</div>
+						<div class="berichtenError"></div>
+					</div>
+				</div>
+			</section>
+			<!-- ####  INZENDINGEN  #### -->
+			<section class="inzendingenContent hidden">
+				<h2 class="hidden">Inzendingen</h2>
+				<div class="inzendingenPickerBg">
+					<div class="content-wrapper">
+						<div class="inzendingenPicker">
+							<p class="inzendingenItem pickerFilms">Films</p>
+							<p class="inzendingenItem pickerDrinks">Drinks</p>
+							<p class="inzendingenItem pickerSnacks">Snacks</p>
+						</div>
+					</div>
+				</div>
+				<!-- #INZENDINGEN ##WACHTEN -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Wachten</h3>
+					<p class="wachten hide">
+						Nog geen inzendingen.
+						<span class="geduld"
+							>Vanaf de suggestieronde komen hier de inzendingen!</span
+						>
+					</p>
+				</section>
+				<!-- #INZENDINGEN ##suggesties_films -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Film suggesties</h3>
+					<ul class="suggestionsMoviesGrid hide">
+						<% if (suggestions_movie.length > 0) { %>
+						<% suggestions_movie.forEach(suggestion => { %> <%-
+						include('./partials/adminSuggestionMovie', {movie: suggestion, url:
+						url}); %> <% }) %>
+						<% } else { %>
+							<p class="geenVrijwilligers">Nog geen filmsuggesties</p>
+						<% } %>
+					</ul>
+					<div class="selectionToolCont content-wrapper hide">
+						<div class="selectionTool">
+							<header class="selectionToolHeader">
+								<h5>Films Selectie</h5>
+								<p><span class="selectionAmount">0</span>/3</p>
+							</header>
+							<div class="movieSelectionUl"></div>
+							<div class="submit button">opslaan</div>
+						</div>
+					</div>
+				</section>
+				<!-- #INZENDINGEN ##suggesties_drinks -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Drinks Suggesties</h3>
+					<ul class="suggestionsDrinksGrid hide">
+						<% if (suggestions_drink.length > 0)  { %>
+						<% suggestions_drink.forEach(suggestion => { %> <%-
+						include('./partials/adminConsumpties', {consumptie: suggestion, url:
+						url}); %> <% }) %>
+						<% } else { %>
+							<p class="geenVrijwilligers">Nog geen drink suggesties</p>
+						<% } %>
+					</ul>
+				</section>
+				<%- include('./partials/selectionTool', {soort: 'drinks'}) %>
+				<!-- #INZENDINGEN ##suggesties_snacks -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Snacks Suggesties</h3>
+					<ul class="suggestionsSnacksGrid hide">
+						<% suggestions_snack.forEach(suggestion => { %> <%-
+						include('./partials/adminConsumpties', {consumptie: suggestion, url:
+						url}); %> <% }) %>
+					</ul>
+				</section>
+				<%- include('./partials/selectionTool', {soort: 'snacks'}) %>
+				<!-- #INZENDINGEN ##stemming_films -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Stemming films</h3>
+					<ul class="votesMovieGrid hide">
+						<% stemming_movies.forEach(vote => { %> <%-
+						include('./partials/stemmingMovie', {vote: vote}) %> <% }) %>
+					</ul>
+				</section>
+				<!-- #INZENDINGEN ##final_films -->
+				<section class="content-wrapper">
+					<h3 class="hidden">Final film</h3>
+					<ul class="finalFilmGrid hide">
+						<li class="finalFilmItem">
+							<% highest_votes.forEach(vote => { %> <%-
+							include('./partials/finalFilm', {movie: vote.film}) %> <% }) %>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<!-- ### VRIJWILLIGERS ### -->
+			<section class="content-wrapper">
+				<h3 class="hidden">Vrijwilligers</h3>
+				<ul class="vrijwilligersGrid hidden">
+					<% vrijwilligers.forEach(volunteer => { %> <%-
+					include('./partials/vrijwilliger', {vrijwilliger: volunteer}) %> <% })
+					%> <% if(vrijwilligers.length == 0) { %>
+					<li class="geenVrijwilligers">Nog geen vrijwilligers</li>
+					<% } %>
+				</ul>
+			</section>
+		</section>
+		<div class="reset click">Reset</div>
+		<div class="plus click">+ Fase</div>
+		<div class="min click">- Fase</div>
+		<ul class="vrijwilligersLijst"></ul>
+		<script>
+			const highest =<%- JSON.stringify(stemming_movies) %>;
+			const drinks =<%- JSON.stringify(suggestions_drink) %>;
+			console.log(drinks)
+		</script>
+		<script src="./js/api.js"></script>
+		<script src="./js/admin.js"></script>
+	</body>
+</html>

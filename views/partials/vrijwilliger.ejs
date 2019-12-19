@@ -1,0 +1,39 @@
+<li
+	class="vrijwilligerItem"
+	data-psid="<%= JSON.stringify(vrijwilliger.psid) %>"
+>
+	<article class="vrijwilligerCont">
+		<div class="vrijwilligerNameCont">
+			<% if(vrijwilliger.checked == 1) { %>
+			<h4
+				class="vrijwilligerName vrijwilligerIsChecked"
+				data-psid="<%= JSON.stringify(vrijwilliger.psid) %>"
+			>
+				<%= vrijwilliger.firstName %> <%= vrijwilliger.lastName %>
+			</h4>
+			<% } else { %>
+			<h4
+				class="vrijwilligerName"
+				data-psid="<%= JSON.stringify(vrijwilliger.psid) %>"
+			>
+				<%= vrijwilliger.firstName %> <%= vrijwilliger.lastName %>
+			</h4>
+			<% } %>
+		</div>
+		<div class="vrijwilligerButtonsCont">
+			<div
+				class="vrijwilligerChecked button"
+				data-psid="<%= JSON.stringify(vrijwilliger.psid) %>"
+				data-checked="<%= JSON.stringify(vrijwilliger.checked) %>"
+			>
+				Check
+			</div>
+			<div
+				class="vrijwilligerDelete button"
+				data-psid="<%= JSON.stringify(vrijwilliger.psid) %>"
+			>
+				Delete
+			</div>
+		</div>
+	</article>
+</li>

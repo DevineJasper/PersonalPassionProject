@@ -1,0 +1,61 @@
+/* User Movie Component  */
+
+/* .userMovieItem {
+	margin-top: 2rem;
+	margin-bottom: 3rem;
+	box-shadow: 0 0 1.8rem 0.2rem rgba(0, 0, 0, 0.09);
+} */
+
+.userMovieGrid {
+	width: 23rem;
+	height: auto;
+	display: grid;
+	grid-template-rows: 1rem auto 1rem 4.4rem 1rem min-content 1rem;
+	grid-template-columns: 1rem auto min-content auto 1rem;
+	grid-template-areas:
+		'. . . . .'
+		'. img img img .'
+		'. . . . .'
+		'. header header header .'
+		'. . . . .'
+		'. . button . .'
+		'. . . . .';
+	margin-top: 2rem;
+	margin-bottom: 2rem;
+}
+
+.userMovieHeader {
+	grid-area: header;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	width: 100%;
+	height: 100%;
+}
+
+.userMovieTitle {
+	overflow: hidden;
+	line-height: 2.2rem;
+	text-align: center;
+	align-self: center;
+}
+
+.userMoviePoster {
+	grid-area: img;
+	height: 13.9rem;
+	width: 9.25rem;
+	justify-self: center;
+}
+
+.userMovieDelete {
+	grid-area: button;
+	cursor: pointer;
+	color: black;
+	border: 0.2rem solid black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 1rem;
+	font-size: 1.4rem;
+	transform: scale(1);
+}

@@ -1,0 +1,78 @@
+@import url('./admin.css');
+@import url('./suggestionFilms.css');
+@import url('./components/userSuggestionForm.css');
+@import url('./stemmingMovie.css');
+@import url('./nav.css');
+@import url('./typo.css');
+
+html {
+	font-size: 62.5%;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	font-family: 'Comic Sans', 'Helvetica', 'Arial', sans-serif;
+}
+
+@media (min-width: 0px) {
+	.content-wrapper {
+		width: 95%;
+		margin: 0 auto;
+	}
+}
+@media (min-width: 540px) {
+	.content-wrapper {
+		width: 50rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 660px) {
+	.content-wrapper {
+		width: 64rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1024px) {
+	.content-wrapper {
+		width: 96rem;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1200px) {
+	.content-wrapper {
+		width: 96rem;
+		margin: 0 auto;
+	}
+}
+
+.subtitle {
+	font-size: 1.8rem;
+}
+
+.fase {
+	font-size: 2rem;
+	font-weight: bold;
+	text-transform: uppercase;
+	line-height: 3rem;
+}
+
+.footer {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+	padding-bottom: 10rem;
+}
+
+.submit {
+	z-index: 1000;
+	background: #4999ff;
+	cursor: pointer;
+	color: white;
+	padding: 1.5rem;
+	max-width: max-content;
+
+	align-self: center;
+	margin-bottom: 0.5rem;
+}

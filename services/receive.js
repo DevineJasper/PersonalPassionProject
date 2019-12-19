@@ -10,26 +10,28 @@
 
 'use strict';
 
-const /* Curation = require('./curation'), */
-	// Order = require('./order'),
-	Response = require('./response'),
-	// Care = require("./care"),
-	// Survey = require("./survey"),
-	Test = require('./test'),
+const Response = require('./response'),
+	NoFilmavond = require('./noFilmavond'),
+	Wachten = require('./wachten'),
+	Suggestie = require('./suggestie'),
+	Selectie = require('./selectie'),
+	Stemming = require('./stemming'),
+	Final = require('./final'),
+	Filmavond = require('./filmavond'),
 	GraphAPI = require('./graph-api'),
+	User = require('./user'),
 	config = require('./config');
 
 module.exports = class Receive {
-	constructor(user, webhookEvent) {
+	constructor(user, webhookEvent, projectPhase) {
 		this.user = user;
 		this.webhookEvent = webhookEvent;
+		this.projectPhase = projectPhase;
 	}
 
 	// Check if the event is a message or postback and
 	// call the appropriate handler function
 	handleMessage() {
-		console.log('in de handleMessag() functie');
-		console.log(this.webhookEvent);
 		let event = this.webhookEvent;
 
 		let responses;
@@ -37,9 +39,7 @@ module.exports = class Receive {
 		try {
 			if (event.message) {
 				let message = event.message;
-
 				if (message.quick_reply) {
-					console.log('QUICK REPLY GEDETECTEERD!');
 					responses = this.handleQuickReply();
 				} else if (message.attachments) {
 					responses = this.handleAttachmentMessage();
@@ -47,8 +47,6 @@ module.exports = class Receive {
 					responses = this.handleTextMessage();
 				}
 			} else if (event.postback) {
-				console.log('POSTBACK EVENT ONTVANGEN IN HANDLEMESSAGE:');
-				console.log(event.postback);
 				responses = this.handlePostback();
 			}
 		} catch (error) {
@@ -58,13 +56,11 @@ module.exports = class Receive {
         will fix the issue shortly!`
 			};
 		}
-		console.log('RESPONSES GEMAAKT IN HANDLEMESSAGE:');
-		console.log(responses);
 
 		if (Array.isArray(responses)) {
 			let delay = 0;
 			for (let response of responses) {
-				this.sendMessage(response, delay * 1000);
+				this.sendMessage(response, delay * 2000);
 				delay++;
 			}
 		} else {
@@ -81,15 +77,41 @@ module.exports = class Receive {
 		let message = this.webhookEvent.message.text.trim().toLowerCase();
 
 		let response;
-		console.log('DIT IS DE MESSAGE IN HANDLETEXTMESSAGE');
 		console.log(message);
 
-		if (message.includes('rs')) {
-			response = Response.genNuxMessage(this.user);
+		if (message.includes('hey' || 'hallo' || 'hi' || 'yeet')) {
+			response = Response.genText('Hey ;)');
 		} else {
-			response = Response.genNuxMessage(this.user);
+			response = this.checkProjectPhase();
 		}
 
+		return response;
+	}
+
+	checkProjectPhase() {
+		let response;
+		if (this.projectPhase === 0) {
+			let noFilmavond = new NoFilmavond(this.user, this.webhookEvent);
+			response = noFilmavond.genFirstResponse(this.user);
+		} else if (this.projectPhase === 1) {
+			let wachten = new Wachten(this.user, this.webhookevent);
+			response = wachten.genFirstResponse(this.user);
+		} else if (this.projectPhase === 2) {
+			let suggestie = new Suggestie(this.user, this.webhookevent);
+			response = suggestie.genFirstResponse(this.user);
+		} else if (this.projectPhase === 3) {
+			let selectie = new Selectie(this.user, this.webhookevent);
+			response = selectie.genFirstResponse(this.user);
+		} else if (this.projectPhase === 4) {
+			let stemming = new Stemming(this.user, this.webhookevent);
+			response = stemming.genFirstResponse(this.user);
+		} else if (this.projectPhase === 5) {
+			let final = new Final(this.user, this.webhookevent);
+			response = final.genFirstResponse(this.user);
+		} else if (this.projectPhase === 6) {
+			let filmavond = new Filmavond(this.user, this.webhookEvent);
+			response = filmavond.genFirstResponse(this.user);
+		}
 		return response;
 	}
 
@@ -173,82 +195,37 @@ module.exports = class Receive {
 		let response;
 
 		// Set the response based on the payload
-		if (
-			payload === 'GET_STARTED' ||
-			payload === 'DEVDOCS' ||
-			payload === 'GITHUB'
-		) {
-			response = Response.genNuxMessage(this.user);
-		} else if (payload.includes('CURATION') || payload.includes('COUPON')) {
-			let curation = new Curation(this.user, this.webhookEvent);
-			response = curation.handlePayload(payload);
-		} else if (payload.includes('CARE')) {
-			let care = new Care(this.user, this.webhookEvent);
-			response = care.handlePayload(payload);
-		} else if (payload.includes('ORDER')) {
-			response = Order.handlePayload(payload);
-		} else if (payload.includes('CSAT')) {
-			response = Survey.handlePayload(payload);
-		} else if (payload.includes('CHAT-PLUGIN')) {
-			response = [
-				Response.genText(i18n.__('chat_plugin.prompt')),
-				Response.genText(i18n.__('get_started.guidance')),
-				Response.genQuickReply(i18n.__('get_started.help'), [
-					{
-						title: i18n.__('care.order'),
-						payload: 'CARE_ORDER'
-					},
-					{
-						title: i18n.__('care.billing'),
-						payload: 'CARE_BILLING'
-					},
-					{
-						title: i18n.__('care.other'),
-						payload: 'CARE_OTHER'
-					}
-				])
-			];
-		} else if (payload == 'TEST') {
-			console.log('payload is TEST, hoera!');
-			let test = new Test(this.user, this.webhookevent);
-			response = test.handlePayload(payload);
+		if (payload === 'GET_STARTED') {
+			response = this.checkProjectPhase();
+		} else if (payload.includes('NOFILMAVOND')) {
+			let noFilmavond = new NoFilmavond(this.user, this.webhookevent);
+			response = noFilmavond.handlePayload(payload);
+		} else if (payload.includes('WACHTEN')) {
+			let wachten = new Wachten(this.user, this.webhookevent);
+			response = wachten.handlePayload(payload);
+		} else if (payload.includes('SUGGESTIE')) {
+			let suggestie = new Suggestie(this.user, this.webhookevent);
+			response = suggestie.handlePayload(payload);
+		} else if (payload.includes('SELECTIE')) {
+			let selectie = new Selectie(this.user, this.webhookevent);
+			response = selectie.handlePayload(payload);
+		} else if (payload.includes('STEMMING')) {
+			let stemming = new Stemming(this.user, this.webhookevent);
+			response = stemming.handlePayload(payload);
+		} else if (payload.includes('FINAL')) {
+			let final = new Final(this.user, this.webhookevent);
+			response = final.handlePayload(payload);
+		} else if (payload.includes('FILMAVOND')) {
+			let filmavond = new Filmavond(this.user, this.webhookevent);
+			response = filmavond.handlePayload(payload);
 		}
 
 		return response;
 	}
 
-	handlePrivateReply(type, object_id) {
-		let welcomeMessage =
-			i18n.__('get_started.welcome') +
-			' ' +
-			i18n.__('get_started.guidance') +
-			'. ' +
-			i18n.__('get_started.help');
-
-		let response = Response.genQuickReply(welcomeMessage, [
-			{
-				title: i18n.__('menu.suggestion'),
-				payload: 'CURATION'
-			},
-			{
-				title: i18n.__('menu.help'),
-				payload: 'CARE_HELP'
-			}
-		]);
-
-		let requestBody = {
-			recipient: {
-				[type]: object_id
-			},
-			message: response
-		};
-
-		GraphAPi.callSendAPI(requestBody);
-	}
-
 	sendMessage(response, delay = 0) {
-		console.log(`RESPONSE IN SENDMESSAGE ONTVANGEN:`);
-		console.log(response);
+		// console.log(`RESPONSE IN SENDMESSAGE ONTVANGEN:`);
+		// console.log(response);
 		// Check if there is delay in the response
 		if ('delay' in response) {
 			delay = response['delay'];
@@ -264,4 +241,34 @@ module.exports = class Receive {
 		};
 		setTimeout(() => GraphAPI.callSendAPI(requestBody), delay);
 	}
+
+	handlePushPayload = (payload, text) => {
+		console.log('bericht ontvangen');
+		let responses;
+		const pushText = text;
+		console.log(pushText);
+
+		switch (payload) {
+			case 'GET_STARTED':
+				responses = this.checkProjectPhase();
+				break;
+			case 'REMINDER':
+				console.log('payload is reminder');
+				responses = Response.genText(pushText);
+				console.log(responses);
+				console.log(this.user);
+				break;
+		}
+
+		if (Array.isArray(responses)) {
+			console.log('tis een array');
+			let delay = 0;
+			for (let response of responses) {
+				this.sendMessage(response, delay * 2000);
+				delay++;
+			}
+		} else {
+			this.sendMessage(responses);
+		}
+	};
 };

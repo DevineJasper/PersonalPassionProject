@@ -1,0 +1,31 @@
+h2 {
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 1.6rem;
+}
+
+h5 {
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 2rem;
+}
+
+.button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.4rem;
+}
+
+label {
+	font-size: 1.4rem;
+	line-height: 1.6rem;
+	font-weight: 700;
+}
+
+.subLabel {
+	display: block;
+	font-weight: 400;
+	font-size: 1.2rem;
+	line-height: 1.8rem;
+}

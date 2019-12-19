@@ -10,8 +10,6 @@
 
 'use strict';
 
-const i18n = require('../i18n.config');
-
 module.exports = class Response {
 	static genQuickReply(text, quickReplies) {
 		let response = {
@@ -48,6 +46,18 @@ module.exports = class Response {
 			}
 		};
 
+		return response;
+	}
+
+	static genImageAttachement(image_url) {
+		let response = {
+			attachment: {
+				type: 'image',
+				payload: {
+					url: image_url
+				}
+			}
+		};
 		return response;
 	}
 
@@ -119,24 +129,24 @@ module.exports = class Response {
 			title: title,
 			url: url,
 			messenger_extensions: true,
-			webview_height_ratio: 'compact'
+			webview_height_ratio: 'full'
 		};
 
 		return response;
 	}
 
 	static genNuxMessage(user) {
-		let curation = this.genQuickReply('What we can do to help you today?', [
+		let response = this.genQuickReply('Wat wil je doen?', [
 			{
-				title: 'Test the webview',
-				payload: 'TEST'
+				title: 'Filmsuggesties',
+				payload: 'SUGGESTIE_FILM'
 			},
 			{
-				title: 'Talk to an agent',
-				payload: 'CARE_HELP'
+				title: 'Andere suggesties',
+				payload: 'SUGGESTIE_ANDERE'
 			}
 		]);
 
-		return curation;
+		return response;
 	}
 };
