@@ -1,6 +1,4 @@
 const SelectionDAO = require('../DAO/SelectionDAO.js');
-// const request = require('request');
-// const fetch = require('node-fetch');
 
 module.exports = class SelectionController {
 	static setMovieSelection = async movies => {

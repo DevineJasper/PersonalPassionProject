@@ -1,13 +1,3 @@
-/**
- * Copyright 2019-present, Facebook, Inc. All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- *
- * Messenger For Original Coast Clothing
- * https://developers.facebook.com/docs/messenger-platform/getting-started/sample-apps/original-coast-clothing
- */
-
 'use strict';
 
 const Response = require('./response'),
@@ -18,9 +8,7 @@ const Response = require('./response'),
 	Stemming = require('./stemming'),
 	Final = require('./final'),
 	Filmavond = require('./filmavond'),
-	GraphAPI = require('./graph-api'),
-	User = require('./user'),
-	config = require('./config');
+	GraphAPI = require('./graph-api')
 
 module.exports = class Receive {
 	constructor(user, webhookEvent, projectPhase) {
@@ -70,10 +58,6 @@ module.exports = class Receive {
 
 	// Handles messages events with text
 	handleTextMessage() {
-		// console.log(
-		// 	'Received text:',
-		// 	`${this.webhookEvent.message.text} for ${this.user.psid}`
-		// );
 		let message = this.webhookEvent.message.text.trim().toLowerCase();
 
 		let response;

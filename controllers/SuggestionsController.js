@@ -1,6 +1,4 @@
 const SuggestionsDAO = require('../DAO/SuggestionsDAO.js');
-const request = require('request');
-const fetch = require('node-fetch');
 
 module.exports = class SuggestionsController {
 	static addDrinkSuggestion = async (psid, drinkBody) => {

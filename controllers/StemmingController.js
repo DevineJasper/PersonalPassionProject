@@ -1,7 +1,5 @@
 const StemmingDAO = require('../DAO/StemmingDAO.js');
 const SelectionDAO = require('../DAO/SelectionDAO.js');
-// const request = require('request');
-const fetch = require('node-fetch');
 
 module.exports = class StemmingController {
 	static setStemming = async (psid, movie) => {

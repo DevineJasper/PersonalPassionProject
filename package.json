@@ -1,7 +1,7 @@
 {
 	"name": "cinematjes-heroku",
 	"version": "1.0.0",
-	"description": "",
+	"description": "cinematjes experience for facebook messenger",
 	"main": "app.js",
 	"engines": {
 		"node": "12.13.0",
@@ -16,7 +16,6 @@
 	"author": "Jasper Vermeesch",
 	"license": "ISC",
 	"dependencies": {
-		"bcrypt": "^3.0.7",
 		"body-parser": "^1.19.0",
 		"camelcase": "^5.3.1",
 		"compression": "^1.7.4",
@@ -25,7 +24,6 @@
 		"ejs": "^2.7.4",
 		"ejs-lint": "^0.3.0",
 		"express": "^4.17.1",
-		"jsonwebtoken": "^8.5.1",
 		"knex": "^0.20.3",
 		"mobx": "^5.15.0",
 		"morgan": "^1.9.1",

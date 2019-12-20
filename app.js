@@ -4,16 +4,13 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
-//database connection
 const compression = require('compression');
 const fetch = require('node-fetch');
-const ejsLint = require('ejs-lint');
 //Controllers
 const CinemaEventController = require('./controllers/CinemaEventController');
 const ParticipantsController = require('./controllers/ParticipantsController');
 const SuggestionsController = require('./controllers/SuggestionsController');
 const StemmingController = require('./controllers/StemmingController');
-const AdminController = require('./controllers/AdminController');
 
 app.use(cors());
 app.use(compression());
@@ -24,7 +21,6 @@ app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
 let projectPhase;
-let images;
 
 app.get('/', (req, res) => {
 	res.render(__dirname + '/views/index', { url: config.appUrl });
@@ -45,6 +41,8 @@ app.get('/admin', async (req, res) => {
 	let highestVotes;
 	let volunteers = [];
 	let currentPhase;
+
+	// Admin Application
 	const render = () => {
 		console.log('renderen functie');
 		res.render(__dirname + '/views/admin', {
@@ -92,49 +90,14 @@ app.get('/admin', async (req, res) => {
 	}
 });
 
-// app.get('/suggesties/films', (req, res) => {
-// 	res.render(__dirname + '/views/suggesties/films', { url: config.appUrl });
-// });
-
-// app.get('/suggesties/snacks', (req, res) => {
-// 	res.render(__dirname + '/views/suggesties/snacks', { url: config.appUrl });
-// });
-
-// app.get('/suggesties/drinks', (req, res) => {
-// 	res.render(__dirname + '/views/suggesties/drinks', { url: config.appUrl });
-// });
-
-// app.get('/suggesties/themas', (req, res) => {
-// 	res.render(__dirname + '/views/suggesties/themas', { url: config.appUrl });
-// });
-
-// app.get('/stemming/films', (req, res) => {
-// 	res.render(__dirname + '/views/stemming/films', { url: config.appUrl });
-// });
-
-// app.get('/stemming/drinks', (req, res) => {
-// 	res.render(__dirname + '/views/stemming/drinks', { url: config.appUrl });
-// });
-
-// app.get('/stemming/snacks', (req, res) => {
-// 	res.render(__dirname + '/views/stemming/snacks', { url: config.appUrl });
-// });
-
-// app.get('/stemming/themas', (req, res) => {
-// 	res.render(__dirname + '/views/stemming/themas', { url: config.appUrl });
-// });
+// CinemaEvent routes
 
 app.put('/api/cinemaEvent/phase', (req, res) => {
-	// console.log(req.body.eventPhase);
 	projectPhase = req.body.eventPhase;
 	CinemaEventController.setEventPhase(projectPhase);
 	res.status(201).json(projectPhase);
 });
 
-// app.get('/cinemaEvent/phase', async (req, res) => {
-// 	projectPhase = await CinemaEventController.getEventPhase();
-// 	res.json(projectPhase);
-// });
 
 app.get('/api/cinemaEvent/dates', async (req, res) => {
 	const dates = await CinemaEventController.Dates();
@@ -145,28 +108,6 @@ app.put('/api/cinemaEvent/dates', async (req, res) => {
 	CinemaEventController.updateDates(req.body);
 	res.json('dates aangepast!');
 });
-
-// app.post('/admin/push', (req, res) => {
-// 	const recipients = req.body.recipients;
-// 	const payload = req.body.payload;
-// 	const phase = req.body.phase;
-// 	recipients.forEach(recipient => {
-// 		AdminController.handlePayload(payload, recipient, phase);
-// 	});
-// 	res.json({
-// 		message: 'Goed gepost!'
-// 	});
-// });
-
-// app.get('/participants', async (req, res) => {
-// 	const participants = await ParticipantsController.getUsers();
-// 	res.json(participants);
-// });
-
-// app.get('/participants/vrijwilligers', async (req, res) => {
-// 	const vrijwilligers = await ParticipantsController.getVolunteers();
-// 	res.json(vrijwilligers);
-// });
 
 // -------------------------------------------------------- //
 // -------------------------------------------------------- //
@@ -219,8 +160,6 @@ app.post('/webhook', (req, res) => {
 			// Get the webhook event. entry.messaging is an array, but
 			// will only ever contain one event, so we get index 0
 			let webhookEvent = entry.messaging[0];
-			// console.log('!!!!!!!!!!!!!!! DIT IS HET WEBHOOKEVENT IN DE APP.POST:');
-			// console.log(webhookEvent);
 
 			// Get the sender PSID
 			let senderPsid = webhookEvent.sender.id;
@@ -302,32 +241,10 @@ app.get('/profile', (req, res) => {
 				Profile.setThread();
 				res.write(`<p>Set Messenger Profile of Page ${config.pageId}</p>`);
 			}
-			// if (mode == 'personas' || mode == 'all') {
-			// 	Profile.setPersonas();
-			// 	res.write(`<p>Set Personas for ${config.appId}</p>`);
-			// 	res.write(
-			// 		'<p>To persist the personas, add the following variables \
-			//     to your environment variables:</p>'
-			// 	);
-			// 	res.write('<ul>');
-			// 	res.write(`<li>PERSONA_BILLING = ${config.personaBilling.id}</li>`);
-			// 	res.write(`<li>PERSONA_CARE = ${config.personaCare.id}</li>`);
-			// 	res.write(`<li>PERSONA_ORDER = ${config.personaOrder.id}</li>`);
-			// 	res.write(`<li>PERSONA_SALES = ${config.personaSales.id}</li>`);
-			// 	res.write('</ul>');
-			// }
-			// if (mode == 'nlp' || mode == 'all') {
-			// 	GraphAPI.callNLPConfigsAPI();
-			// 	res.write(`<p>Enable Built-in NLP for Page ${config.pageId}</p>`);
-			// }
 			if (mode == 'domains' || mode == 'all') {
 				Profile.setWhitelistedDomains();
 				res.write(`<p>Whitelisting domains: ${config.whitelistedDomains}</p>`);
 			}
-			// if (mode == 'private-reply') {
-			// 	Profile.setPageFeedWebhook();
-			// 	res.write(`<p>Set Page Feed Webhook for Private Replies.</p>`);
-			// }
 			res.status(200).end();
 		} else {
 			// Responds with '403 Forbidden' if verify tokens do not match
@@ -403,7 +320,6 @@ const listener = app.listen(config.port, async () => {
 require('./routes/suggestieRoutes.js')(app);
 require('./routes/stemmingRoutes.js')(app);
 require('./routes/selectieRoutes.js')(app);
-// require('./routes/cinemaEvent.routes.js')(app);
 require('./routes/adminRoutes.js')(app);
 require('./routes/finalRoutes.js')(app);
 require('./routes/participantRoutes.js')(app);

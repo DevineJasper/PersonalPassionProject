@@ -3,7 +3,6 @@
 // Imports dependencies
 const Response = require('./response'),
 	config = require('./config'),
-	request = require('request'),
 	ParticipantsController = require('../controllers/ParticipantsController');
 
 module.exports = class Selectie {

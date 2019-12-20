@@ -1,7 +1,4 @@
-const DAO = require('../DAO/dao');
 const ParticipantsDAO = require('../DAO/ParticipantsDAO');
-const request = require('request');
-const knex = require('knex')(DAO);
 
 module.exports = class ParticipantsController {
 	static getUsers = async => {
