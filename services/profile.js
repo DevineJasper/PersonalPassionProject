@@ -14,7 +14,6 @@ module.exports = class Profile {
 		let profilePayload = {
 			...this.getGetStarted(),
 			...this.getGreeting()
-			// ...this.getPersistentMenu()
 		};
 		console.log('setThread function');
 		GraphAPI.callMessengerProfileAPI(profilePayload);
